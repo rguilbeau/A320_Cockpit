@@ -16,9 +16,8 @@ namespace A320_Cockpit.Infrastructure.MsfsVariableUpdater
 {
     internal class MsfsFcuDisplayUpdater : MsfsUpdator<IFcuDisplayVariableUpdater.Updates>, IFcuDisplayVariableUpdater
     {
-
-        public static Lvar<bool> IsExpeditedMode = new("A32NX_FMA_EXPEDITE_MODE");
-        public static SimVar<bool> IsMachSpeed = new("AUTOPILOT MANAGED SPEED IN MACH");
+        private static readonly  Lvar<bool> IsExpeditedMode = new("A32NX_FMA_EXPEDITE_MODE");
+        public static readonly SimVar<bool> IsMachSpeed = new("AUTOPILOT MANAGED SPEED IN MACH");
 
         public MsfsFcuDisplayUpdater(MsfsConnector msfsConnector, ICanBus can) : base(msfsConnector, can)
         {
@@ -29,8 +28,8 @@ namespace A320_Cockpit.Infrastructure.MsfsVariableUpdater
             switch(update)
             {
                 case IFcuDisplayVariableUpdater.Updates.SPEED:
-                    msfsConnector.Request(IsExpeditedMode);
-                    msfsConnector.Request(IsMachSpeed);
+                    msfsConnector.Update(IsExpeditedMode);
+                    msfsConnector.Update(IsMachSpeed);
                     break;
             }
 

@@ -13,16 +13,15 @@ namespace A320_Cockpit.Domain.UseCase
 {
     internal class SendFcuDisplay
     {
+        private const int ID = 0x064;
+
+        private const int SIZE = 8;
+
         private readonly IUpdateCockpitPresenter presenter;
-
-        private static Frame? cacheFrame;
-
-        private static readonly int ID = 0x064;
-
-        private static readonly int SIZE = 8;
-
-        private ICanBus canBus;
-
+        
+        private readonly ICanBus canBus;
+        
+        private static Frame? previousFrame;
 
         public SendFcuDisplay(ICanBus canBus, IUpdateCockpitPresenter presenter)
         {
@@ -96,8 +95,9 @@ namespace A320_Cockpit.Domain.UseCase
             frame.Data[7] = Frame.BitArrayToByte(hiddens);
 
 
-            bool sent = frame.Equals(cacheFrame);
-            bool success = sent ? canBus.Send(frame) : true;
+            bool sent = frame.Equals(previousFrame);
+            bool success = !sent || canBus.Send(frame);
+            previousFrame = frame;
             presenter.Present(success, sent, frame);
         }
 

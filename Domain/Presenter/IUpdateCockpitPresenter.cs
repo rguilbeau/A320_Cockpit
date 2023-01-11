@@ -1,5 +1,4 @@
 ﻿using A320_Cockpit.Domain.CanBus;
-using A320_Cockpit.Domain.FrameSender;
 using System;
 using System.Collections.Generic;
 using System.Linq;

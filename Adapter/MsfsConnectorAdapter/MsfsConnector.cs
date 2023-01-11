@@ -12,20 +12,18 @@ namespace A320_Cockpit.Adapter.MsfsConnectorAdapter
     internal class MsfsConnector
     {
 
-        private FsuipcConnector fsuipc;
+        private readonly FsuipcConnector fsuipc;
 
-        private SimConnectConnector simConnect;
+        private readonly SimConnectConnector simConnect;
 
 
         public static MsfsConnector CreateConnection()
         {
 
-            FsuipcConnector fsuipcRequester = new(new TypeConverter());
+            FsuipcConnector fsuipcRequester = FsuipcConnector.Get();
             fsuipcRequester.Open();
 
-
-            SimConnect simConnect = new SimConnect("A320 Cockpit", IntPtr.Zero, SimConnectConnector.DEFAULT_USER_EVENT_WIN32, null, 0);
-            SimConnectConnector simConnectRequester = new(simConnect, new TypeConverter());
+            SimConnectConnector simConnectRequester = SimConnectConnector.Get();
             simConnectRequester.Open();
 
             return new MsfsConnector(fsuipcRequester, simConnectRequester);
@@ -37,7 +35,7 @@ namespace A320_Cockpit.Adapter.MsfsConnectorAdapter
             simConnect = simConnectRequester;
         }
 
-        public bool Request<T>(IVar<T> variable)
+        public bool Update<T>(IVar<T> variable)
         {
             bool hasMuted = false;
             T? value = default;

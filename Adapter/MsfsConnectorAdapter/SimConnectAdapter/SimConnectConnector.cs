@@ -18,13 +18,6 @@ namespace A320_Cockpit.Adapter.MsfsConnectorAdapter.SimConnectAdapter
 
         private const int DEFAUL_ID_OBJECT = 1;
 
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
-        private struct StructStr
-        {
-            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
-            public string sValue;
-        };
-
         private enum ID_DEFINITION { }
 
         private SimConnect simConnect;
@@ -33,9 +26,30 @@ namespace A320_Cockpit.Adapter.MsfsConnectorAdapter.SimConnectAdapter
 
         private bool isOpen;
 
-        private TypeConverter typeConverter;
+        private readonly TypeConverter typeConverter;
 
-        public SimConnectConnector(SimConnect simConnect, TypeConverter typeConverter)
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
+        private struct StructStr
+        {
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
+            public string sValue;
+        };
+
+        private static SimConnectConnector? instance;
+
+        public static SimConnectConnector Get()
+        {
+            if(instance == null)
+            {
+                instance = new SimConnectConnector(
+                    new SimConnect("A320 Cockpit", IntPtr.Zero, SimConnectConnector.DEFAULT_USER_EVENT_WIN32, null, 0),
+                    new TypeConverter()
+                );
+            }
+            return instance;
+        }
+
+        private SimConnectConnector(SimConnect simConnect, TypeConverter typeConverter)
         {
             isOpen = false;
             this.simConnect = simConnect;

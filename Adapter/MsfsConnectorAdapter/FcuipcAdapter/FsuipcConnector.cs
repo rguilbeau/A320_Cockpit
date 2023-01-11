@@ -12,7 +12,19 @@ namespace A320_Cockpit.Adapter.MsfsConnectorAdapter.FcuipcAdapter
 
         private readonly TypeConverter typeConverter;
 
-        public FsuipcConnector(TypeConverter typeConverter)
+        private static FsuipcConnector? instance;
+
+        public static FsuipcConnector Get()
+        {
+            if(instance == null)
+            {
+                instance = new FsuipcConnector(new TypeConverter());
+            }
+            return instance;
+        }
+
+
+        private FsuipcConnector(TypeConverter typeConverter)
         {
             this.typeConverter = typeConverter;
         }
