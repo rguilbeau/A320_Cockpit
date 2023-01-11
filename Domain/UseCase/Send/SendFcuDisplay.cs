@@ -1,4 +1,6 @@
-﻿using A320_Cockpit.Domain.Can;
+﻿using A320_Cockpit.Domain.CanBus;
+using A320_Cockpit.Domain.Payload;
+using A320_Cockpit.Domain.Presenter;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,25 +9,30 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace A320_Cockpit.Domain.Frames.Fcu
+namespace A320_Cockpit.Domain.UseCase
 {
-    internal class FcuDisplay: IFrame<FcuDisplayPayload>
+    internal class SendFcuDisplay
     {
+        private readonly IUpdateCockpitPresenter presenter;
+
+        private static Frame? cacheFrame;
 
         private static readonly int ID = 0x064;
 
         private static readonly int SIZE = 8;
 
-        private ICan _can;
+        private ICanBus canBus;
 
-        public FcuDisplay(ICan can)
+
+        public SendFcuDisplay(ICanBus canBus, IUpdateCockpitPresenter presenter)
         {
-            _can = can;
+            this.presenter = presenter;
+            this.canBus = canBus;
         }
 
-        public Response Send(FcuDisplayPayload payload)
+        public void Send(FcuDisplayPayload payload)
         {
-            CanMessage message = new(ID, SIZE);
+            Frame frame = new(ID, SIZE);
 
             int speed = (int)payload.Speed;
             if (payload.IsMach)
@@ -47,9 +54,9 @@ namespace A320_Cockpit.Domain.Frames.Fcu
             hundreds[6] = headingHundreds == 200;
             hundreds[7] = headingHundreds == 300;
 
-            message.Data[0] = (byte)(speed - speedHundreds);
-            message.Data[1] = (byte)(payload.Heading - headingHundreds);
-            message.Data[2] = CanMessage.BitArrayToByte(hundreds);
+            frame.Data[0] = (byte)(speed - speedHundreds);
+            frame.Data[1] = (byte)(payload.Heading - headingHundreds);
+            frame.Data[2] = Frame.BitArrayToByte(hundreds);
 
             BitArray indicators = new BitArray(8);
             indicators[0] = payload.IsMach;
@@ -61,19 +68,19 @@ namespace A320_Cockpit.Domain.Frames.Fcu
             indicators[6] = payload.IsAltitudeForced;
             indicators[7] = payload.IsVerticalSpeedPositive;
 
-            message.Data[3] = CanMessage.BitArrayToByte(indicators);
+            frame.Data[3] = Frame.BitArrayToByte(indicators);
 
             int altitude = payload.Altitude / 100;
-            message.Data[4] = (byte)(altitude > byte.MaxValue ? byte.MaxValue : altitude);
-            message.Data[5] = (byte)(altitude > byte.MaxValue ? altitude - byte.MaxValue : 0);
+            frame.Data[4] = (byte)(altitude > byte.MaxValue ? byte.MaxValue : altitude);
+            frame.Data[5] = (byte)(altitude > byte.MaxValue ? altitude - byte.MaxValue : 0);
 
             if (payload.IsFpa)
             {
-                message.Data[6] = (byte)(payload.VerticalSpeed * 10);
+                frame.Data[6] = (byte)(payload.VerticalSpeed * 10);
             }
             else
             {
-                message.Data[6] = (byte)(payload.VerticalSpeed / 100);
+                frame.Data[6] = (byte)(payload.VerticalSpeed / 100);
             }
 
             BitArray hiddens = new BitArray(8);
@@ -86,9 +93,13 @@ namespace A320_Cockpit.Domain.Frames.Fcu
             hiddens[6] = false;
             hiddens[7] = false;
 
-            message.Data[7] = CanMessage.BitArrayToByte(hiddens);
+            frame.Data[7] = Frame.BitArrayToByte(hiddens);
 
-            return new Response(_can.Send(message), ID);
+
+            bool sent = frame.Equals(cacheFrame);
+            bool success = sent ? canBus.Send(frame) : true;
+            presenter.Present(success, sent, frame);
         }
+
     }
 }

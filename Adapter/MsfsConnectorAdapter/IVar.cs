@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace A320_Cockpit.Domain.Frames
+namespace A320_Cockpit.Adapter.MsfsConnectorAdapter
 {
-    internal interface IFrame<TValue>
+    internal interface IVar<T>
     {
-        public Response Send(TValue payload);
-
+        public T? Value { get; set; }
     }
 }

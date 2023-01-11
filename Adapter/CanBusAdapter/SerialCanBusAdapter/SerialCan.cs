@@ -1,82 +1,82 @@
-﻿using A320_Cockpit.Domain.Can;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO.Ports;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using A320_Cockpit.Domain.CanBus;
 
-namespace A320_Cockpit.Infrastructure.Can
+namespace A320_Cockpit.Adapter.CanBusAdapter.SerialCanBusAdapter
 {
-    internal class SerialCan: ICan
-    {       
-        private readonly SerialPort _serialPort;
+    internal class SerialCan : ICanBus
+    {
+        private readonly SerialPort serialPort;
 
-        private readonly string _comPort;
+        private readonly string comPort;
 
-        private readonly int _serialBaudRate;
+        private readonly int serialBaudRate;
 
-        private readonly string _canBaudRate;
+        private readonly string canBaudRate;
 
-        public event EventHandler<MessageRecievedEventArgs>? MessageReceivedEvent;
+        //public event EventHandler<MessageRecievedEventArgs>? MessageReceivedEvent;
 
         public SerialCan(SerialPort serialPort, string comPort, int serialBaudRate, string canBaudRate)
         {
-            _serialPort = serialPort;
-            _comPort = comPort;
-            _serialBaudRate = serialBaudRate;
-            _canBaudRate = canBaudRate;
-            _serialPort.DataReceived += _serialPort_DataReceived;
+            this.serialPort = serialPort;
+            this.comPort = comPort;
+            this.serialBaudRate = serialBaudRate;
+            this.canBaudRate = canBaudRate;
+            this.serialPort.DataReceived += _serialPort_DataReceived;
         }
 
         public bool Open()
         {
-            if (_serialPort.IsOpen)
+            if (serialPort.IsOpen)
             {
-                _serialPort.Close();
+                serialPort.Close();
             }
 
             // open serial connexion
-            _serialPort.PortName = _comPort;
-            _serialPort.BaudRate = _serialBaudRate;
+            serialPort.PortName = comPort;
+            serialPort.BaudRate = serialBaudRate;
 
-            _serialPort.Open();
+            serialPort.Open();
 
-            if (_serialPort.IsOpen)
+            if (serialPort.IsOpen)
             {
                 // open can bus connexion
-                _serialPort.Write("O\r");
+                serialPort.Write("O\r");
                 // set bitrate
-                _serialPort.Write("S");
-                _serialPort.Write(_canBaudRate);
-                _serialPort.Write("\r");
+                serialPort.Write("S");
+                serialPort.Write(canBaudRate);
+                serialPort.Write("\r");
 
                 CheckHardware();
             }
 
-            return _serialPort.IsOpen;
+            return serialPort.IsOpen;
         }
 
         public void Close()
         {
-            _serialPort.Close();
+            serialPort.Close();
         }
 
         private bool CheckHardware()
         {
             bool isOk = false;
 
-            if (_serialPort.IsOpen)
+            if (serialPort.IsOpen)
             {
-                _serialPort.DataReceived -= _serialPort_DataReceived;
-                _serialPort.Write("V\r");
-                string version = _serialPort.ReadExisting();
+                serialPort.DataReceived -= _serialPort_DataReceived;
+                serialPort.Write("V\r");
+                string version = serialPort.ReadExisting();
                 isOk = version.Contains("cantact");
-                _serialPort.DataReceived += _serialPort_DataReceived;
-                
-                if(!isOk)
+                serialPort.DataReceived += _serialPort_DataReceived;
+
+                if (!isOk)
                 {
-                    _serialPort.Close();
+                    serialPort.Close();
                     throw new Exception("Hardware is not a CANable. Please flash with slcan firmware");
                 }
             }
@@ -86,26 +86,26 @@ namespace A320_Cockpit.Infrastructure.Can
 
         public bool IsOpen
         {
-            get { return _serialPort.IsOpen; }
+            get { return serialPort.IsOpen; }
         }
 
-        public bool Send(CanMessage message)
+        public bool Send(Frame frame)
         {
             bool success = false;
 
-            if (_serialPort.IsOpen)
+            if (serialPort.IsOpen)
             {
                 string canFrameData = "t";
-                canFrameData += message.Id.ToString("X").PadLeft(3, '0');
-                canFrameData += message.Size.ToString();
+                canFrameData += frame.Id.ToString("X").PadLeft(3, '0');
+                canFrameData += frame.Size.ToString();
 
-                foreach (int value in message.Data)
+                foreach (int value in frame.Data)
                 {
                     canFrameData += value.ToString("X").PadLeft(2);
                 }
 
-                _serialPort.Write(canFrameData);
-                _serialPort.Write("\r");
+                serialPort.Write(canFrameData);
+                serialPort.Write("\r");
                 success = true;
             }
 
@@ -114,11 +114,11 @@ namespace A320_Cockpit.Infrastructure.Can
 
         private void _serialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            try
+            /*try
             {
                 if (MessageReceivedEvent != null)
                 {
-                    string frame = _serialPort.ReadExisting();
+                    string frame = serialPort.ReadExisting();
                     if (frame != null && frame.StartsWith("t"))
                     {
                         int id = int.Parse(frame.Substring(1, 3), System.Globalization.NumberStyles.HexNumber);
@@ -128,16 +128,16 @@ namespace A320_Cockpit.Infrastructure.Can
 
                         for (int i = 0; i < size; i++)
                         {
-                            message.Data[i] = byte.Parse(frame.Substring(5 + (i * 2), 2), System.Globalization.NumberStyles.HexNumber);
+                            message.Data[i] = byte.Parse(frame.Substring(5 + i * 2, 2), System.Globalization.NumberStyles.HexNumber);
                         }
 
                         MessageReceivedEvent.Invoke(this, new MessageRecievedEventArgs(message));
                     }
                 }
             }
-            catch (System.TimeoutException)
+            catch (TimeoutException)
             {
-            }
+            }*/
         }
 
         public static string[] FindAvailablePort()
