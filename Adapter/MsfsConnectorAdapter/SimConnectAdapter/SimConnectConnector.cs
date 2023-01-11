@@ -42,7 +42,7 @@ namespace A320_Cockpit.Adapter.MsfsConnectorAdapter.SimConnectAdapter
             if(instance == null)
             {
                 instance = new SimConnectConnector(
-                    new SimConnect("A320 Cockpit", IntPtr.Zero, SimConnectConnector.DEFAULT_USER_EVENT_WIN32, null, 0),
+                    new SimConnect("A320 Cockpit", IntPtr.Zero, DEFAULT_USER_EVENT_WIN32, null, 0),
                     new TypeConverter()
                 );
             }
@@ -84,7 +84,6 @@ namespace A320_Cockpit.Adapter.MsfsConnectorAdapter.SimConnectAdapter
         public T? ReadSimVar<T>(SimVar<T> simVar)
         {
             T? value = default;
-            Console.WriteLine("Read sim var " + IsOpen);
 
             if (IsOpen)
             {
@@ -98,15 +97,11 @@ namespace A320_Cockpit.Adapter.MsfsConnectorAdapter.SimConnectAdapter
 
                 readed = false;
                 currentreadType = typeof(T);
-                int hintReceive = 0;
                 while (!readed)
                 {
-                    hintReceive++;
                     simConnect.ReceiveMessage();
                     Thread.Yield();
                 }
-
-                Console.WriteLine("hint: " + hintReceive);
 
                 if (currentReadValue != null)
                 {

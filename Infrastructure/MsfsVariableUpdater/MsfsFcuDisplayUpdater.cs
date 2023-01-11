@@ -19,13 +19,16 @@ namespace A320_Cockpit.Infrastructure.MsfsVariableUpdater
         private static readonly  Lvar<bool> IsExpeditedMode = new("A32NX_FMA_EXPEDITE_MODE");
         public static readonly SimVar<bool> IsMachSpeed = new("AUTOPILOT MANAGED SPEED IN MACH");
 
+        private FcuDisplayPayload fcuDisplayPayload;
+
         public MsfsFcuDisplayUpdater(MsfsConnector msfsConnector, ICanBus can) : base(msfsConnector, can)
         {
+            fcuDisplayPayload = new();
         }
 
-        public override void Update(IFcuDisplayVariableUpdater.Updates update)
+        protected override void UpdateVariables(IFcuDisplayVariableUpdater.Updates update)
         {
-            switch(update)
+            switch (update)
             {
                 case IFcuDisplayVariableUpdater.Updates.SPEED:
                     msfsConnector.Update(IsExpeditedMode);
@@ -33,11 +36,11 @@ namespace A320_Cockpit.Infrastructure.MsfsVariableUpdater
                     break;
             }
 
-            FcuDisplayPayload fcuDisplayPayload = new()
-            {
-                IsMach = IsMachSpeed.Value
-            };
+            fcuDisplayPayload.IsMach = IsMachSpeed.Value;
+        }
 
+        protected override void VariablesUpdated()
+        {
             new SendFcuDisplay(canBus, new ConsoleFramePresenter()).Send(fcuDisplayPayload);
         }
     }

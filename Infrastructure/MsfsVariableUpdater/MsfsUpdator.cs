@@ -27,18 +27,29 @@ namespace A320_Cockpit.Infrastructure.MsfsVariableUpdater
         {
             foreach (T update in (T[])Enum.GetValues(typeof(T)))
             {
-                Update(update);
+                UpdateVariables(update);
             }
+            VariablesUpdated();
         }
 
-        public abstract void Update(T update);
+        public void Update(T update)
+        {
+            UpdateVariables(update);
+            VariablesUpdated();
+        }
 
         public void Update(params T[] updates)
         {
             foreach (T update in updates)
             {
-                Update(update);
+                UpdateVariables(update);
             }
+
+            VariablesUpdated();
         }
+
+        protected abstract void UpdateVariables(T update);
+
+        protected abstract void VariablesUpdated();
     }
 }

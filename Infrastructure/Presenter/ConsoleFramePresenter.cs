@@ -14,7 +14,10 @@ namespace A320_Cockpit.Infrastructure.Presenter
     {
         public void Present(bool success, bool sent, Frame? frame)
         {
-            Console.WriteLine((success ? "==> " : "/!\\ ") + " " + frame?.ToString());
+            if(sent)
+            {
+                Console.WriteLine((success ? "==> " : "/!\\ ") + " " + frame?.ToString());
+            }
         }
     }
 }

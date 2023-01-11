@@ -95,7 +95,7 @@ namespace A320_Cockpit.Domain.UseCase
             frame.Data[7] = Frame.BitArrayToByte(hiddens);
 
 
-            bool sent = frame.Equals(previousFrame);
+            bool sent = !frame.Equals(previousFrame);
             bool success = !sent || canBus.Send(frame);
             previousFrame = frame;
             presenter.Present(success, sent, frame);
