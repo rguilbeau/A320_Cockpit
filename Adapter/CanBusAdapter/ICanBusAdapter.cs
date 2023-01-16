@@ -5,11 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace A320_Cockpit.Domain.Presenter
+namespace A320_Cockpit.Adapter.CanBusAdapter
 {
-    internal interface IUpdateCockpitPresenter
+    public interface ICanBusAdapter : ICanBus
     {
-        public void Present(bool success, bool sent, Frame? frame);
-
     }
 }

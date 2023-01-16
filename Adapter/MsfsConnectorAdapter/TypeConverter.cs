@@ -1,13 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace A320_Cockpit.Adapter.MsfsConnectorAdapter
+﻿namespace A320_Cockpit.Adapter.MsfsConnectorAdapter
 {
-    internal class TypeConverter
+    /// <summary>
+    /// Utilitaire pour la version des valeurs recu de MSFS vers les variables
+    /// </summary>
+    public class TypeConverter
     {
+        /// <summary>
+        /// Converti une variable double
+        /// </summary>
+        /// <typeparam name="T">Le type de retour</typeparam>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public T? Convert<T>(double value)
         {
             object? convertValue;
@@ -19,6 +22,14 @@ namespace A320_Cockpit.Adapter.MsfsConnectorAdapter
             else if (typeof(T).Equals(typeof(bool)))
             {
                 convertValue = value == 1;
+            }
+            else if (typeof(T).Equals(typeof(short)))
+            {
+                convertValue = (short)Math.Round(value, 0);
+            }
+            else if (typeof(T).Equals(typeof(int)))
+            {
+                convertValue = (int)Math.Round(value, 0);
             }
             else
             {

@@ -1,21 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using A320_Cockpit.Adapter.CanBusAdapter;
-
+﻿
 namespace A320_Cockpit.Domain.CanBus
 {
-    internal interface ICanBus
+    /// <summary>
+    /// Représente la connexion au CAN Bus
+    /// </summary>
+    public interface ICanBus
     {
+        /// <summary>
+        /// Ouvre la connexion au CAN Bus
+        /// </summary>
+        public void Open();
 
-        public bool Open();
-
+        /// <summary>
+        /// Ferme la connexion au CAN Bus
+        /// </summary>
         public void Close();
 
-        public bool Send(Frame frame);
+        /// <summary>
+        /// Envoi une frame au CAN Bus
+        /// </summary>
+        /// <param name="frame">La frame à envoyer</param>
+        public void Send(Frame frame);
 
+        /// <summary>
+        /// Etat de la connexion du CAN Bus
+        /// </summary>
         public bool IsOpen { get; }
 
     }

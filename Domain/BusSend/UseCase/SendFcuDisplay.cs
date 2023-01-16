@@ -1,35 +1,31 @@
-﻿using A320_Cockpit.Domain.CanBus;
-using A320_Cockpit.Domain.Payload;
-using A320_Cockpit.Domain.Presenter;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using A320_Cockpit.Domain.BusSend.Payload;
+using A320_Cockpit.Domain.CanBus;
 
-namespace A320_Cockpit.Domain.UseCase
+namespace A320_Cockpit.Domain.BusSend.UseCase
 {
-    internal class SendFcuDisplay
+    /// <summary>
+    /// Envoi la frame des afficheurs du FCU
+    /// </summary>
+    public class SendFcuDisplay : BaseSender<FcuDisplayPayload>
     {
         private const int ID = 0x064;
-
         private const int SIZE = 8;
 
-        private readonly IUpdateCockpitPresenter presenter;
-        
-        private readonly ICanBus canBus;
-        
-        private static Frame? previousFrame;
-
-        public SendFcuDisplay(ICanBus canBus, IUpdateCockpitPresenter presenter)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="canBus">Le CAN Bus</param>
+        /// <param name="presenter">Le présenteur de sortie</param>
+        public SendFcuDisplay(ICanBus canBus, ISendFramePresenter presenter) : base(canBus, presenter)
         {
-            this.presenter = presenter;
-            this.canBus = canBus;
         }
 
-        public void Send(FcuDisplayPayload payload)
+        /// <summary>
+        /// Construction de la frame à partir du payload
+        /// </summary>
+        /// <param name="payload">Le payload à envoyer</param>
+        /// <returns></returns>
+        protected override Frame BuildFrame(FcuDisplayPayload payload)
         {
             Frame frame = new(ID, SIZE);
 
@@ -42,8 +38,7 @@ namespace A320_Cockpit.Domain.UseCase
             int speedHundreds = speed / 100 * 100;
             int headingHundreds = payload.Heading / 100 * 100;
 
-            BitArray hundreds = new BitArray(8);
-
+            bool[] hundreds = new bool[8];
             hundreds[0] = speedHundreds == 100;
             hundreds[1] = speedHundreds == 200;
             hundreds[2] = speedHundreds == 300;
@@ -57,7 +52,7 @@ namespace A320_Cockpit.Domain.UseCase
             frame.Data[1] = (byte)(payload.Heading - headingHundreds);
             frame.Data[2] = Frame.BitArrayToByte(hundreds);
 
-            BitArray indicators = new BitArray(8);
+            bool[] indicators = new bool[8];
             indicators[0] = payload.IsMach;
             indicators[1] = payload.IsTrack;
             indicators[2] = payload.IsLat;
@@ -65,7 +60,7 @@ namespace A320_Cockpit.Domain.UseCase
             indicators[4] = payload.IsSpeedForced;
             indicators[5] = payload.IsHeadingForced;
             indicators[6] = payload.IsAltitudeForced;
-            indicators[7] = payload.IsVerticalSpeedPositive;
+            indicators[7] = payload.VerticalSpeed >= 0;
 
             frame.Data[3] = Frame.BitArrayToByte(indicators);
 
@@ -73,16 +68,18 @@ namespace A320_Cockpit.Domain.UseCase
             frame.Data[4] = (byte)(altitude > byte.MaxValue ? byte.MaxValue : altitude);
             frame.Data[5] = (byte)(altitude > byte.MaxValue ? altitude - byte.MaxValue : 0);
 
+            double verticalSpeedForcePositive = Math.Abs(payload.VerticalSpeed);
             if (payload.IsFpa)
             {
-                frame.Data[6] = (byte)(payload.VerticalSpeed * 10);
+                verticalSpeedForcePositive = Math.Round(verticalSpeedForcePositive, 1);
+                frame.Data[6] = (byte)(verticalSpeedForcePositive * 10);
             }
             else
             {
-                frame.Data[6] = (byte)(payload.VerticalSpeed / 100);
+                frame.Data[6] = (byte)(verticalSpeedForcePositive / 100);
             }
 
-            BitArray hiddens = new BitArray(8);
+            bool[] hiddens = new bool[8];
             hiddens[0] = payload.IsSpeedHidden;
             hiddens[1] = payload.IsHeadingHidden;
             hiddens[2] = payload.IsAltitudeHidden;
@@ -94,12 +91,7 @@ namespace A320_Cockpit.Domain.UseCase
 
             frame.Data[7] = Frame.BitArrayToByte(hiddens);
 
-
-            bool sent = !frame.Equals(previousFrame);
-            bool success = !sent || canBus.Send(frame);
-            previousFrame = frame;
-            presenter.Present(success, sent, frame);
+            return frame;
         }
-
     }
 }

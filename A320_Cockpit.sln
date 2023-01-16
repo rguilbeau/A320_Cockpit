@@ -8,17 +8,23 @@ EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Debug|MSFS = Debug|MSFS
 		Debug|x64 = Debug|x64
 		Release|Any CPU = Release|Any CPU
+		Release|MSFS = Release|MSFS
 		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{0BFE11C2-86E1-4BB3-8BA5-352E81187791}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0BFE11C2-86E1-4BB3-8BA5-352E81187791}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0BFE11C2-86E1-4BB3-8BA5-352E81187791}.Debug|MSFS.ActiveCfg = Debug|Any CPU
+		{0BFE11C2-86E1-4BB3-8BA5-352E81187791}.Debug|MSFS.Build.0 = Debug|Any CPU
 		{0BFE11C2-86E1-4BB3-8BA5-352E81187791}.Debug|x64.ActiveCfg = Debug|x64
 		{0BFE11C2-86E1-4BB3-8BA5-352E81187791}.Debug|x64.Build.0 = Debug|x64
 		{0BFE11C2-86E1-4BB3-8BA5-352E81187791}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0BFE11C2-86E1-4BB3-8BA5-352E81187791}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0BFE11C2-86E1-4BB3-8BA5-352E81187791}.Release|MSFS.ActiveCfg = Release|Any CPU
+		{0BFE11C2-86E1-4BB3-8BA5-352E81187791}.Release|MSFS.Build.0 = Release|Any CPU
 		{0BFE11C2-86E1-4BB3-8BA5-352E81187791}.Release|x64.ActiveCfg = Release|x64
 		{0BFE11C2-86E1-4BB3-8BA5-352E81187791}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection

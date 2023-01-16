@@ -1,25 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO.Ports;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.IO.Ports;
 using A320_Cockpit.Domain.CanBus;
+
 
 namespace A320_Cockpit.Adapter.CanBusAdapter.SerialCanBusAdapter
 {
-    internal class SerialCan : ICanBus
-    {
+    /// <summary>
+    /// Système de connexion au bus via le port USB et le module CANtact (firmware slcan)
+    /// </summary>
+    public class SerialCan : ICanBusAdapter
+    {   
         private readonly SerialPort serialPort;
-
         private readonly string comPort;
-
         private readonly int serialBaudRate;
-
         private readonly string canBaudRate;
 
         //public event EventHandler<MessageRecievedEventArgs>? MessageReceivedEvent;
 
+        /// <summary>
+        /// Création d'une nouvelle connexion
+        /// </summary>
+        /// <param name="serialPort">La communication avec le port USB</param>
+        /// <param name="comPort">Le COM port du port USB</param>
+        /// <param name="serialBaudRate">La vitesse de communication USB</param>
+        /// <param name="canBaudRate">La vitesse de communicaton du CAN Bus</param>
         public SerialCan(SerialPort serialPort, string comPort, int serialBaudRate, string canBaudRate)
         {
             this.serialPort = serialPort;
@@ -29,7 +32,19 @@ namespace A320_Cockpit.Adapter.CanBusAdapter.SerialCanBusAdapter
             this.serialPort.DataReceived += _serialPort_DataReceived;
         }
 
-        public bool Open()
+        /// <summary>
+        /// L'état de la connexion au port USB (n'est pas actuellement capable de terminer si il est connecté au CAN BUs)
+        /// </summary>
+        public bool IsOpen
+        {
+            get { return serialPort.IsOpen; }
+        }
+
+        /// <summary>
+        /// Ouvre la connexion
+        /// </summary>
+        /// <exception cref="Exception"></exception>
+        public void Open()
         {
             if (serialPort.IsOpen)
             {
@@ -50,48 +65,76 @@ namespace A320_Cockpit.Adapter.CanBusAdapter.SerialCanBusAdapter
                 serialPort.Write("S");
                 serialPort.Write(canBaudRate);
                 serialPort.Write("\r");
-
+    
                 CheckHardware();
             }
-
-            return serialPort.IsOpen;
+            
+            if(!serialPort.IsOpen)
+            {
+                throw new Exception("Unable to connect to serial bus can with unknown error");
+            }
         }
 
+        /// <summary>
+        /// Ferme la connexion
+        /// </summary>
+        /// <exception cref="Exception"></exception>
         public void Close()
         {
             serialPort.Close();
+            if (serialPort.IsOpen)
+            {
+                throw new Exception("Unable to close serial port connexion with unknwon error");
+            }
         }
 
+        /// <summary>
+        /// Vérifie que le module est bien un CANtact avec le firmware slcan
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         private bool CheckHardware()
         {
             bool isOk = false;
 
-            if (serialPort.IsOpen)
+            if (!serialPort.IsOpen)
+            {
+                throw new Exception("Unable to check hardware, serial port is closed");
+            }
+
+            try
             {
                 serialPort.DataReceived -= _serialPort_DataReceived;
                 serialPort.Write("V\r");
                 string version = serialPort.ReadExisting();
                 isOk = version.Contains("cantact");
                 serialPort.DataReceived += _serialPort_DataReceived;
+            }
+            catch(Exception e)
+            {
+                throw new Exception("Unable to write into Serial bus, but port is opened", e);
+            }
 
-                if (!isOk)
-                {
-                    serialPort.Close();
-                    throw new Exception("Hardware is not a CANable. Please flash with slcan firmware");
-                }
+            if (!isOk)
+            {
+                serialPort.Close();
+                throw new Exception("Hardware is not a CANable. Please flash with slcan firmware");
             }
 
             return isOk;
         }
 
-        public bool IsOpen
+        /// <summary>
+        /// Envoi une frame au CAN Bus
+        /// </summary>
+        /// <param name="frame">La frame à envoyer</param>
+        /// <exception cref="Exception"></exception>
+        public void Send(Frame frame)
         {
-            get { return serialPort.IsOpen; }
-        }
-
-        public bool Send(Frame frame)
-        {
-            bool success = false;
+            if(!serialPort.IsOpen)
+            {
+                throw new Exception("Unable to send frame over bus, serial port is closed");
+            }
 
             if (serialPort.IsOpen)
             {
@@ -106,12 +149,14 @@ namespace A320_Cockpit.Adapter.CanBusAdapter.SerialCanBusAdapter
 
                 serialPort.Write(canFrameData);
                 serialPort.Write("\r");
-                success = true;
             }
-
-            return success;
         }
 
+        /// <summary>
+        /// Reception d'une nouvelle frame du CAN Bus
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void _serialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
             /*try
@@ -140,6 +185,11 @@ namespace A320_Cockpit.Adapter.CanBusAdapter.SerialCanBusAdapter
             }*/
         }
 
+        /// <summary>
+        /// Retourne les ports disponibles
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public static string[] FindAvailablePort()
         {
             string[] ports = SerialPort.GetPortNames();
