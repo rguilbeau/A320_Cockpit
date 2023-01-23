@@ -1,5 +1,5 @@
 ﻿using A320_Cockpit.Adapter.LogHandler;
-using A320_Cockpit.Adapter.MsfsConnectorAdapter;
+using A320_Cockpit.Adapter.SimulatorHandler;
 using A320_Cockpit.Domain.BusSend.Payload;
 using A320_Cockpit.Domain.BusSend.UseCase;
 using A320_Cockpit.Domain.CanBus;
@@ -27,10 +27,10 @@ namespace A320_Cockpit.Infrastructure.MsfsVariableUpdater.A32NX_VariableUpdater
         /// <summary>
         /// Création du système de mise à jours des variables des indicateurs de lumières depuis l'A32NX
         /// </summary>
-        /// <param name="simConnector">Le connecteur MSFS</param>
+        /// <param name="simulatorHandler">Le connecteur MSFS</param>
         /// <param name="canBus">Le CAN Bus</param>
         /// <param name="presenter">Le présenteur de sortie</param>
-        public A32NX_LightIndicatorsUpdater(MsfsConnector simConnector, ICanBus can, ISendFramePresenter presenter, ILogHandlerAdapter logger) : base(simConnector, can, presenter, logger)
+        public A32NX_LightIndicatorsUpdater(ISimulatorHandler simulatorHandler, ICanBus can, ISendFramePresenter presenter, ILogHandler logger) : base(simulatorHandler, can, presenter, logger)
         {
             sender = new SendLightIndicators(canBus, presenter);
 
@@ -56,7 +56,7 @@ namespace A320_Cockpit.Infrastructure.MsfsVariableUpdater.A32NX_VariableUpdater
             switch (update)
             {
                 case Updates.TEST_INDICATORS_LIGHT:
-                    simConnector.Update(A32NX_Variables.LightIndicators.LightIndicatorStatus);
+                    simulatorHandler.Read(A32NX_Variables.LightIndicators.LightIndicatorStatus);
                     break;
                 case Updates.FCU_DISPLAY_BRIGHTNESS:
                     break;

@@ -1,4 +1,4 @@
-﻿namespace A320_Cockpit.Adapter.MsfsConnectorAdapter
+﻿namespace A320_Cockpit.Adapter.SimulatorHandler
 {
     /// <summary>
     /// Utilitaire pour la version des valeurs recu de MSFS vers les variables

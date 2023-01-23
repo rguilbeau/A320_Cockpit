@@ -1,13 +1,12 @@
 ﻿using System.IO.Ports;
 using A320_Cockpit.Domain.CanBus;
 
-
-namespace A320_Cockpit.Adapter.CanBusAdapter.SerialCanBusAdapter
+namespace A320_Cockpit.Adapter.CanBusHandler.SerialCanBusAdapter
 {
     /// <summary>
     /// Système de connexion au bus via le port USB et le module CANtact (firmware slcan)
     /// </summary>
-    public class SerialCan : ICanBusAdapter
+    public class SerialCan : ICanBusHandler
     {   
         private readonly SerialPort serialPort;
         private readonly string comPort;

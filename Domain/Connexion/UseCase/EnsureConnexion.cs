@@ -1,6 +1,7 @@
 ﻿using A320_Cockpit.Domain.CanBus;
 using A320_Cockpit.Domain.Connexion;
 using A320_Cockpit.Domain.Connexion.SimConnector;
+using System.Runtime.InteropServices;
 
 namespace A320_Cockpit.Domain.Connexion.UseCase
 {
@@ -9,7 +10,7 @@ namespace A320_Cockpit.Domain.Connexion.UseCase
     /// </summary>
     public class EnsureConnexion
     {
-        private ISimConnector simConnexion;
+        private ISimulatorConnector simConnexion;
         public ICanBus canBus;
 
         /// <summary>
@@ -17,7 +18,7 @@ namespace A320_Cockpit.Domain.Connexion.UseCase
         /// </summary>
         /// <param name="simConnexion"></param>
         /// <param name="canBus"></param>
-        public EnsureConnexion(ISimConnector simConnexion, ICanBus canBus)
+        public EnsureConnexion(ISimulatorConnector simConnexion, ICanBus canBus)
         {
             this.simConnexion = simConnexion;
             this.canBus = canBus;

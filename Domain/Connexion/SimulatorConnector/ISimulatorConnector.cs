@@ -3,7 +3,7 @@
     /// <summary>
     /// Connecteur du simulateur
     /// </summary>
-    public interface ISimConnector
+    public interface ISimulatorConnector
     {
         /// <summary>
         /// Etat de la connexion

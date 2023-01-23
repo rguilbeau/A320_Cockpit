@@ -1,8 +1,6 @@
-﻿using A320_Cockpit.Adapter.CanBusAdapter;
+﻿using A320_Cockpit.Adapter.CanBusHandler;
 using A320_Cockpit.Adapter.LogHandler;
-using A320_Cockpit.Adapter.MsfsConnectorAdapter;
-using A320_Cockpit.Adapter.MsfsConnectorAdapter.FcuipcAdapter;
-using A320_Cockpit.Adapter.MsfsConnectorAdapter.SimConnectAdapter;
+using A320_Cockpit.Adapter.SimulatorHandler;
 using A320_Cockpit.Domain.Connexion.UseCase;
 using A320_Cockpit.Infrastructure.Presenter.ConnexionPresenter;
 using System.Diagnostics;
@@ -15,18 +13,18 @@ namespace A320_Cockpit.Infrastructure.View.ApplicationTray
     /// </summary>
     public class ApplicationTray : ApplicationContext
     {
-        private readonly ICanBusAdapter canBus;
-        private readonly MsfsConnector simConnector;
+        private readonly ICanBusHandler canBusHandler;
+        private readonly ISimulatorHandler simulatorHandler;
         private readonly NotifyIcon trayIcon;
         private readonly System.Windows.Forms.Timer timerConnexion;
 
         /// <summary>
         /// Création du système tray
         /// </summary>
-        public ApplicationTray()
+        public ApplicationTray(ICanBusHandler canBusHandler, ISimulatorHandler simulatorHandler)
         {
-            canBus = CanBusFactory.Get();
-            simConnector = new MsfsConnector(FsuipcConnector.Get(), SimConnectConnector.Get());
+            this.canBusHandler = canBusHandler;
+            this.simulatorHandler = simulatorHandler;
             timerConnexion = new() { Interval = 5000 };
             timerConnexion.Tick += TimerConnexion_Tick;
             timerConnexion.Start();
@@ -49,7 +47,7 @@ namespace A320_Cockpit.Infrastructure.View.ApplicationTray
 
             trayIcon.ShowBalloonTip(3);
 
-            new MainLoop(this, canBus, simConnector, LogHandlerFactory.Get()).Start();
+            new MainLoop(this, canBusHandler, simulatorHandler, LogFactory.Get()).Start();
         }
 
         /// <summary>
@@ -102,7 +100,7 @@ namespace A320_Cockpit.Infrastructure.View.ApplicationTray
         /// <exception cref="NotImplementedException"></exception>
         private void Log_OnClick(object? sender, EventArgs e)
         {
-            string path = LogHandlerFactory.Get().LogPath;
+            string path = LogFactory.Get().LogPath;
             var pi = new ProcessStartInfo(path)
             {
                 Arguments = Path.GetFileName(path),
@@ -121,7 +119,7 @@ namespace A320_Cockpit.Infrastructure.View.ApplicationTray
         /// <param name="e"></param>
         private void TimerConnexion_Tick(object? sender, EventArgs e)
         {
-            new EnsureConnexion(simConnector, canBus).Connect(new SystemTrayConnexionPresenter(this, LogHandlerFactory.Get()));
+            new EnsureConnexion(simulatorHandler, canBusHandler).Connect(new SystemTrayConnexionPresenter(this, LogFactory.Get()));
         }
     }
 }

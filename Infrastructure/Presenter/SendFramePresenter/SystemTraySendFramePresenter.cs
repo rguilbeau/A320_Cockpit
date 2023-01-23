@@ -13,14 +13,14 @@ namespace A320_Cockpit.Infrastructure.Presenter.SendFramePresenter
         private Frame? frame;
         private Exception? error;
         private ApplicationTray applicationTray;
-        private ILogHandlerAdapter logger;
+        private ILogHandler logger;
 
         /// <summary>
         /// Création du présenter pour l'affiche du system tray
         /// </summary>
         /// <param name="applicationTray">Le system tray</param>
         /// <param name="logger">Lo logger</param>
-        public SystemTrayFramePresenter(ApplicationTray applicationTray, ILogHandlerAdapter logger)
+        public SystemTrayFramePresenter(ApplicationTray applicationTray, ILogHandler logger)
         {
             this.applicationTray = applicationTray;
             this.logger = logger;

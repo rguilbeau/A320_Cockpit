@@ -1,4 +1,4 @@
-﻿using A320_Cockpit.Adapter.MsfsConnectorAdapter.SimConnectAdapter;
+﻿using A320_Cockpit.Adapter.SimulatorHandler.Model;
 
 namespace A320_Cockpit.Infrastructure.MsfsVariableUpdater.A32NX_VariableUpdater
 {

@@ -1,4 +1,4 @@
-﻿namespace A320_Cockpit.Adapter.MsfsConnectorAdapter
+﻿namespace A320_Cockpit.Adapter.SimulatorHandler.Model
 {
     /// <summary>
     /// Représentation globale d'une variable de MSFS

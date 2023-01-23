@@ -1,5 +1,7 @@
 using A320_Cockpit.Infrastructure.View.ApplicationTray;
 using A320_Cockpit.Adapter.LogHandler;
+using A320_Cockpit.Adapter.CanBusHandler;
+using A320_Cockpit.Adapter.SimulatorHandler;
 
 namespace A320_Cockpit
 {
@@ -13,7 +15,7 @@ namespace A320_Cockpit
         {
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             ApplicationConfiguration.Initialize();
-            Application.Run(new ApplicationTray());
+            Application.Run(new ApplicationTray(CanBusFactory.Get(), SimulatorFactory.Get()));
         }
 
         /// <summary>
@@ -23,7 +25,7 @@ namespace A320_Cockpit
         /// <param name="e"></param>
         private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            LogHandlerFactory.Get().Error(new Exception("Unhandled exception", (Exception)e.ExceptionObject));
+            LogFactory.Get().Error(new Exception("Unhandled exception", (Exception)e.ExceptionObject));
             {
                 Application.Exit();
             }
