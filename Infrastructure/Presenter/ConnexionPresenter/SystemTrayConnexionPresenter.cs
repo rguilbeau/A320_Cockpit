@@ -52,7 +52,6 @@ namespace A320_Cockpit.Infrastructure.Presenter.ConnexionPresenter
         public void Present()
         {
             applicationTray.ChangeStatus(errors.Count == 0 ? TrayStatus.SUCCESS : TrayStatus.FAILURE);
-            logger.Info("coucou!!!!!!");
             if(errors.Count > 0) 
             {
                 foreach(Exception e in errors)

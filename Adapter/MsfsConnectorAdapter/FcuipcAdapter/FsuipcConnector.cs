@@ -1,4 +1,5 @@
-﻿using FSUIPC;
+﻿using A320_Cockpit.Adapter.MsfsConnectorAdapter.SimConnectAdapter;
+using FSUIPC;
 
 namespace A320_Cockpit.Adapter.MsfsConnectorAdapter.FcuipcAdapter
 {
@@ -28,7 +29,7 @@ namespace A320_Cockpit.Adapter.MsfsConnectorAdapter.FcuipcAdapter
         /// </summary>
         public bool IsOpen
         {
-            get { return FSUIPCConnection.IsOpen; }
+            get { return true; }// FSUIPCConnection.IsOpen; }
         }
 
         /// <summary>
@@ -47,11 +48,11 @@ namespace A320_Cockpit.Adapter.MsfsConnectorAdapter.FcuipcAdapter
         /// <exception cref="Exception"></exception>
         public void Open()
         {
-            FSUIPCConnection.Open();
+            /*FSUIPCConnection.Open();
             if (!FSUIPCConnection.IsOpen)
             {
                 throw new Exception("Unable to connect to FSUIPC with unknwon error");
-            }
+            }*/
         }
 
         /// <summary>

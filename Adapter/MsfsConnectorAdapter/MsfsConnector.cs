@@ -60,7 +60,7 @@ namespace A320_Cockpit.Adapter.MsfsConnectorAdapter
         /// <typeparam name="T">Le type de la variable</typeparam>
         /// <param name="variable">La variable à lire</param>
         /// <exception cref="Exception"></exception>
-        public void Update<T>(IVar<T> variable)
+        public async void Update<T>(IVar<T> variable)
         {
             if (!isTransaction || !transactionReaded.Contains(variable.Identifier))
             {
@@ -69,17 +69,17 @@ namespace A320_Cockpit.Adapter.MsfsConnectorAdapter
                 switch (variable)
                 {
                     case Lvar<T> lvar:
-                        value = fsuipc.ReadLvar(lvar);
+                        await simConnect.ReadVar(lvar);
                         break;
                     case SimVar<T> simVar:
-                        value = simConnect.ReadSimVar(simVar);
+                        await simConnect.ReadVar(simVar);
                         break;
                 }
 
-                if (variable.Value != null && !variable.Value.Equals(value))
+                /*if (variable.Value != null && !variable.Value.Equals(value))
                 {
                     variable.Value = value;
-                }
+                }*/
 
                 if (isTransaction)
                 {

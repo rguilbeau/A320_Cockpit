@@ -1,4 +1,4 @@
-﻿namespace A320_Cockpit.Adapter.MsfsConnectorAdapter.FcuipcAdapter
+﻿namespace A320_Cockpit.Adapter.MsfsConnectorAdapter.SimConnectAdapter
 {
     /// <summary>
     /// Définition d'une LVAR

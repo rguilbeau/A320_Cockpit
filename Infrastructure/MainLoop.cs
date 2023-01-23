@@ -71,9 +71,9 @@ namespace A320_Cockpit.Infrastructure
                 try
                 {
                     msfsConnector.StartTransaction();
-                    a32NX_FcuDisplayUpdater.Update();
-                    a32NX_ElectricityUpdater.Update();
-                    a32NX_LightIndicatorsUpdater.Update();
+                    a32NX_FcuDisplayUpdater.Update(A32NX_FcuDisplayUpdater.Updates.SPEED);
+                    //a32NX_ElectricityUpdater.Update();
+                    //a32NX_LightIndicatorsUpdater.Update();
                     msfsConnector.StopTransaction();
                 } catch (Exception ex)
                 {
