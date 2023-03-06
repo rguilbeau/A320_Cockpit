@@ -26,7 +26,7 @@ namespace A320_Cockpit.Adapter.LogHandler.SirelogAdapter
             logger = new LoggerConfiguration()
                 .WriteTo.File(
                     new Serilog.Formatting.Display.MessageTemplateTextFormatter(
-                        "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{Exception}"),
+                        "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{Exception}{NewLine}"),
                         logPath
                     )
                 .CreateLogger();

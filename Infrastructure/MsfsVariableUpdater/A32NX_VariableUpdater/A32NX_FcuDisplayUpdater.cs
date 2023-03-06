@@ -98,6 +98,8 @@ namespace A320_Cockpit.Infrastructure.MsfsVariableUpdater.A32NX_VariableUpdater
                     {
                         simulatorHandler.Read(A32NX_Variables.FcuDisplay.VerticalSpeedSelectedFpm);
                     }
+
+                    simulatorHandler.Read(A32NX_Variables.FcuDisplay.HeadingSelected);
                     break;
                 case Updates.ALTITUDE:
                     simulatorHandler.Read(A32NX_Variables.FcuDisplay.AltitudeSelected);

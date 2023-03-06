@@ -1,5 +1,6 @@
 ﻿using A320_Cockpit.Adapter.SimulatorHandler.Model;
 using Microsoft.FlightSimulator.SimConnect;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 
 namespace A320_Cockpit.Adapter.SimulatorHandler.MsfsConnectorAdapter
@@ -21,7 +22,7 @@ namespace A320_Cockpit.Adapter.SimulatorHandler.MsfsConnectorAdapter
         private bool isTransaction;
         private readonly List<string> transactionVariables;
 
-        AsyncTask<object>? asyncTask = null;
+        AsyncTask? asyncTask;
 
         /// <summary>
         /// La structure d'une variable en string
@@ -106,29 +107,22 @@ namespace A320_Cockpit.Adapter.SimulatorHandler.MsfsConnectorAdapter
         /// Ouvre la connexion à SimConnect
         /// </summary>
         /// <exception cref="Exception"></exception>
-        public async void Open()
+        public void Open()
         {
             if (!isOpen)
             {
-                try
-                {
-                    simConnect = new SimConnect(NAME, IntPtr.Zero, DEFAULT_USER_EVENT_WIN32, null, 0);
-                    simConnect.OnRecvOpen += new SimConnect.RecvOpenEventHandler(SimConnect_OnRecvOpen);
-                    simConnect.OnRecvQuit += new SimConnect.RecvQuitEventHandler(SimConnect_OnRecvQuit);
-                    simConnect.OnRecvException += new SimConnect.RecvExceptionEventHandler(SimConnect_OnRecvException);
-                    simConnect.OnRecvSimobjectDataBytype += new SimConnect.RecvSimobjectDataBytypeEventHandler(SimConnect_OnRecvSimobjectDataBytype);
-                    simConnect.OnRecvClientData += new SimConnect.RecvClientDataEventHandler(SimConnect_OnRecvClientData);
-
-                    simConnect.ReceiveMessage();
-
-                    asyncTask = new(0, typeof(bool));
-                    await asyncTask.Task;
-
-                    isOpen = (bool)asyncTask.Task.Result;
-                }
-                catch (Exception e)
-                {
+                simConnect = new SimConnect(NAME, IntPtr.Zero, DEFAULT_USER_EVENT_WIN32, null, 0);
                     
+                simConnect.OnRecvQuit += new SimConnect.RecvQuitEventHandler(SimConnect_OnRecvQuit);
+                simConnect.OnRecvException += new SimConnect.RecvExceptionEventHandler(SimConnect_OnRecvException);
+                simConnect.OnRecvSimobjectDataBytype += new SimConnect.RecvSimobjectDataBytypeEventHandler(SimConnect_OnRecvSimobjectDataBytype);
+                simConnect.OnRecvClientData += new SimConnect.RecvClientDataEventHandler(SimConnect_OnRecvClientData);
+                simConnect.OnRecvOpen += new SimConnect.RecvOpenEventHandler(SimConnect_OnRecvOpen);
+
+                while (!isOpen)
+                {
+                    simConnect.ReceiveMessage();
+                    Thread.Yield();
                 }
 
                 if (!isOpen)
@@ -234,37 +228,66 @@ namespace A320_Cockpit.Adapter.SimulatorHandler.MsfsConnectorAdapter
         /// <typeparam name="T"></typeparam>
         /// <param name="lvar"></param>
         /// <exception cref="Exception"></exception>
-        public async void Read<T>(Lvar<T> lvar)
+        public void Read<T>(Lvar<T> lvar)
         {
+            //LogHandler.LogFactory.Get().Info("Read lvar " + lvar.Name);
             if (!isOpen || simConnect == null)
             {
                 throw new Exception("Unable to read LVar, SimConnect is closed");
             }
 
-            if(!isTransaction || !transactionVariables.Contains(lvar.Identifier))
+            if (!isTransaction || !transactionVariables.Contains(lvar.Identifier))
             {
+                transactionVariables.Add(lvar.Identifier);
+
                 StructStr cmd;
                 cmd.value = lvar.Name;
 
                 int definition = 0;
 
-                simConnect.SetClientData((ID_CLIENT)0, (ID_DEFINITION)definition, SIMCONNECT_CLIENT_DATA_SET_FLAG.DEFAULT, 0, cmd);
-                simConnect.ReceiveMessage();
+                Stopwatch watch = new();
+                watch.Start();
 
                 asyncTask = new(definition, typeof(double));
-                await asyncTask.Task;
 
-                if(asyncTask.Task.Result.GetType() == typeof(Exception))
+                simConnect.SetClientData((ID_CLIENT)0, (ID_DEFINITION)definition, SIMCONNECT_CLIENT_DATA_SET_FLAG.DEFAULT, 0, cmd);
+
+                //LogHandler.LogFactory.Get().Info("Request message");
+                //simConnect.ReceiveMessage();
+                //Thread.Sleep(10);
+
+                int hint = 0;
+                //LogHandler.LogFactory.Get().Info("Wait messages");
+                while (!asyncTask.IsCompleted)
                 {
-                    Exception readLvarException = (Exception)asyncTask.Task.Result;
+                    simConnect.ReceiveMessage();
+                    hint++;
+                }
+                
+                //LogHandler.LogFactory.Get().Info("Wait messages");
+
+                //watch.Stop();
+                
+                //LogHandler.LogFactory.Get().Info("Read lvar time: " + watch.ElapsedMilliseconds + "ms (" + hint + ")");
+
+                if(asyncTask.Exception != null)
+                {
+                    Exception e = asyncTask.Exception;
                     asyncTask = null;
-                    throw readLvarException;
+                    throw e;
+                }
+                else if(asyncTask.Value != null)
+                {
+                    lvar.Value = typeConverter.Convert<T>((double)asyncTask.Value);
+                    asyncTask = null;
                 }
                 else
                 {
-                    lvar.Value = typeConverter.Convert<T>((double)asyncTask.Task.Result);
                     asyncTask = null;
-                }                
+                    throw new Exception("Unable to read lvar, null received");
+                }
+
+                //LogHandler.LogFactory.Get().Info("end of read process");
             }
         }
 
@@ -275,7 +298,7 @@ namespace A320_Cockpit.Adapter.SimulatorHandler.MsfsConnectorAdapter
         /// <param name="simVar">La Simvar à lire</param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public async void Read<T>(SimVar<T> simVar)
+        public void Read<T>(SimVar<T> simVar)
         {
             if (!isOpen || simConnect == null)
             {
@@ -289,14 +312,39 @@ namespace A320_Cockpit.Adapter.SimulatorHandler.MsfsConnectorAdapter
                     RegisterSimVar(simVar);
                 }
 
+                transactionVariables.Add(simVar.Identifier);
+
                 int definition = registeredSimVars.IndexOf(simVar.Name);
+                asyncTask = new(definition, typeof(T));
+
                 simConnect.RequestDataOnSimObjectType((ID_DEFINITION)definition, (ID_DEFINITION)definition, 0, SIMCONNECT_SIMOBJECT_TYPE.ALL);
 
-                asyncTask = new(definition, typeof(T));
-                await asyncTask.Task;
+                while(!asyncTask.IsCompleted)
+                {
+                    simConnect.ReceiveMessage();
+                }
 
-                simVar.Value = typeConverter.Convert<T>((double)asyncTask.Task.Result);
-                asyncTask = null;
+                if (asyncTask.Exception != null)
+                {
+                    Exception e = asyncTask.Exception;
+                    asyncTask = null;
+                    throw e;
+                }
+                else if(asyncTask.Value == null)
+                {
+                    asyncTask = null;
+                    throw new Exception("Unable to read simvar, null received");
+                }
+                else if (typeof(T) == typeof(string))
+                {
+                    simVar.Value = (T?)asyncTask.Value;
+                    asyncTask = null;
+                }
+                else
+                {
+                    simVar.Value = typeConverter.Convert<T>((double)asyncTask.Value);
+                    asyncTask = null;
+                }
             }
         }
 
@@ -307,6 +355,7 @@ namespace A320_Cockpit.Adapter.SimulatorHandler.MsfsConnectorAdapter
         /// <param name="data"></param>
         private void SimConnect_OnRecvClientData(SimConnect sender, SIMCONNECT_RECV_CLIENT_DATA data)
         {
+            //LogHandler.LogFactory.Get().Info("SimConnect_OnRecvClientData");
             if (asyncTask != null)
             {
                 switch (data.dwRequestID)
@@ -314,11 +363,11 @@ namespace A320_Cockpit.Adapter.SimulatorHandler.MsfsConnectorAdapter
                     case 1:
                         Result exeResult = (Result)data.dwData[0];
                         double value = exeResult.value;
-                        asyncTask.TrySetResult(value);
+                        asyncTask.Value = value;
                         break;
                     case 2:
                         ResponseError error = (ResponseError)data.dwData[0];
-                        asyncTask.TrySetResult(new Exception("Exception thrown from WASM module with code:" + error.errorCode));
+                        asyncTask.Exception = new Exception("Exception thrown from WASM module with code:" + error.errorCode);
                         break;
                 }
             }
@@ -341,12 +390,12 @@ namespace A320_Cockpit.Adapter.SimulatorHandler.MsfsConnectorAdapter
                     if(asyncTask.TypeVar == typeof(string))
                     {
                         StructStr result = (StructStr)data.dwData[0];
-                        asyncTask.TrySetResult(result.value);
+                        asyncTask.Value = result.value;
                     }
                     else
                     {
                         double value = (double)data.dwData[0];
-                        asyncTask.TrySetResult(value);
+                        asyncTask.Value = value;
                     }
                 }
             }
@@ -380,7 +429,7 @@ namespace A320_Cockpit.Adapter.SimulatorHandler.MsfsConnectorAdapter
         /// <param name="data"></param>
         private void SimConnect_OnRecvOpen(SimConnect sender, SIMCONNECT_RECV_OPEN data)
         {
-            asyncTask?.TrySetResult(true);
+            isOpen = true;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using A320_Cockpit.Domain.CanBus;
+﻿using A320_Cockpit.Adapter.LogHandler;
+using A320_Cockpit.Domain.CanBus;
 using A320_Cockpit.Domain.Connexion;
 using A320_Cockpit.Domain.Connexion.SimConnector;
 using System.Runtime.InteropServices;
