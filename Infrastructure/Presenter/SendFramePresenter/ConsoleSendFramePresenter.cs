@@ -11,13 +11,13 @@ namespace A320_Cockpit.Infrastructure.Presenter.SendFramePresenter
     {
         private Frame? frame;
         private Exception? error;
-        private ILogHandlerAdapter logger;
+        private ILogHandler logger;
 
         /// <summary>
         /// Construction du présenter de frame via la Console
         /// </summary>
         /// <param name="logger"></param>
-        public ConsoleSendFramePresenter(ILogHandlerAdapter logger)
+        public ConsoleSendFramePresenter(ILogHandler logger)
         {
             this.logger = logger;
         }

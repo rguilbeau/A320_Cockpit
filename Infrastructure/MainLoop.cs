@@ -1,20 +1,10 @@
-﻿using A320_Cockpit.Adapter.CanBusAdapter.SerialCanBusAdapter;
-using A320_Cockpit.Adapter.MsfsConnectorAdapter.FcuipcAdapter;
-using A320_Cockpit.Adapter.MsfsConnectorAdapter.SimConnectAdapter;
-using A320_Cockpit.Domain.CanBus;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using A320_Cockpit.Domain.Connexion;
-using Microsoft.FlightSimulator.SimConnect;
+﻿using A320_Cockpit.Domain.CanBus;
 using A320_Cockpit.Infrastructure.MsfsVariableUpdater.A32NX_VariableUpdater;
 using A320_Cockpit.Infrastructure.Presenter.SendFramePresenter;
 using A320_Cockpit.Infrastructure.View.ApplicationTray;
-using A320_Cockpit.Adapter.MsfsConnectorAdapter;
-using A320_Cockpit.Adapter.LogHandler.SirelogAdapter;
 using A320_Cockpit.Adapter.LogHandler;
+using A320_Cockpit.Adapter.SimulatorHandler;
+using System.Diagnostics;
 
 namespace A320_Cockpit.Infrastructure
 {
@@ -23,10 +13,8 @@ namespace A320_Cockpit.Infrastructure
     /// </summary>
     public class MainLoop
     {
-        private readonly ILogHandlerAdapter logger;
-        private readonly System.Windows.Forms.Timer timerUpdateVars;
-        private readonly ICanBus canBus;
-        private readonly MsfsConnector msfsConnector;
+        private readonly ILogHandler logger;
+        private readonly ISimulatorHandler simulatorHandler;
 
         private readonly A32NX_FcuDisplayUpdater a32NX_FcuDisplayUpdater;
         private readonly A32NX_ElectricityUpdater a32NX_ElectricityUpdater;
@@ -37,18 +25,13 @@ namespace A320_Cockpit.Infrastructure
         /// </summary>
         /// <param name="canBus"></param>
         /// <param name="simConnector"></param>
-        public MainLoop(ApplicationTray applicationTray, ICanBus canBus, MsfsConnector msfsConnector, ILogHandlerAdapter logger)
+        public MainLoop(ApplicationTray applicationTray, ICanBus canBus, ISimulatorHandler simulatorHandler, ILogHandler logger)
         {
-            this.canBus = canBus;
-            this.msfsConnector = msfsConnector;
+            this.simulatorHandler = simulatorHandler;
             this.logger = logger;
-            a32NX_FcuDisplayUpdater = new(msfsConnector, canBus, new SystemTrayFramePresenter(applicationTray, logger), logger);
-            a32NX_ElectricityUpdater = new(msfsConnector, canBus, new SystemTrayFramePresenter(applicationTray, logger), logger);
-            a32NX_LightIndicatorsUpdater = new(msfsConnector, canBus, new SystemTrayFramePresenter(applicationTray, logger), logger);
-
-
-            timerUpdateVars = new() { Interval = 1 };
-            timerUpdateVars.Tick += TimerUpdateVars_Tick;
+            a32NX_FcuDisplayUpdater = new(simulatorHandler, canBus, new SystemTrayFramePresenter(applicationTray, logger), logger);
+            a32NX_ElectricityUpdater = new(simulatorHandler, canBus, new SystemTrayFramePresenter(applicationTray, logger), logger);
+            a32NX_LightIndicatorsUpdater = new(simulatorHandler, canBus, new SystemTrayFramePresenter(applicationTray, logger), logger);
         }
 
         /// <summary>
@@ -56,32 +39,35 @@ namespace A320_Cockpit.Infrastructure
         /// </summary>
         public void Start()
         {
-            timerUpdateVars.Start();
-        }
-
-        /// <summary>
-        /// La loop d'execution, mise à jour de toutes les variables
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void TimerUpdateVars_Tick(object? sender, EventArgs e)
-        {
-            if (msfsConnector.IsOpen)
+            new Thread(() =>
             {
-                try
+                while(true)
                 {
-                    msfsConnector.StartTransaction();
-                    a32NX_FcuDisplayUpdater.Update();
-                    a32NX_ElectricityUpdater.Update();
-                    a32NX_LightIndicatorsUpdater.Update();
-                    msfsConnector.StopTransaction();
-                } catch (Exception ex)
-                {
-                    LogHandlerFactory.Get().Error(ex);
+                    if (simulatorHandler.IsOpen)
+                    {
+                        try
+                        {
+                            simulatorHandler.StartTransaction();
+
+                            a32NX_FcuDisplayUpdater.Update();
+                            a32NX_ElectricityUpdater.Update();
+                            a32NX_LightIndicatorsUpdater.Update();
+
+                            simulatorHandler.StopTransaction();
+                        }
+                        catch (Exception ex)
+                        {
+                            logger.Error(ex);
+                        }
+
+                    }
+                    else
+                    {
+                        Thread.Sleep(1);
+                    }
                 }
                 
-            }
+            }).Start();
         }
-
     }
 }

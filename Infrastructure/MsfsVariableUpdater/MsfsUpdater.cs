@@ -1,5 +1,5 @@
 ﻿using A320_Cockpit.Adapter.LogHandler;
-using A320_Cockpit.Adapter.MsfsConnectorAdapter;
+using A320_Cockpit.Adapter.SimulatorHandler;
 using A320_Cockpit.Domain.BusSend.UseCase;
 using A320_Cockpit.Domain.CanBus;
 using A320_Cockpit.Domain.Connexion.SimConnector;
@@ -13,21 +13,21 @@ namespace A320_Cockpit.Infrastructure.MsfsVariableUpdater
     /// <typeparam name="P">Le type du payload</typeparam>
     public abstract class MsfsUpdater<T, P> where T : Enum
     {
-        protected readonly MsfsConnector simConnector;
+        protected readonly ISimulatorHandler simulatorHandler;
         protected readonly ICanBus canBus;
         protected ISendFramePresenter presenter;
-        protected readonly ILogHandlerAdapter logger;
+        protected readonly ILogHandler logger;
 
         /// <summary>
         /// Création du système de mise à jours des variables d'un avion de MSFS
         /// </summary>
-        /// <param name="simConnector">Le connecteur MSFS</param>
+        /// <param name="simulatorHandler">Le connecteur MSFS</param>
         /// <param name="canBus">Le CAN Bus</param>
         /// <param name="presenter">Le présenteur de sortie</param>
         /// <param name="logger">Le logger de l'application</param>
-        public MsfsUpdater(MsfsConnector simConnector, ICanBus canBus, ISendFramePresenter presenter, ILogHandlerAdapter logger)
+        public MsfsUpdater(ISimulatorHandler simulatorHandler, ICanBus canBus, ISendFramePresenter presenter, ILogHandler logger)
         {
-            this.simConnector = simConnector;
+            this.simulatorHandler = simulatorHandler;
             this.canBus = canBus;
             this.presenter = presenter;
             this.logger = logger;

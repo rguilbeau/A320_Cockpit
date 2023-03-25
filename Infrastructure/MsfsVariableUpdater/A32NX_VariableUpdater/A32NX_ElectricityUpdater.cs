@@ -1,5 +1,5 @@
 ﻿using A320_Cockpit.Adapter.LogHandler;
-using A320_Cockpit.Adapter.MsfsConnectorAdapter;
+using A320_Cockpit.Adapter.SimulatorHandler;
 using A320_Cockpit.Domain.BusSend.Payload;
 using A320_Cockpit.Domain.BusSend.UseCase;
 using A320_Cockpit.Domain.CanBus;
@@ -25,10 +25,10 @@ namespace A320_Cockpit.Infrastructure.MsfsVariableUpdater.A32NX_VariableUpdater
         /// <summary>
         /// Création du système de mise à jours des variables de l'électricité depuis l'A32NX
         /// </summary>
-        /// <param name="simConnector">Le connecteur MSFS</param>
+        /// <param name="simulatorHandler">Le connecteur MSFS</param>
         /// <param name="canBus">Le CAN Bus</param>
         /// <param name="presenter">Le présenteur de sortie</param>
-        public A32NX_ElectricityUpdater(MsfsConnector simConnector, ICanBus can, ISendFramePresenter presenter, ILogHandlerAdapter logger) : base(simConnector, can, presenter, logger)
+        public A32NX_ElectricityUpdater(ISimulatorHandler simulatorHandler, ICanBus can, ISendFramePresenter presenter, ILogHandler logger) : base(simulatorHandler, can, presenter, logger)
         {
             electricityPayload = new();
         }
@@ -52,7 +52,7 @@ namespace A320_Cockpit.Infrastructure.MsfsVariableUpdater.A32NX_VariableUpdater
             switch (update)
             {
                 case Updates.ALL:
-                    simConnector.Update(A32NX_Variables.Eletricity.IsElectricityAc1BusPowered);
+                    simulatorHandler.Read(A32NX_Variables.Eletricity.IsElectricityAc1BusPowered);
                     break;
             }
         }

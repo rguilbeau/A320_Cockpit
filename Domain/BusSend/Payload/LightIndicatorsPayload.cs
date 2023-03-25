@@ -13,7 +13,7 @@
         /// </summary>
         public byte FcuDisplayBrightness { get => fcuDisplayBrightness; set => fcuDisplayBrightness = value; }
         /// <summary>
-        /// Le test des indicateurs est sur ON (affiche toutes les limères du cockpit pour checker l'état)
+        /// Le test des indicateurs est sur ON (affiche toutes les limières du cockpit pour checker l'état)
         /// </summary>
         public bool TestIndicatorsLight { get => testIndicatorsLight; set => testIndicatorsLight = value; }
     }

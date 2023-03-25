@@ -13,14 +13,14 @@ namespace A320_Cockpit.Infrastructure.Presenter.ConnexionPresenter
     {
         private ApplicationTray applicationTray;
         private List<Exception> errors;
-        private ILogHandlerAdapter logger;
+        private ILogHandler logger;
 
         /// <summary>
         /// Création du présenteur dédié à la connexion pour le system tray
         /// </summary>
         /// <param name="applicationTray">L'application system tray</param>
         /// <param name="logger">Le logger</param>
-        public SystemTrayConnexionPresenter(ApplicationTray applicationTray, ILogHandlerAdapter logger)
+        public SystemTrayConnexionPresenter(ApplicationTray applicationTray, ILogHandler logger)
         {
             errors = new List<Exception>();
             this.applicationTray= applicationTray;
@@ -52,7 +52,6 @@ namespace A320_Cockpit.Infrastructure.Presenter.ConnexionPresenter
         public void Present()
         {
             applicationTray.ChangeStatus(errors.Count == 0 ? TrayStatus.SUCCESS : TrayStatus.FAILURE);
-            logger.Info("coucou!!!!!!");
             if(errors.Count > 0) 
             {
                 foreach(Exception e in errors)

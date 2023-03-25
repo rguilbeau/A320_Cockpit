@@ -11,7 +11,7 @@ namespace A320_Cockpit.Adapter.LogHandler.SirelogAdapter
     /// <summary>
     /// Système de log de l'application
     /// </summary>
-    public class SirelogHandler : ILogHandlerAdapter
+    public class SirelogAdapter : ILogHandler
     {
         private readonly string logPath;
         private readonly Logger logger;
@@ -20,13 +20,13 @@ namespace A320_Cockpit.Adapter.LogHandler.SirelogAdapter
         /// Création du logger de l'application
         /// </summary>
         /// <param name="logPath"></param>
-        public SirelogHandler(string logPath)
+        public SirelogAdapter(string logPath)
         {
             this.logPath = logPath;
             logger = new LoggerConfiguration()
                 .WriteTo.File(
                     new Serilog.Formatting.Display.MessageTemplateTextFormatter(
-                        "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{Exception}"),
+                        "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{Exception}{NewLine}"),
                         logPath
                     )
                 .CreateLogger();
