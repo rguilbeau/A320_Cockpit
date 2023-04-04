@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace A320_Cockpit.Domain.Repository.Payload.Glareshield
 {
-    public interface IFcuRepository : IPayloadRepository<Fcu>
+    public interface IFcuGlareshieldIndicators : IPayloadRepository<GlareshieldIndicators>
     {
     }
 }

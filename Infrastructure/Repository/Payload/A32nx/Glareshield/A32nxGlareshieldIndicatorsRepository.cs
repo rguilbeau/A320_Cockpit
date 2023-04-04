@@ -11,16 +11,16 @@ using System.Threading.Tasks;
 
 namespace A320_Cockpit.Infrastructure.Repository.Payload.A32nx.Glareshield
 {
-    public class A32nxFcuRepository : A32nxPayloadRepository<Fcu>, IFcuRepository
+    public class A32nxGlareshieldIndicatorsRepository : A32nxPayloadRepository<GlareshieldIndicators>, IFcuGlareshieldIndicators
     {
 
-        private static readonly Fcu fcu = new();
+        private static readonly GlareshieldIndicators glareshieldIndicators = new();
 
-        public A32nxFcuRepository(MsfsSimulatorRepository msfs) : base(msfs)
+        public A32nxGlareshieldIndicatorsRepository(MsfsSimulatorRepository msfs) : base(msfs)
         {
         }
 
-        protected override Fcu Payload => fcu;
+        protected override GlareshieldIndicators Payload => glareshieldIndicators;
 
         protected override void Refresh(CockpitEvent? e)
         {
@@ -63,13 +63,13 @@ namespace A320_Cockpit.Infrastructure.Repository.Payload.A32nx.Glareshield
 
         protected override void UpdateEntity()
         {
-            fcu.Ap1 = A32nxVariables.Autopilot1Active.Value;
-            fcu.Ap2 = A32nxVariables.Autopilot2Active.Value;
-            fcu.Athr = A32nxVariables.AutoThrustStatus.Value != 0;
-            fcu.Loc = A32nxVariables.LocModeActive.Value;
-            fcu.Exped = A32nxVariables.ExpedModeActive.Value;
-            fcu.Appr = A32nxVariables.ApprModeActive.Value;
-            fcu.IsPowerOn = A32nxVariables.IsElectricityAc1BusPowered.Value;
+            glareshieldIndicators.FcuAp1 = A32nxVariables.Autopilot1Active.Value;
+            glareshieldIndicators.FcuAp2 = A32nxVariables.Autopilot2Active.Value;
+            glareshieldIndicators.FcuAthr = A32nxVariables.AutoThrustStatus.Value != 0;
+            glareshieldIndicators.FcuLoc = A32nxVariables.LocModeActive.Value;
+            glareshieldIndicators.FcuExped = A32nxVariables.ExpedModeActive.Value;
+            glareshieldIndicators.FcuAppr = A32nxVariables.ApprModeActive.Value;
+            glareshieldIndicators.FcuIsPowerOn = A32nxVariables.IsElectricityAc1BusPowered.Value;
         }
     }
 }

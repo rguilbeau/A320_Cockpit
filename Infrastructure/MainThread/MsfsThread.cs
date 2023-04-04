@@ -35,7 +35,7 @@ namespace A320_Cockpit.Infrastructure.MainThread
             sendUseCases = new()
             {
                 new SendFcuDisplay(cockpitRepository, presenter, new A32nxFcuDisplayRepository(msfs)),
-                new SendFcu(cockpitRepository, presenter, new A32nxFcuRepository(msfs)),
+                new SendGlareshieldIndicators(cockpitRepository, presenter, new A32nxGlareshieldIndicatorsRepository(msfs)),
                 new SendBrightness(cockpitRepository, presenter, new A32nxBrightnessRepository(msfs)),
                 new SendLightIndicator(cockpitRepository, presenter, new A32nxLightIndicatorsRepository(msfs))
             };
