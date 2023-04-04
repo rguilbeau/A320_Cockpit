@@ -10,5 +10,7 @@ namespace A320_Cockpit.Infrastructure.MainThread
     {
         public void Start();
 
+        public void Stop();
+
     }
 }

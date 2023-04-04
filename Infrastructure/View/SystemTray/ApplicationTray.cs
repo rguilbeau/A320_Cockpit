@@ -107,6 +107,7 @@ namespace A320_Cockpit.Infrastructure.View.SystemTray
         public void Exit_OnClick(object? sender, EventArgs e)
         {
             trayIcon.Visible = false;
+            mainThread.Stop();
             Dispose();
             Application.Exit();
         }

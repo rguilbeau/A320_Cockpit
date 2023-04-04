@@ -27,3 +27,4 @@ C:\Users\Romai\projets\A320\A320_Cockpit\obj\x64\Debug\net6.0-windows\refint\A32
 C:\Users\Romai\projets\A320\A320_Cockpit\obj\x64\Debug\net6.0-windows\A320_Cockpit.pdb
 C:\Users\Romai\projets\A320\A320_Cockpit\obj\x64\Debug\net6.0-windows\A320_Cockpit.genruntimeconfig.cache
 C:\Users\Romai\projets\A320\A320_Cockpit\obj\x64\Debug\net6.0-windows\ref\A320_Cockpit.dll
+C:\Users\Romai\projets\A320\A320_Cockpit\bin\x64\Debug\net6.0-windows\SimConnect.dll

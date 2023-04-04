@@ -25,7 +25,7 @@ namespace A320_Cockpit.Infrastructure.MainThread
         private readonly MsfsSimulatorRepository msfs;
         private readonly ICockpitRepository cockpitRepository;
         private readonly ISendPresenter presenter;
-
+        private bool running = false;
         public MsfsThread(MsfsSimulatorRepository msfs, ILogHandler logger, ISendPresenter presenter, ICockpitRepository cockpitRepository)
         {
             this.msfs = msfs;
@@ -34,12 +34,23 @@ namespace A320_Cockpit.Infrastructure.MainThread
             this.cockpitRepository = cockpitRepository;
         }
 
+        public void Stop()
+        {
+            running = false;
+        }
+
         public void Start() 
         {
+            running = true;
             new Thread(() =>
             {
                 while(true)
                 {
+                    if(!running)
+                    {
+                        break;
+                    }
+
                     if(!msfs.IsOpen)
                     {
                         Thread.Sleep(1000);
