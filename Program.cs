@@ -1,3 +1,6 @@
+using A320_Cockpit.Adaptation.Log;
+using A320_Cockpit.Infrastructure.View.SystemTray;
+
 namespace A320_Cockpit
 {
     internal static class Program
@@ -8,27 +11,22 @@ namespace A320_Cockpit
         [STAThread]
         static void Main()
         {
-            // To customize application configuration such as set high DPI settings or default font,
-            // see https://aka.ms/applicationconfiguration.
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             ApplicationConfiguration.Initialize();
-            Application.Run(new Form1());
+            Application.Run(new ApplicationTray());
+        }
 
-            //ICockpitRepository cockpitRepository = new SerialBusCockpitRepository();
-           // IReadingPresenter presenter = new TraySendMessagePresenter();
-
-            //List<AReadingUseCase> useCaseReaders = new()
-            //{
-            //    new ReadingFcuDisplay(cockpitRepository, presenter, null)
-            //};
-
-            //while (true)
-            //{
-             //   foreach(AReadingUseCase useCaseReader in useCaseReaders)
-              //  {
-              //      useCaseReader.Exec();
-               // }
-           // }
-
+        /// <summary>
+        /// Log les exception non gérées
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            LogFactory.Get().Error(new Exception("Unhandled exception", (Exception)e.ExceptionObject));
+            {
+                Application.Exit();
+            }
         }
     }
 }

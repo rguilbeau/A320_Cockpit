@@ -1,4 +1,5 @@
-﻿using A320_Cockpit.Adapter.Log.Sirelog;
+﻿
+using A320_Cockpit.Adaptation.Log.Sirelog;
 
 namespace A320_Cockpit.Adaptation.Log
 {

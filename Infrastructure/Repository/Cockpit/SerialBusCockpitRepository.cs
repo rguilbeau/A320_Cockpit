@@ -12,7 +12,7 @@ namespace A320_Cockpit.Infrastructure.Repository.Cockpit
     public class SerialBusCockpitRepository : ICockpitRepository
     {
 
-        private ICanbus canbus;
+        private readonly ICanbus canbus;
 
         public SerialBusCockpitRepository(ICanbus canbus)
         {

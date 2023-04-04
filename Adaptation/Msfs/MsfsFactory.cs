@@ -21,10 +21,7 @@ namespace A320_Cockpit.Adaptation.Msfs
         /// <returns></returns>
         public static IMsfs Get()
         {
-            if (msfs == null)
-            {
-                msfs = new MsfsWasmAdapter(new TypeConverter());
-            }
+            msfs ??= new MsfsWasmAdapter();
             return msfs;
         }
 

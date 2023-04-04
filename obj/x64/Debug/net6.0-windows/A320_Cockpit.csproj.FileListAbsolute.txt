@@ -16,7 +16,6 @@ C:\Users\Romai\projets\A320\A320_Cockpit\bin\x64\Debug\net6.0-windows\runtimes\u
 C:\Users\Romai\projets\A320\A320_Cockpit\bin\x64\Debug\net6.0-windows\runtimes\win\lib\net6.0\System.IO.Ports.dll
 C:\Users\Romai\projets\A320\A320_Cockpit\obj\x64\Debug\net6.0-windows\A320_Cockpit.csproj.AssemblyReference.cache
 C:\Users\Romai\projets\A320\A320_Cockpit\obj\x64\Debug\net6.0-windows\A320_Cockpit.AppResources.resources
-C:\Users\Romai\projets\A320\A320_Cockpit\obj\x64\Debug\net6.0-windows\A320_Cockpit.Form1.resources
 C:\Users\Romai\projets\A320\A320_Cockpit\obj\x64\Debug\net6.0-windows\A320_Cockpit.csproj.GenerateResource.cache
 C:\Users\Romai\projets\A320\A320_Cockpit\obj\x64\Debug\net6.0-windows\A320_Cockpit.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\Romai\projets\A320\A320_Cockpit\obj\x64\Debug\net6.0-windows\A320_Cockpit.AssemblyInfoInputs.cache

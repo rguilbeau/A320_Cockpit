@@ -106,7 +106,7 @@ namespace A320_Cockpit.Domain.Entity.Cockpit
         }
 
         /// <summary>
-        /// Converti une array de boolean en un décimale
+        /// Converti une array de boolean en une décimale
         /// </summary>
         /// <param name="bitArray">L'array de boolean à convertire</param>
         /// <returns></returns>

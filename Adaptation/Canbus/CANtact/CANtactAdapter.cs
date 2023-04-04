@@ -13,8 +13,6 @@ namespace A320_Cockpit.Adaptation.Canbus.CANtact
         private readonly int serialBaudRate;
         private readonly string canBaudRate;
 
-        //public event EventHandler<MessageRecievedEventArgs>? MessageReceivedEvent;
-
         /// <summary>
         /// Création d'une nouvelle connexion
         /// </summary>
@@ -28,7 +26,7 @@ namespace A320_Cockpit.Adaptation.Canbus.CANtact
             this.comPort = comPort;
             this.serialBaudRate = serialBaudRate;
             this.canBaudRate = canBaudRate;
-            this.serialPort.DataReceived += _serialPort_DataReceived;
+            this.serialPort.DataReceived += SerialPort_DataReceived;
         }
 
         /// <summary>
@@ -103,11 +101,11 @@ namespace A320_Cockpit.Adaptation.Canbus.CANtact
 
             try
             {
-                serialPort.DataReceived -= _serialPort_DataReceived;
+                serialPort.DataReceived -= SerialPort_DataReceived;
                 serialPort.Write("V\r");
                 string version = serialPort.ReadExisting();
                 isOk = version.Contains("cantact");
-                serialPort.DataReceived += _serialPort_DataReceived;
+                serialPort.DataReceived += SerialPort_DataReceived;
             }
             catch (Exception e)
             {
@@ -156,7 +154,7 @@ namespace A320_Cockpit.Adaptation.Canbus.CANtact
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void _serialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
+        private void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
             /*try
             {

@@ -22,7 +22,6 @@ namespace A320_Cockpit.Adaptation.Msfs.MsfsWasm
         private SimConnect? simConnect;
         private readonly List<string> registeredSimVars;
         private bool isOpen;
-        private readonly TypeConverter typeConverter;
         private bool isTransaction;
         private readonly List<string> transactionVariables;
 
@@ -38,14 +37,14 @@ namespace A320_Cockpit.Adaptation.Msfs.MsfsWasm
             public string value;
         };
 
-        // Structure to get the result of execute_calculator_code
+        // Structure d'une réponse de simconnect
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
         public struct Result
         {
             public double value;
         };
 
-        // Structure to get the result of execute_calculator_code
+        // Structure d'une erreur de simconnect
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
         public struct ResponseError
         {
@@ -70,12 +69,9 @@ namespace A320_Cockpit.Adaptation.Msfs.MsfsWasm
         /// <summary>
         /// Création d'une nouvelle connexion à SimConnect
         /// </summary>
-        /// <param name="simConnect">La librairie SimConnect fournis par Microsoft</param>
-        /// <param name="typeConverter">L'utilisataire de convertion des types des variables</param>
-        public MsfsWasmAdapter(TypeConverter typeConverter)
+        public MsfsWasmAdapter()
         {
             isOpen = false;
-            this.typeConverter = typeConverter;
             registeredSimVars = new();
             transactionVariables = new();
             isTransaction = false;
@@ -234,7 +230,6 @@ namespace A320_Cockpit.Adaptation.Msfs.MsfsWasm
         /// <exception cref="Exception"></exception>
         public void Read<T>(Lvar<T> lvar)
         {
-            //LogHandler.LogFactory.Get().Info("Read lvar " + lvar.Name);
             if (!isOpen || simConnect == null)
             {
                 throw new Exception("Unable to read LVar, SimConnect is closed");
@@ -249,18 +244,13 @@ namespace A320_Cockpit.Adaptation.Msfs.MsfsWasm
 
                 int definition = 0;
 
-                Stopwatch watch = new();
-                watch.Start();
-
                 asyncTask = new(definition, typeof(double));
 
                 simConnect.SetClientData((ID_CLIENT)0, (ID_DEFINITION)definition, SIMCONNECT_CLIENT_DATA_SET_FLAG.DEFAULT, 0, cmd);
 
-                int hint = 0;
                 while (!asyncTask.IsCompleted)
                 {
                     simConnect.ReceiveMessage();
-                    hint++;
                 }
 
                 if (asyncTask.Exception != null)
@@ -271,7 +261,7 @@ namespace A320_Cockpit.Adaptation.Msfs.MsfsWasm
                 }
                 else if (asyncTask.Value != null)
                 {
-                    lvar.Value = typeConverter.Convert<T>((double)asyncTask.Value);
+                    lvar.Value = TypeConverter.Convert<T>((double)asyncTask.Value);
                     asyncTask = null;
                 }
                 else
@@ -334,7 +324,7 @@ namespace A320_Cockpit.Adaptation.Msfs.MsfsWasm
                 }
                 else
                 {
-                    simVar.Value = typeConverter.Convert<T>((double)asyncTask.Value);
+                    simVar.Value = TypeConverter.Convert<T>((double)asyncTask.Value);
                     asyncTask = null;
                 }
             }
@@ -347,7 +337,6 @@ namespace A320_Cockpit.Adaptation.Msfs.MsfsWasm
         /// <param name="data"></param>
         private void SimConnect_OnRecvClientData(SimConnect sender, SIMCONNECT_RECV_CLIENT_DATA data)
         {
-            //LogHandler.LogFactory.Get().Info("SimConnect_OnRecvClientData");
             if (asyncTask != null)
             {
                 switch (data.dwRequestID)

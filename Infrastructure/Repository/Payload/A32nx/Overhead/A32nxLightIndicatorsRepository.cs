@@ -2,6 +2,7 @@
 using A320_Cockpit.Domain.Entity.Payload.Overhead;
 using A320_Cockpit.Domain.Enum;
 using A320_Cockpit.Domain.Repository.Payload.Overhead;
+using A320_Cockpit.Infrastructure.Repository.Simulator;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +16,7 @@ namespace A320_Cockpit.Infrastructure.Repository.Payload.A32nx.Overhead
 
         private static readonly LightIndicators lightIndicators = new();
 
-        public A32nxLightIndicatorsRepository(IMsfs msfs) : base(msfs)
+        public A32nxLightIndicatorsRepository(MsfsSimulatorRepository msfs) : base(msfs)
         {
         }
 

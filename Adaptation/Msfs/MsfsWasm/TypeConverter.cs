@@ -1,4 +1,4 @@
-﻿namespace A320_Cockpit.Adaptation.Msfs
+﻿namespace A320_Cockpit.Adaptation.Msfs.MsfsWasm
 {
     /// <summary>
     /// Utilitaire pour la version des valeurs recu de MSFS vers les variables
@@ -11,7 +11,7 @@
         /// <typeparam name="T">Le type de retour</typeparam>
         /// <param name="value"></param>
         /// <returns></returns>
-        public T? Convert<T>(double value)
+        public static T? Convert<T>(double value)
         {
             object? convertValue;
 

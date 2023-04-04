@@ -2,6 +2,7 @@
 using A320_Cockpit.Domain.Entity.Payload.Glareshield;
 using A320_Cockpit.Domain.Enum;
 using A320_Cockpit.Domain.Repository.Payload.Glareshield;
+using A320_Cockpit.Infrastructure.Repository.Simulator;
 using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ namespace A320_Cockpit.Infrastructure.Repository.Payload.A32nx.Glareshield
     {
         private static readonly FcuDisplay fcuDisplay = new();
 
-        public A32nxFcuDisplayRepository(IMsfs msfs) : base(msfs)
+        public A32nxFcuDisplayRepository(MsfsSimulatorRepository msfs) : base(msfs)
         {
         }
 
@@ -25,7 +26,6 @@ namespace A320_Cockpit.Infrastructure.Repository.Payload.A32nx.Glareshield
         protected override void Refresh(CockpitEvent? e)
         {
             bool all = e == null;
-            msfs.StartTransaction();
 
             if (all || e == CockpitEvent.FCU_SPEED_MACH)
             {
@@ -114,8 +114,6 @@ namespace A320_Cockpit.Infrastructure.Repository.Payload.A32nx.Glareshield
             {
                 msfs.Read(A32nxVariables.IsElectricityAc1BusPowered);
             }
-
-            msfs.StopTransaction();
         }
 
         protected override void UpdateEntity()

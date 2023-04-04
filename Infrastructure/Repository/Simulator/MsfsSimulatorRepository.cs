@@ -14,7 +14,7 @@ namespace A320_Cockpit.Infrastructure.Repository.Simulator
     public class MsfsSimulatorRepository : ISimulatorRepository
     {
 
-        private IMsfs msfs;
+        private readonly IMsfs msfs;
 
         public MsfsSimulatorRepository(IMsfs msfs)
         {
@@ -26,6 +26,31 @@ namespace A320_Cockpit.Infrastructure.Repository.Simulator
         public void Open()
         {
             msfs.Open();
+        }
+
+        public void Close()
+        {
+            msfs.Close();
+        }
+
+        public void Read<T>(Lvar<T> variable)
+        {
+            msfs.Read(variable);
+        }
+
+        public void Read<T>(SimVar<T> variable)
+        {
+            msfs.Read(variable);
+        }
+
+        public void StartTransaction()
+        {
+            msfs.StartTransaction();
+        }
+
+        public void StopTransaction()
+        {
+            msfs.StopTransaction();
         }
     }
 }

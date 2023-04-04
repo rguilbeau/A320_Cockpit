@@ -16,11 +16,7 @@ namespace A320_Cockpit.Adaptation.Canbus
         /// <returns></returns>
         public static ICanbus Get()
         {
-            if (instance == null)
-            {
-                instance = new CANtactAdapter(new System.IO.Ports.SerialPort(), "COM5", 9600, "125Kbit");
-            }
-
+            instance ??= new CANtactAdapter(new System.IO.Ports.SerialPort(), "COM5", 9600, "125Kbit");
             return instance;
         }
     }

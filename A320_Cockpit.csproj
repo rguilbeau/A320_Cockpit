@@ -42,11 +42,4 @@
     </None>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Domain\Entity\Payload\Brightness\" />
-    <Folder Include="Domain\Repository\Payload\Brightness\" />
-    <Folder Include="Domain\UseCase\Send\SendPayload\Brightness\" />
-    <Folder Include="Infrastructure\Repository\Payload\A32nx\Brightness\" />
-  </ItemGroup>
-
 </Project>

@@ -13,7 +13,7 @@ namespace A320_Cockpit.Domain.UseCase.Send
         private readonly ICockpitRepository cockpitRepository;
 
         private readonly static Dictionary<int, Frame> frameHistory = new();
-        private ISendPresenter presenter;
+        private readonly ISendPresenter presenter;
 
         public SendUseCase(ICockpitRepository cockpitRepository, ISendPresenter presenter)
         {

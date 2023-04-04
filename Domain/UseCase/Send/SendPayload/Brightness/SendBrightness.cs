@@ -13,7 +13,7 @@ namespace A320_Cockpit.Domain.UseCase.Send.SendPayload.Brightness
     public class SendBrightness : SendUseCase
     {
 
-        private IBrightnessRepository brightnessRepository;
+        private readonly IBrightnessRepository brightnessRepository;
 
         public SendBrightness(ICockpitRepository cockpitRepository, ISendPresenter presenter, IBrightnessRepository brightnessRepository) : base(cockpitRepository, presenter)
         {

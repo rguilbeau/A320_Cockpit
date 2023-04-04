@@ -14,7 +14,7 @@ namespace A320_Cockpit.Domain.UseCase.Send.SendPayload.Overhead
     public class SendLightIndicator : SendUseCase
     {
 
-        private ILightIndicatorsRepository lightIndicatorsRepository;
+        private readonly ILightIndicatorsRepository lightIndicatorsRepository;
 
         public SendLightIndicator(ICockpitRepository cockpitRepository, ISendPresenter presenter, ILightIndicatorsRepository lightIndicatorsRepository) : base(cockpitRepository, presenter)
         {

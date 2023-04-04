@@ -1,6 +1,7 @@
 ﻿using A320_Cockpit.Adaptation.Msfs;
 using A320_Cockpit.Domain.Enum;
 using A320_Cockpit.Domain.Repository.Payload;
+using A320_Cockpit.Infrastructure.Repository.Simulator;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,9 +14,9 @@ namespace A320_Cockpit.Infrastructure.Repository.Payload.A32nx
     public abstract class A32nxPayloadRepository<T>
     {
 
-        protected IMsfs msfs;
+        protected MsfsSimulatorRepository msfs;
 
-        public A32nxPayloadRepository(IMsfs msfs)
+        public A32nxPayloadRepository(MsfsSimulatorRepository msfs)
         {
             this.msfs = msfs;
         }

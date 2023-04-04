@@ -14,7 +14,7 @@ namespace A320_Cockpit.Domain.UseCase.Send.SendPayload.Glareshield
     public class SendFcuDisplay : SendUseCase
     {
 
-        private IFcuDisplayRepository repository;
+        private readonly IFcuDisplayRepository repository;
 
         public SendFcuDisplay(ICockpitRepository cockpitRepository, ISendPresenter presenter, IFcuDisplayRepository repository) : base(cockpitRepository, presenter)
         {
@@ -66,15 +66,15 @@ namespace A320_Cockpit.Domain.UseCase.Send.SendPayload.Glareshield
             frame.Data[4] = (byte)(altitude > byte.MaxValue ? byte.MaxValue : altitude);
             frame.Data[5] = (byte)(altitude > byte.MaxValue ? altitude - byte.MaxValue : 0);
 
-            double verticalSpeedForcePositive = Math.Abs(fcuDisplay.VerticalSpeed);
+            double verticalSpeedPositive = Math.Abs(fcuDisplay.VerticalSpeed);
             if (fcuDisplay.IsFpa)
             {
-                verticalSpeedForcePositive = Math.Round(verticalSpeedForcePositive, 1);
-                frame.Data[6] = (byte)(verticalSpeedForcePositive * 10);
+                verticalSpeedPositive = Math.Round(verticalSpeedPositive, 1);
+                frame.Data[6] = (byte)(verticalSpeedPositive * 10);
             }
             else
             {
-                frame.Data[6] = (byte)(verticalSpeedForcePositive / 100);
+                frame.Data[6] = (byte)(verticalSpeedPositive / 100);
             }
 
             bool[] hiddens = new bool[8];
@@ -85,7 +85,7 @@ namespace A320_Cockpit.Domain.UseCase.Send.SendPayload.Glareshield
             hiddens[4] = false; //not used
             hiddens[5] = false; //not used
             hiddens[6] = false; //not used
-            hiddens[7] = false; //not used
+            hiddens[7] = fcuDisplay.IsPowerOn;
 
             frame.Data[7] = Frame.BitArrayToByte(hiddens);
 

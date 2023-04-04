@@ -2,6 +2,7 @@
 using A320_Cockpit.Domain.Entity.Payload.Brightness;
 using A320_Cockpit.Domain.Enum;
 using A320_Cockpit.Domain.Repository.Payload.Brightness;
+using A320_Cockpit.Infrastructure.Repository.Simulator;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,7 @@ namespace A320_Cockpit.Infrastructure.Repository.Payload.A32nx.Brightness
     {
         private static readonly BrightnessCockpit brightness = new ();
 
-        public A32nxBrightnessRepository(IMsfs msfs) : base(msfs)
+        public A32nxBrightnessRepository(MsfsSimulatorRepository msfs) : base(msfs)
         {
         }
 
