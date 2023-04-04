@@ -9,7 +9,7 @@ namespace A320_Cockpit.Domain.Entity.Payload.Brightness
     public class BrightnessCockpit : PayloadEntity
     {
 
-        private const int ID = 0x064;
+        private const int ID = 0x002;
         private const int SIZE = 1;
         private byte fcu = 100;
 

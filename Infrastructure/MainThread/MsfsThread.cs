@@ -23,15 +23,22 @@ namespace A320_Cockpit.Infrastructure.MainThread
 
         private readonly ILogHandler logger;
         private readonly MsfsSimulatorRepository msfs;
-        private readonly ICockpitRepository cockpitRepository;
-        private readonly ISendPresenter presenter;
         private bool running = false;
+
+        private readonly List<SendUseCase> sendUseCases;
+
         public MsfsThread(MsfsSimulatorRepository msfs, ILogHandler logger, ISendPresenter presenter, ICockpitRepository cockpitRepository)
         {
             this.msfs = msfs;
             this.logger = logger;
-            this.presenter = presenter;
-            this.cockpitRepository = cockpitRepository;
+
+            sendUseCases = new()
+            {
+                new SendFcuDisplay(cockpitRepository, presenter, new A32nxFcuDisplayRepository(msfs)),
+                new SendFcu(cockpitRepository, presenter, new A32nxFcuRepository(msfs)),
+                new SendBrightness(cockpitRepository, presenter, new A32nxBrightnessRepository(msfs)),
+                new SendLightIndicator(cockpitRepository, presenter, new A32nxLightIndicatorsRepository(msfs))
+            };
         }
 
         public void Stop()
@@ -60,9 +67,10 @@ namespace A320_Cockpit.Infrastructure.MainThread
                         {
                             msfs.StartTransaction();
 
-                            new SendFcuDisplay(cockpitRepository, presenter, new A32nxFcuDisplayRepository(msfs)).Exec();
-                            new SendBrightness(cockpitRepository, presenter, new A32nxBrightnessRepository(msfs)).Exec();
-                            new SendLightIndicator(cockpitRepository, presenter, new A32nxLightIndicatorsRepository(msfs)).Exec();
+                            foreach(SendUseCase sendUseCase in sendUseCases)
+                            {
+                                sendUseCase.Exec();
+                            }
 
                             msfs.StopTransaction();
                         } catch(Exception ex)

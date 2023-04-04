@@ -56,6 +56,7 @@ namespace A320_Cockpit.Adaptation.Log.Sirelog
         public void Error(Exception e)
         {
             logger.Error(e, string.Empty);
+            Console.WriteLine(e);
         }
 
         /// <summary>

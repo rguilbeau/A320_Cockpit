@@ -11,7 +11,7 @@ namespace A320_Cockpit.Domain.Entity.Payload.Glareshield
     /// </summary>
     public class FcuDisplay : PayloadEntity
     {
-        private const int ID = 0x064;
+        private const int ID = 0x001;
         private const int SIZE = 8;
         private double speed = 0;
         private short heading = 0;

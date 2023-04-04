@@ -11,7 +11,7 @@ namespace A320_Cockpit.Domain.Entity.Payload.Overhead
     /// </summary>
     public class LightIndicators : PayloadEntity
     {
-        private const int ID = 0x0C8;
+        private const int ID = 0x003;
         private const int SIZE = 1;
         private bool testIndicatorsLight = false;
 

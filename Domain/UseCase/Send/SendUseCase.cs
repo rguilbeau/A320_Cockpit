@@ -25,7 +25,7 @@ namespace A320_Cockpit.Domain.UseCase.Send
         public void Exec()
         {
             Frame frame = BuildFrame();
-            bool alreadySent = !frameHistory.ContainsKey(frame.Id) && frame.Equals(frameHistory[frame.Id]);
+            bool alreadySent = frameHistory.ContainsKey(frame.Id) && frame.Equals(frameHistory[frame.Id]);
             presenter.IsSent = false;
 
             if (!alreadySent)

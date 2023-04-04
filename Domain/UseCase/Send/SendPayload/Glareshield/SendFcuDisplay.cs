@@ -1,5 +1,6 @@
 ﻿using A320_Cockpit.Domain.Entity.Cockpit;
 using A320_Cockpit.Domain.Entity.Payload.Glareshield;
+using A320_Cockpit.Domain.Enum;
 using A320_Cockpit.Domain.Repository.Cockpit;
 using A320_Cockpit.Domain.Repository.Payload;
 using A320_Cockpit.Domain.Repository.Payload.Glareshield;

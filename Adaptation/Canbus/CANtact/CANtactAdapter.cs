@@ -135,7 +135,7 @@ namespace A320_Cockpit.Adaptation.Canbus.CANtact
 
             if (serialPort.IsOpen)
             {
-                string canFrameData = "t";
+                string canFrameData = "";
                 canFrameData += frame.Id.ToString("X").PadLeft(3, '0');
                 canFrameData += frame.Size.ToString();
 
@@ -144,7 +144,8 @@ namespace A320_Cockpit.Adaptation.Canbus.CANtact
                     canFrameData += value.ToString("X").PadLeft(2);
                 }
 
-                serialPort.Write(canFrameData);
+                serialPort.Write("t" + canFrameData);
+                Console.WriteLine(frame.ToString());
                 serialPort.Write("\r");
             }
         }

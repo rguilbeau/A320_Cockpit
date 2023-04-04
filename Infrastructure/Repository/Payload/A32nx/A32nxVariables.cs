@@ -35,6 +35,16 @@ namespace A320_Cockpit.Infrastructure.Repository.Payload.A32nx
         public static readonly Lvar<bool> VerticalSpeedManaged = new("A32NX_FCU_VS_MANAGED");
 
         //
+        // FCU
+        //
+        public static readonly Lvar<bool> LocModeActive = new("A32NX_FCU_LOC_MODE_ACTIVE");
+        public static readonly Lvar<bool> ExpedModeActive = new("A32NX_FMA_EXPEDITE_MODE");
+        public static readonly Lvar<bool> ApprModeActive = new("A32NX_FCU_APPR_MODE_ACTIVE");
+        public static readonly Lvar<bool> Autopilot1Active = new("A32NX_AUTOPILOT_1_ACTIVE");
+        public static readonly Lvar<bool> Autopilot2Active = new("A32NX_AUTOPILOT_2_ACTIVE");
+        public static readonly Lvar<short> AutoThrustStatus = new("A32NX_AUTOTHRUST_STATUS");
+
+        //
         // Over head panel
         //
         public static readonly Lvar<short> LightIndicatorStatus = new("A32NX_OVHD_INTLT_ANN");

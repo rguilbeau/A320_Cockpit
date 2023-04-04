@@ -11,6 +11,7 @@ namespace A320_Cockpit
         [STAThread]
         static void Main()
         {
+            AllocConsole();
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             ApplicationConfiguration.Initialize();
             Application.Run(new ApplicationTray());
@@ -28,5 +29,8 @@ namespace A320_Cockpit
                 Application.Exit();
             }
         }
+
+        [System.Runtime.InteropServices.DllImport("kernel32.dll")]
+        private static extern bool AllocConsole();
     }
 }
