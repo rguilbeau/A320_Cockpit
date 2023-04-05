@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace A320_Cockpit.Domain.Repository.Payload.Overhead
 {
+    /// <summary>
+    /// Repository pour la mise à jour et la récupération de l'entité du contrôle des LED témoins (boutons) du cockpit
+    /// </summary>
     public interface ILightIndicatorsRepository : IPayloadRepository<LightIndicators>
     {
     }
