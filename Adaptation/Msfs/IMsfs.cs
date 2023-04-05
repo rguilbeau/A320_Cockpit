@@ -37,8 +37,14 @@ namespace A320_Cockpit.Adaptation.Msfs
         /// </summary>
         public void StopTransaction();
 
+        /// <summary>
+        /// Retourne si la connexion est ouverte
+        /// </summary>
         public bool IsOpen { get; }
 
+        /// <summary>
+        /// Ouvre une connexion
+        /// </summary>
         public void Open();
 
     }

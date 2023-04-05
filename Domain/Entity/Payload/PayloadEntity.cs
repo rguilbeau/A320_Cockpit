@@ -12,11 +12,11 @@ namespace A320_Cockpit.Domain.Entity.Payload
     public abstract class PayloadEntity
     {
         /// <summary>
-        /// Retourne l'ID de la frame
+        /// L'id de la frame
         /// </summary>
         public abstract int Id { get; }
         /// <summary>
-        /// Retourne la taille de la frame
+        /// La taille de la frame
         /// </summary>
         public abstract int Size { get; }
     }

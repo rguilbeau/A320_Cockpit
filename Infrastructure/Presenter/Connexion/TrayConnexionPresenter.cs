@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace A320_Cockpit.Infrastructure.Presenter.Connexion
 {
+    /// <summary>
+    /// Présenteur dédié à la connexion pour le system tray
+    /// </summary>
     public class TrayConnexionPresenter : IConnexionPresenter
     {
         private readonly ApplicationTray applicationTray;
@@ -16,7 +19,7 @@ namespace A320_Cockpit.Infrastructure.Presenter.Connexion
         private readonly ILogHandler logger;
 
         /// <summary>
-        /// Création du présenteur dédié à la connexion pour le system tray
+        /// Création du présenteur
         /// </summary>
         /// <param name="applicationTray">L'application system tray</param>
         /// <param name="logger">Le logger</param>

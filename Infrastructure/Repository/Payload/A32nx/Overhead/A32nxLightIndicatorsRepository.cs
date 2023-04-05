@@ -11,17 +11,31 @@ using System.Threading.Tasks;
 
 namespace A320_Cockpit.Infrastructure.Repository.Payload.A32nx.Overhead
 {
+    /// <summary>
+    /// Repository pour la mise à jour et la récupération de l'entité du contrôle des LED témoins (boutons) du cockpit
+    /// </summary>
     public class A32nxLightIndicatorsRepository : A32nxPayloadRepository<LightIndicators>, ILightIndicatorsRepository
     {
-
         private static readonly LightIndicators lightIndicators = new();
 
+        /// <summary>
+        /// Création du repository
+        /// </summary>
+        /// <param name="msfs"></param>
         public A32nxLightIndicatorsRepository(MsfsSimulatorRepository msfs) : base(msfs)
         {
         }
 
+        /// <summary>
+        /// Retourne l'entité LightIndicators
+        /// </summary>
         protected override LightIndicators Payload => lightIndicators;
 
+        /// <summary>
+        /// Met à jour les valeurs des variables MSFS (LVar, SimVar...)
+        /// Si en event est passé, on ne met à jour que les varibales susceptibles d'avoir été modifiées
+        /// </summary>
+        /// <param name="e"></param>
         protected override void Refresh(CockpitEvent? e)
         {
             bool all = e == null;
@@ -33,6 +47,9 @@ namespace A320_Cockpit.Infrastructure.Repository.Payload.A32nx.Overhead
 
         }
 
+        /// <summary>
+        /// Mise à jour de l'entité avec les variables MSFS Mise à jour de l'entité avec les variables MSFS
+        /// </summary>
         protected override void UpdateEntity()
         {
             lightIndicators.TestIndicatorsLight = A32nxVariables.LightIndicatorStatus.Value == 0;

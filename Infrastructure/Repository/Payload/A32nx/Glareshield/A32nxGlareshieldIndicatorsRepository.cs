@@ -11,17 +11,31 @@ using System.Threading.Tasks;
 
 namespace A320_Cockpit.Infrastructure.Repository.Payload.A32nx.Glareshield
 {
+    /// <summary>
+    /// Repository pour la mise à jour et la récupération de l'entité du des témoins des panels du Glareshield
+    /// </summary>
     public class A32nxGlareshieldIndicatorsRepository : A32nxPayloadRepository<GlareshieldIndicators>, IFcuGlareshieldIndicators
     {
-
         private static readonly GlareshieldIndicators glareshieldIndicators = new();
 
+        /// <summary>
+        /// Création du repository
+        /// </summary>
+        /// <param name="msfs"></param>
         public A32nxGlareshieldIndicatorsRepository(MsfsSimulatorRepository msfs) : base(msfs)
         {
         }
 
+        /// <summary>
+        /// Retourne l'entité GlareshieldIndicators
+        /// </summary>
         protected override GlareshieldIndicators Payload => glareshieldIndicators;
 
+        /// <summary>
+        /// Met à jour les valeurs des variables MSFS (LVar, SimVar...)
+        /// Si en event est passé, on ne met à jour que les varibales susceptibles d'avoir été modifiées
+        /// </summary>
+        /// <param name="e"></param>
         protected override void Refresh(CockpitEvent? e)
         {
             bool all = e == null;
@@ -61,6 +75,9 @@ namespace A320_Cockpit.Infrastructure.Repository.Payload.A32nx.Glareshield
             }
         }
 
+        /// <summary>
+        /// Mise à jour de l'entité avec les variables MSFS
+        /// </summary>
         protected override void UpdateEntity()
         {
             glareshieldIndicators.FcuAp1 = A32nxVariables.Autopilot1Active.Value;

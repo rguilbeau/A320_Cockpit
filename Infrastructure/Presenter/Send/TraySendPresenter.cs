@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 
 namespace A320_Cockpit.Infrastructure.Presenter.Send
 {
+    /// <summary>
+    /// Présenter pour le system tray, afin de gérer l'affichage des frames envoyées
+    /// </summary>
     public class TraySendPresenter : ISendPresenter
     {
         private Frame? frame;
@@ -20,7 +23,7 @@ namespace A320_Cockpit.Infrastructure.Presenter.Send
 
 
         /// <summary>
-        /// Création du présenter pour l'affiche du system tray
+        /// Création du présenter
         /// </summary>
         /// <param name="applicationTray">Le system tray</param>
         /// <param name="logger">Lo logger</param>
@@ -43,8 +46,6 @@ namespace A320_Cockpit.Infrastructure.Presenter.Send
         /// Si le message a été envoyé
         /// </summary>
         public bool IsSent { get => isSent; set => isSent = value; }
-
-
 
         /// <summary>
         /// Présente les éléments au system tray

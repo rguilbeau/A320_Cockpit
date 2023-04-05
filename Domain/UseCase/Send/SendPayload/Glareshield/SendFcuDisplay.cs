@@ -12,16 +12,30 @@ using System.Threading.Tasks;
 
 namespace A320_Cockpit.Domain.UseCase.Send.SendPayload.Glareshield
 {
+    /// <summary>
+    /// Envoi de la frame FCU display au cockpit
+    /// Hérite du UseCase "SendUseCase" la méthode Exec est dans la classe mère.
+    /// Ici on consrtuit juste la frame
+    /// </summary>
     public class SendFcuDisplay : SendUseCase
     {
-
         private readonly IFcuDisplayRepository repository;
 
+        /// <summary>
+        /// Création du UseCase
+        /// </summary>
+        /// <param name="cockpitRepository"></param>
+        /// <param name="presenter"></param>
+        /// <param name="repository"></param>
         public SendFcuDisplay(ICockpitRepository cockpitRepository, ISendPresenter presenter, IFcuDisplayRepository repository) : base(cockpitRepository, presenter)
         {
             this.repository = repository;
         }
 
+        /// <summary>
+        /// Création de la frame à partir de l'entité
+        /// </summary>
+        /// <returns>La frame</returns>
         protected override Frame BuildFrame()
         {
             FcuDisplay fcuDisplay = repository.Find();

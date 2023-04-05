@@ -11,16 +11,30 @@ using System.Threading.Tasks;
 
 namespace A320_Cockpit.Domain.UseCase.Send.SendPayload.Overhead
 {
+    /// <summary>
+    /// Envoi de la frame light indicators au cockpit
+    /// Hérite du UseCase "SendUseCase" la méthode Exec est dans la classe mère.
+    /// Ici on consrtuit juste la frame
+    /// </summary>
     public class SendLightIndicator : SendUseCase
     {
-
         private readonly ILightIndicatorsRepository lightIndicatorsRepository;
 
+        /// <summary>
+        /// Création du UseCase
+        /// </summary>
+        /// <param name="cockpitRepository"></param>
+        /// <param name="presenter"></param>
+        /// <param name="lightIndicatorsRepository"></param>
         public SendLightIndicator(ICockpitRepository cockpitRepository, ISendPresenter presenter, ILightIndicatorsRepository lightIndicatorsRepository) : base(cockpitRepository, presenter)
         {
             this.lightIndicatorsRepository = lightIndicatorsRepository;
         }
 
+        /// <summary>
+        /// Création de la frame à partir de l'entité
+        /// </summary>
+        /// <returns>La frame</returns>
         protected override Frame BuildFrame()
         {
             LightIndicators lightIndicators = lightIndicatorsRepository.Find();

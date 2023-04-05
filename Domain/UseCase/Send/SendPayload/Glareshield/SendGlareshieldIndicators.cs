@@ -10,16 +10,30 @@ using System.Threading.Tasks;
 
 namespace A320_Cockpit.Domain.UseCase.Send.SendPayload.Glareshield
 {
+    /// <summary>
+    /// Envoi de la frame Glareshield indicators au cockpit
+    /// Hérite du UseCase "SendUseCase" la méthode Exec est dans la classe mère.
+    /// Ici on consrtuit juste la frame
+    /// </summary>
     public class SendGlareshieldIndicators : SendUseCase
     {
-
         private readonly IFcuGlareshieldIndicators fcuRepository;
 
+        /// <summary>
+        /// Création du UseCase
+        /// </summary>
+        /// <param name="cockpitRepository"></param>
+        /// <param name="presenter"></param>
+        /// <param name="fcuRepository"></param>
         public SendGlareshieldIndicators(ICockpitRepository cockpitRepository, ISendPresenter presenter, IFcuGlareshieldIndicators fcuRepository) : base(cockpitRepository, presenter)
         {
             this.fcuRepository = fcuRepository;
         }
 
+        /// <summary>
+        /// Création de la frame à partir de l'entité
+        /// </summary>
+        /// <returns>La frame</returns>
         protected override Frame BuildFrame()
         {
             GlareshieldIndicators glareshieldIndicators = fcuRepository.Find();

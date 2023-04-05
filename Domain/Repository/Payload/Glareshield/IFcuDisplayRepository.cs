@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace A320_Cockpit.Domain.Repository.Payload.Glareshield
 {
+    /// <summary>
+    /// Le repository des écrans du FCU
+    /// </summary>
     public interface IFcuDisplayRepository : IPayloadRepository<FcuDisplay>
     {
     }

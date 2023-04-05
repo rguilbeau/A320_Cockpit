@@ -1,4 +1,5 @@
-﻿using System;
+﻿using A320_Cockpit.Domain.Enum;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,16 +12,15 @@ namespace A320_Cockpit.Domain.Entity.Payload.Overhead
     /// </summary>
     public class LightIndicators : PayloadEntity
     {
-        private const int ID = 0x003;
         private const int SIZE = 1;
         private bool testIndicatorsLight = false;
 
         /// <summary>
-        /// Retourne l'ID de la frame
+        /// L'id de la frame
         /// </summary>
-        public override int Id => ID;
+        public override int Id => (int)FrameId.LIGHT_INDICATOR;
         /// <summary>
-        /// Retourne la taille de la frame
+        /// La taille de la frame
         /// </summary>
         public override int Size => SIZE;
         /// <summary>

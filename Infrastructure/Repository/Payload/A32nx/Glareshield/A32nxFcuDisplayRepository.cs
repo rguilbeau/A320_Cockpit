@@ -13,16 +13,32 @@ using System.Threading.Tasks;
 
 namespace A320_Cockpit.Infrastructure.Repository.Payload.A32nx.Glareshield
 {
+    /// <summary>
+    /// Repository pour la mise à jour et la récupération de l'entité du des valeurs 
+    /// à afficher sur les écrans du FCU
+    /// </summary>
     public class A32nxFcuDisplayRepository : A32nxPayloadRepository<FcuDisplay>, IFcuDisplayRepository
     {
         private static readonly FcuDisplay fcuDisplay = new();
 
+        /// <summary>
+        /// Création du repository
+        /// </summary>
+        /// <param name="msfs"></param>
         public A32nxFcuDisplayRepository(MsfsSimulatorRepository msfs) : base(msfs)
         {
         }
 
+        /// <summary>
+        /// Retourne l'entité FCU Display
+        /// </summary>
         protected override FcuDisplay Payload => fcuDisplay;
 
+        /// <summary>
+        /// Met à jour les valeurs des variables MSFS (LVar, SimVar...)
+        /// Si en event est passé, on ne met à jour que les varibales susceptibles d'avoir été modifiées
+        /// </summary>
+        /// <param name="e"></param>
         protected override void Refresh(CockpitEvent? e)
         {
             bool all = e == null;
@@ -116,6 +132,9 @@ namespace A320_Cockpit.Infrastructure.Repository.Payload.A32nx.Glareshield
             }
         }
 
+        /// <summary>
+        /// Mise à jour de l'entité avec les variables MSFS
+        /// </summary>
         protected override void UpdateEntity()
         {
             if (A32nxVariables.SpeedSelected.Value <= 0)

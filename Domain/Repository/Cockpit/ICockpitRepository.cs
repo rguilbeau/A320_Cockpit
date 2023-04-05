@@ -8,28 +8,28 @@ using A320_Cockpit.Domain.Entity.Cockpit;
 namespace A320_Cockpit.Domain.Repository.Cockpit
 {
     /// <summary>
-    /// Représente la connexion au CAN Bus du cockpit
+    /// Repository de la connexion au cockpit du cockpit
     /// </summary>
     public interface ICockpitRepository
     {
         /// <summary>
-        /// Ouvre la connexion au CAN Bus
+        /// Ouvre la connexion au cockpit
         /// </summary>
         public void Open();
 
         /// <summary>
-        /// Ferme la connexion au CAN Bus
+        /// Ferme la connexion au cockpit
         /// </summary>
         public void Close();
 
         /// <summary>
-        /// Envoi une frame au CAN Bus
+        /// Envoi une frame au cockpit
         /// </summary>
         /// <param name="frame">La frame à envoyer</param>
         public void Send(Frame frame);
 
         /// <summary>
-        /// Etat de la connexion du CAN Bus
+        /// Etat de la connexion au cockpit
         /// </summary>
         public bool IsOpen { get; }
     }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace A320_Cockpit.Domain.Repository.Simulator
 {
     /// <summary>
-    /// Connecteur du simulateur
+    /// Repository du simulateur
     /// </summary>
     public interface ISimulatorRepository
     {

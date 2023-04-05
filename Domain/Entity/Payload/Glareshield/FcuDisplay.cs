@@ -1,4 +1,5 @@
-﻿using System;
+﻿using A320_Cockpit.Domain.Enum;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,11 +8,10 @@ using System.Threading.Tasks;
 namespace A320_Cockpit.Domain.Entity.Payload.Glareshield
 {
     /// <summary>
-    /// Contenu de la frame des afficheurs du FCU
+    /// Les informations affiché sur les écrans du FCU
     /// </summary>
     public class FcuDisplay : PayloadEntity
     {
-        private const int ID = 0x001;
         private const int SIZE = 8;
         private double speed = 0;
         private short heading = 0;
@@ -31,11 +31,11 @@ namespace A320_Cockpit.Domain.Entity.Payload.Glareshield
         private bool isPowerOn = false;
 
         /// <summary>
-        /// Retourne l'ID de la frame
+        /// L'id de la frame
         /// </summary>
-        public override int Id => ID;
+        public override int Id => (int) FrameId.FCU_DISPLAY;
         /// <summary>
-        /// Retourne la taille de la frame
+        /// La taille de la frame
         /// </summary>
         public override int Size => SIZE;
         /// <summary>

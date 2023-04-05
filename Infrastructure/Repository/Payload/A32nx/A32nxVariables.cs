@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace A320_Cockpit.Infrastructure.Repository.Payload.A32nx
 {
+    /// <summary>
+    /// Lise des variables de MSFS (LVar, SimVar...)
+    /// </summary>
     public class A32nxVariables
     {
         //
