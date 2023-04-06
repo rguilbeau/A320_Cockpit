@@ -45,7 +45,7 @@ namespace A320_Cockpit.Domain.UseCase.Send.SendPayload.Glareshield
             int speed = (int)fcuDisplay.Speed;
             if (fcuDisplay.IsMach)
             {
-                speed = (int)(fcuDisplay.Speed * 100);
+                speed = (int)(Math.Round(fcuDisplay.Speed * 100));
             }
 
             int speedHundreds = speed / 100 * 100;
@@ -96,7 +96,7 @@ namespace A320_Cockpit.Domain.UseCase.Send.SendPayload.Glareshield
             hiddens[0] = fcuDisplay.IsSpeedDash;
             hiddens[1] = fcuDisplay.IsHeadingDash;
             hiddens[2] = fcuDisplay.IsAltitudeDash;
-            hiddens[3] = fcuDisplay.IsVerticalSpeedHidden;
+            hiddens[3] = fcuDisplay.IsVerticalSpeedDash;
             hiddens[4] = false; //not used
             hiddens[5] = false; //not used
             hiddens[6] = false; //not used

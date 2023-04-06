@@ -19,15 +19,15 @@ namespace A320_Cockpit.Domain.Entity.Payload.Glareshield
         private bool isTrack = false;
         private bool isLat = false;
         private bool isFpa = false;
-        private bool isSpeedForced = false;
-        private bool isHeadingForced = false;
-        private bool isAltitudeForced = false;
+        private bool isSpeedDot = false;
+        private bool isHeadingDot = false;
+        private bool isAltitudeDot = false;
         private int altitude = 0;
         private double verticalSpeed = 0;
-        private bool isSpeedHidden = false;
-        private bool isHeadingHidden = false;
-        private bool isAltitudeHidden = false;
-        private bool isVerticalSpeedHidden = false;
+        private bool isSpeedDash = false;
+        private bool isHeadingDash = false;
+        private bool isAltitudeDash = false;
+        private bool isVerticalSpeedDash = false;
         private bool isPowerOn = false;
 
         /// <summary>
@@ -65,15 +65,15 @@ namespace A320_Cockpit.Domain.Entity.Payload.Glareshield
         /// <summary>
         /// La vitesse est forcée par le pilote, le point ne s'affiche pas
         /// </summary>
-        public bool IsSpeedDot { get => isSpeedForced; set => isSpeedForced = value; }
+        public bool IsSpeedDot { get => isSpeedDot; set => isSpeedDot = value; }
         /// <summary>
         /// Le cap est forcée par le pilote, le point ne s'affiche pas
         /// </summary>
-        public bool IsHeadingDot { get => isHeadingForced; set => isHeadingForced = value; }
+        public bool IsHeadingDot { get => isHeadingDot; set => isHeadingDot = value; }
         /// <summary>
         /// L'altitude est forcée par le pilote, le point ne s'affiche pas
         /// </summary>
-        public bool IsAltitudeDot { get => isAltitudeForced; set => isAltitudeForced = value; }
+        public bool IsAltitudeDot { get => isAltitudeDot; set => isAltitudeDot = value; }
         /// <summary>
         /// L'atitude affichée sur le FCU
         /// </summary>
@@ -85,19 +85,19 @@ namespace A320_Cockpit.Domain.Entity.Payload.Glareshield
         /// <summary>
         /// La vitesse n'est pas affichée sur le FCU "---"
         /// </summary>
-        public bool IsSpeedDash { get => isSpeedHidden; set => isSpeedHidden = value; }
+        public bool IsSpeedDash { get => isSpeedDash; set => isSpeedDash = value; }
         /// <summary>
         /// Le cap n'est pas affiché sur le FCU "---"
         /// </summary>
-        public bool IsHeadingDash { get => isHeadingHidden; set => isHeadingHidden = value; }
+        public bool IsHeadingDash { get => isHeadingDash; set => isHeadingDash = value; }
         /// <summary>
         /// L'altitude n'est pas affichée sur le FCU "-----"
         /// </summary>
-        public bool IsAltitudeDash { get => isAltitudeHidden; set => isAltitudeHidden = value; }
+        public bool IsAltitudeDash { get => isAltitudeDash; set => isAltitudeDash = value; }
         /// <summary>
         /// La vitesse verticale n'est pas affichée sur le FCU "----"
         /// </summary>
-        public bool IsVerticalSpeedHidden { get => isVerticalSpeedHidden; set => isVerticalSpeedHidden = value; }
+        public bool IsVerticalSpeedDash { get => isVerticalSpeedDash; set => isVerticalSpeedDash = value; }
         /// <summary>
         /// Le FCU est allimenté
         /// </summary>

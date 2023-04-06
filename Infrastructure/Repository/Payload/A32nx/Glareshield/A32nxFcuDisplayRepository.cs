@@ -153,12 +153,13 @@ namespace A320_Cockpit.Infrastructure.Repository.Payload.A32nx.Glareshield
             fcuDisplay.IsHeadingDot = A32nxVariables.IsHeadingDot.Value;
             fcuDisplay.IsHeadingDash = A32nxVariables.IsHeadingManageDash.Value;
             fcuDisplay.Heading = A32nxVariables.HeadingSelected.Value;
+            fcuDisplay.IsLat = true;
 
             fcuDisplay.IsTrack = A32nxVariables.IsTrackFpa.Value;
             fcuDisplay.IsFpa = A32nxVariables.IsTrackFpa.Value;
 
             fcuDisplay.Altitude = A32nxVariables.AltitudeSelected.Value;
-            fcuDisplay.IsAltitudeDot = A32nxVariables.IsHeadingDot.Value;
+            fcuDisplay.IsAltitudeDot = A32nxVariables.AltitudeManaged.Value;
             fcuDisplay.IsAltitudeDash = false;
 
             if (A32nxVariables.IsTrackFpa.Value)
@@ -170,7 +171,7 @@ namespace A320_Cockpit.Infrastructure.Repository.Payload.A32nx.Glareshield
                 fcuDisplay.VerticalSpeed = A32nxVariables.VerticalSpeedSelectedFpm.Value;
             }
 
-            fcuDisplay.IsVerticalSpeedHidden = A32nxVariables.VerticalSpeedManaged.Value;
+            fcuDisplay.IsVerticalSpeedDash = A32nxVariables.VerticalSpeedManaged.Value;
             fcuDisplay.IsPowerOn = A32nxVariables.IsElectricityAc1BusPowered.Value;
         }
     }

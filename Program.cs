@@ -1,3 +1,4 @@
+using A320_Cockpit.Adaptation.Canbus;
 using A320_Cockpit.Adaptation.Log;
 using A320_Cockpit.Infrastructure.View.SystemTray;
 
@@ -30,6 +31,10 @@ namespace A320_Cockpit
             }
         }
 
+        /// <summary>
+        /// Affiche la console de l'application
+        /// </summary>
+        /// <returns></returns>
         [System.Runtime.InteropServices.DllImport("kernel32.dll")]
         private static extern bool AllocConsole();
     }
