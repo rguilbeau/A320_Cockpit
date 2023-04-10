@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -38,6 +40,22 @@ namespace A320_Cockpit.Adaptation.Log.Sirelog
         public string LogPath
         {
             get { return logPath; }
+        }
+
+        /// <summary>
+        /// Ouvre le log dans l'éditeur par défaut
+        /// </summary>
+        public void OpenInEditor()
+        {
+            var pi = new ProcessStartInfo(logPath)
+            {
+                Arguments = Path.GetFileName(logPath),
+                UseShellExecute = true,
+                WorkingDirectory = Path.GetDirectoryName(logPath),
+                FileName = logPath,
+                Verb = "OPEN"
+            };
+            Process.Start(pi);
         }
 
         /// <summary>

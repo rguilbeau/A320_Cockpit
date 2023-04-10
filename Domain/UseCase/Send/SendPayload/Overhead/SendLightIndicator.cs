@@ -1,5 +1,6 @@
 ﻿using A320_Cockpit.Domain.Entity.Cockpit;
 using A320_Cockpit.Domain.Entity.Payload.Overhead;
+using A320_Cockpit.Domain.Enum;
 using A320_Cockpit.Domain.Repository.Cockpit;
 using A320_Cockpit.Domain.Repository.Payload;
 using A320_Cockpit.Domain.Repository.Payload.Overhead;
@@ -37,7 +38,7 @@ namespace A320_Cockpit.Domain.UseCase.Send.SendPayload.Overhead
         /// <returns>La frame</returns>
         protected override Frame BuildFrame()
         {
-            LightIndicators lightIndicators = lightIndicatorsRepository.Find();
+            LightIndicators lightIndicators = lightIndicatorsRepository.Find(CockpitEvent.NONE);
 
             Frame frame = new(lightIndicators.Id, lightIndicators.Size);
 

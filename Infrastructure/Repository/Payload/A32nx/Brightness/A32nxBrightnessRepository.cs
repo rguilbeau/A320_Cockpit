@@ -36,7 +36,7 @@ namespace A320_Cockpit.Infrastructure.Repository.Payload.A32nx.Brightness
         /// Si en event est passé, on ne met à jour que les varibales susceptibles d'avoir été modifiées
         /// </summary>
         /// <param name="e"></param>
-        protected override void Refresh(CockpitEvent? e)
+        protected override void Refresh(CockpitEvent e)
         {
             // todo
         }

@@ -8,6 +8,10 @@ namespace A320_Cockpit.Adaptation.Canbus
     public interface ICanbus
     {
         /// <summary>
+        /// Evenement sur la récéption de nouveau message
+        /// </summary>
+        public event EventHandler<Frame> ?MessageReceived;
+        /// <summary>
         /// Ouvre la connexion au CAN Bus
         /// </summary>
         public void Open();

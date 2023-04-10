@@ -38,7 +38,7 @@ namespace A320_Cockpit.Domain.UseCase.Send.SendPayload.Glareshield
         /// <returns>La frame</returns>
         protected override Frame BuildFrame()
         {
-            FcuDisplay fcuDisplay = repository.Find();
+            FcuDisplay fcuDisplay = repository.Find(CockpitEvent.NONE);
             Frame frame = new(fcuDisplay.Id, fcuDisplay.Size);
 
 

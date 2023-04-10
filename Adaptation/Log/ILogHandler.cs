@@ -11,6 +11,11 @@
         public string LogPath { get; }
 
         /// <summary>
+        /// Ouvre le log dans l'editeur par défaut
+        /// </summary>
+        public void OpenInEditor();
+
+        /// <summary>
         /// Inscrit une information dans le log
         /// </summary>
         /// <param name="message">Le message à logger</param>

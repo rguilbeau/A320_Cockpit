@@ -1,4 +1,5 @@
-﻿using A320_Cockpit.Adaptation.Log;
+﻿using A320_Cockpit.Adaptation.Canbus;
+using A320_Cockpit.Adaptation.Log;
 using A320_Cockpit.Adaptation.Msfs;
 using A320_Cockpit.Domain.Repository.Cockpit;
 using A320_Cockpit.Domain.Repository.Payload.Glareshield;
@@ -16,12 +17,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace A320_Cockpit.Infrastructure.MainThread
+namespace A320_Cockpit.Infrastructure.Runner
 {
     /// <summary>
     /// Le thread principale pour la communication avec MSFS2020
     /// </summary>
-    public class MsfsThread : IMainThread
+    public class MsfsVariableRunner : IRunner
     {
 
         private readonly ILogHandler logger;
@@ -36,7 +37,7 @@ namespace A320_Cockpit.Infrastructure.MainThread
         /// <param name="logger"></param>
         /// <param name="presenter"></param>
         /// <param name="cockpitRepository"></param>
-        public MsfsThread(MsfsSimulatorRepository msfs, ILogHandler logger, ISendPresenter presenter, ICockpitRepository cockpitRepository)
+        public MsfsVariableRunner(MsfsSimulatorRepository msfs, ILogHandler logger, ISendPresenter presenter, ICockpitRepository cockpitRepository)
         {
             this.msfs = msfs;
             this.logger = logger;
@@ -64,6 +65,9 @@ namespace A320_Cockpit.Infrastructure.MainThread
         /// </summary>
         public void Start() 
         {
+
+            CanBusFactory.Get().MessageReceived += MsfsThread_MessageReceived;
+
             running = true;
             new Thread(() =>
             {
@@ -103,5 +107,14 @@ namespace A320_Cockpit.Infrastructure.MainThread
             }).Start();
         }
 
+        /// <summary>
+        /// Nouveau message du 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MsfsThread_MessageReceived(object? sender, Domain.Entity.Cockpit.Frame e)
+        {
+            int i = 0;
+        }
     }
 }

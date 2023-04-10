@@ -8,6 +8,8 @@ namespace A320_Cockpit.Adaptation.Canbus.CANtact
     /// </summary>
     public class CANtactAdapter : ICanbus
     {
+        public event EventHandler<Frame> ?MessageReceived;
+
         private readonly SerialPort serialPort;
         private readonly string comPort;
         private readonly int serialBaudRate;
@@ -157,9 +159,9 @@ namespace A320_Cockpit.Adaptation.Canbus.CANtact
         /// <param name="e"></param>
         private void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            /*try
+            try
             {
-                if (MessageReceivedEvent != null)
+                if (MessageReceived != null)
                 {
                     string frame = serialPort.ReadExisting();
                     if (frame != null && frame.StartsWith("t"))
@@ -167,20 +169,20 @@ namespace A320_Cockpit.Adaptation.Canbus.CANtact
                         int id = int.Parse(frame.Substring(1, 3), System.Globalization.NumberStyles.HexNumber);
                         int size = int.Parse(frame.Substring(4, 1));
 
-                        CanMessage message = new(id, size);
+                        Frame message = new(id, size);
 
                         for (int i = 0; i < size; i++)
                         {
                             message.Data[i] = byte.Parse(frame.Substring(5 + i * 2, 2), System.Globalization.NumberStyles.HexNumber);
                         }
 
-                        MessageReceivedEvent.Invoke(this, new MessageRecievedEventArgs(message));
+                        MessageReceived.Invoke(this, message);
                     }
                 }
             }
             catch (TimeoutException)
             {
-            }*/
+            }
         }
 
         /// <summary>

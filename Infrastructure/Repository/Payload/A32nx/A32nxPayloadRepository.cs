@@ -31,21 +31,9 @@ namespace A320_Cockpit.Infrastructure.Repository.Payload.A32nx
         /// <summary>
         /// Met à jour et récupère l'entité
         /// </summary>
-        /// <returns></returns>
-        public T Find()
-        {
-            Refresh(null);
-            UpdateEntity();
-            return Payload;
-        }
-
-        /// <summary>
-        /// Met à jour (uniquement les valeurs susceptible d'être modifiées par l'évènement passé en paramètre)
-        /// et récupère l'entité
-        /// </summary>
         /// <param name="e"></param>
         /// <returns></returns>
-        public T FindByEvent(CockpitEvent e)
+        public T Find(CockpitEvent e)
         {
             Refresh(e);
             UpdateEntity();
@@ -62,7 +50,7 @@ namespace A320_Cockpit.Infrastructure.Repository.Payload.A32nx
         /// Si en event est passé, on ne met à jour que les varibales susceptibles d'avoir été modifiées
         /// </summary>
         /// <param name="e"></param>
-        protected abstract void Refresh(CockpitEvent? e);
+        protected abstract void Refresh(CockpitEvent e);
 
         /// <summary>
         /// Mise à jour de l'entité avec les variables MSFS Mise à jour de l'entité avec les variables MSFS

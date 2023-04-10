@@ -19,14 +19,6 @@ namespace A320_Cockpit.Domain.Repository.Payload
         /// Met à jour et récupère l'entité
         /// </summary>
         /// <returns></returns>
-        public T Find();
-
-        /// <summary>
-        /// Met à jour (uniquement les valeurs susceptible d'être modifiées par l'évènement passé en paramètre)
-        /// et récupère l'entité
-        /// </summary>
-        /// <param name="e"></param>
-        /// <returns></returns>
-        public T FindByEvent(CockpitEvent e);
+        public T Find(CockpitEvent e);
     }
 }

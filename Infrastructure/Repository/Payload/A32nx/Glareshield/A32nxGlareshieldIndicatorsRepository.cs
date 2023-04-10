@@ -36,40 +36,39 @@ namespace A320_Cockpit.Infrastructure.Repository.Payload.A32nx.Glareshield
         /// Si en event est passé, on ne met à jour que les varibales susceptibles d'avoir été modifiées
         /// </summary>
         /// <param name="e"></param>
-        protected override void Refresh(CockpitEvent? e)
+        protected override void Refresh(CockpitEvent e)
         {
-            bool all = e == null;
-            if (all || e == CockpitEvent.FCU_AP1)
+            if (e == CockpitEvent.NONE || e == CockpitEvent.FCU_AP1)
             {
                 msfs.Read(A32nxVariables.Autopilot1Active);
             }
 
-            if(all || e == CockpitEvent.FCU_AP2)
+            if(e == CockpitEvent.NONE || e == CockpitEvent.FCU_AP2)
             {
                 msfs.Read(A32nxVariables.Autopilot2Active);
             }
 
-            if (all || e == CockpitEvent.FCU_ATHR)
+            if (e == CockpitEvent.NONE || e == CockpitEvent.FCU_ATHR)
             {
                 msfs.Read(A32nxVariables.AutoThrustStatus);
             }
 
-            if(all || e == CockpitEvent.FCU_LOC)
+            if(e == CockpitEvent.NONE || e == CockpitEvent.FCU_LOC)
             {
                 msfs.Read(A32nxVariables.LocModeActive);
             }
 
-            if(all || e == CockpitEvent.FCU_EXPED)
+            if(e == CockpitEvent.NONE || e == CockpitEvent.FCU_EXPED)
             {
                 msfs.Read(A32nxVariables.ExpedModeActive);
             }
 
-            if(all || e == CockpitEvent.FCU_APPR)
+            if(e == CockpitEvent.NONE || e == CockpitEvent.FCU_APPR)
             {
                 msfs.Read(A32nxVariables.ApprModeActive);
             }
 
-            if (all)
+            if (e == CockpitEvent.NONE)
             {
                 msfs.Read(A32nxVariables.IsElectricityAc1BusPowered);
             }

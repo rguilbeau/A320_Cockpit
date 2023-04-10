@@ -39,43 +39,42 @@ namespace A320_Cockpit.Infrastructure.Repository.Payload.A32nx.Glareshield
         /// Si en event est passé, on ne met à jour que les varibales susceptibles d'avoir été modifiées
         /// </summary>
         /// <param name="e"></param>
-        protected override void Refresh(CockpitEvent? e)
+        protected override void Refresh(CockpitEvent e)
         {
-            bool all = e == null;
 
-            if (all || e == CockpitEvent.FCU_SPEED_MACH)
+            if (e == CockpitEvent.NONE || e == CockpitEvent.FCU_SPEED_MACH)
             {
                 msfs.Read(A32nxVariables.IsManagedSpeedInMach);
                 msfs.Read(A32nxVariables.SpeedSelected);
             }
 
-            if (all || e == CockpitEvent.FCU_SPEED_BUG)
+            if (e == CockpitEvent.NONE || e == CockpitEvent.FCU_SPEED_BUG)
             {
                 msfs.Read(A32nxVariables.IsSpeedManagedDash);
                 msfs.Read(A32nxVariables.SpeedSelected);
             }
 
-            if (all || e == CockpitEvent.FCU_SPEED_PULL || e == CockpitEvent.FCU_SPEED_PULL)
+            if (e == CockpitEvent.NONE || e == CockpitEvent.FCU_SPEED_PULL || e == CockpitEvent.FCU_SPEED_PULL)
             {
                 msfs.Read(A32nxVariables.IsSpeedDot);
                 msfs.Read(A32nxVariables.IsSpeedManagedDash);
                 msfs.Read(A32nxVariables.SpeedSelected);
             }
 
-            if (all || e == CockpitEvent.FCU_HEADING_BUG)
+            if (e == CockpitEvent.NONE || e == CockpitEvent.FCU_HEADING_BUG)
             {
                 msfs.Read(A32nxVariables.IsHeadingManageDash);
                 msfs.Read(A32nxVariables.HeadingSelected);
             }
 
-            if (all || e == CockpitEvent.FCU_HEADING_PUSH || e == CockpitEvent.FCU_HEADING_PULL)
+            if (e == CockpitEvent.NONE || e == CockpitEvent.FCU_HEADING_PUSH || e == CockpitEvent.FCU_HEADING_PULL)
             {
                 msfs.Read(A32nxVariables.IsHeadingDot);
                 msfs.Read(A32nxVariables.IsHeadingManageDash);
                 msfs.Read(A32nxVariables.HeadingSelected);
             }
 
-            if (all || e == CockpitEvent.FCU_VS_FPA)
+            if (e == CockpitEvent.NONE || e == CockpitEvent.FCU_VS_FPA)
             {
                 msfs.Read(A32nxVariables.IsTrackFpa);
                 if (A32nxVariables.IsTrackFpa.Value)
@@ -90,17 +89,17 @@ namespace A320_Cockpit.Infrastructure.Repository.Payload.A32nx.Glareshield
                 msfs.Read(A32nxVariables.HeadingSelected);
             }
 
-            if (all || e == CockpitEvent.FCU_ALTITUDE_BUG)
+            if (e == CockpitEvent.NONE || e == CockpitEvent.FCU_ALTITUDE_BUG)
             {
                 msfs.Read(A32nxVariables.AltitudeSelected);
             }
 
-            if (all || e == CockpitEvent.FCU_ALTITUDE_PUSH || e == CockpitEvent.FCU_ALTITUDE_PULL)
+            if (e == CockpitEvent.NONE || e == CockpitEvent.FCU_ALTITUDE_PUSH || e == CockpitEvent.FCU_ALTITUDE_PULL)
             {
                 msfs.Read(A32nxVariables.AltitudeManaged);
             }
 
-            if (all || e == CockpitEvent.FCU_VS_BUG)
+            if (e == CockpitEvent.NONE || e == CockpitEvent.FCU_VS_BUG)
             {
                 if (A32nxVariables.IsTrackFpa.Value)
                 {
@@ -112,7 +111,7 @@ namespace A320_Cockpit.Infrastructure.Repository.Payload.A32nx.Glareshield
                 }
             }
 
-            if (all || e == CockpitEvent.FCU_VS_PUSH || e == CockpitEvent.FCU_VS_PULL)
+            if (e == CockpitEvent.NONE || e == CockpitEvent.FCU_VS_PUSH || e == CockpitEvent.FCU_VS_PULL)
             {
                 msfs.Read(A32nxVariables.VerticalSpeedManaged);
 
@@ -126,7 +125,7 @@ namespace A320_Cockpit.Infrastructure.Repository.Payload.A32nx.Glareshield
                 }
             }
 
-            if (all)
+            if (e == CockpitEvent.NONE)
             {
                 msfs.Read(A32nxVariables.IsElectricityAc1BusPowered);
             }

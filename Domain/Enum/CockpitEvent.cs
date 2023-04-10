@@ -16,6 +16,8 @@ namespace A320_Cockpit.Domain.Enum
     /// </summary>
     public enum CockpitEvent
     {
+        NONE                    = 0x000,
+
         ///
         /// Glareshield FCU (0x01##)
         ///

@@ -1,5 +1,6 @@
 ﻿using A320_Cockpit.Domain.Entity.Cockpit;
 using A320_Cockpit.Domain.Entity.Payload.Glareshield;
+using A320_Cockpit.Domain.Enum;
 using A320_Cockpit.Domain.Repository.Cockpit;
 using A320_Cockpit.Domain.Repository.Payload.Glareshield;
 using System;
@@ -36,7 +37,7 @@ namespace A320_Cockpit.Domain.UseCase.Send.SendPayload.Glareshield
         /// <returns>La frame</returns>
         protected override Frame BuildFrame()
         {
-            GlareshieldIndicators glareshieldIndicators = fcuRepository.Find();
+            GlareshieldIndicators glareshieldIndicators = fcuRepository.Find(CockpitEvent.NONE);
 
             Frame frame = new(glareshieldIndicators.Id, glareshieldIndicators.Size);
             bool[] fcuLight = new bool[8];
