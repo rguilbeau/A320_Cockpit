@@ -13,7 +13,7 @@ namespace A320_Cockpit.Domain.UseCase.Connexion
     /// </summary>
     public class ConnextionUseCase
     {
-        private readonly ISimulatorRepository simulatorRepository;
+        private readonly ISimulatorConnexionRepository simulatorRepository;
         private readonly ICockpitRepository cockpitRepository;
         private readonly IConnexionPresenter presenter;
 
@@ -21,7 +21,7 @@ namespace A320_Cockpit.Domain.UseCase.Connexion
         /// Création du UseCase
         /// <param name="simulatorRepository"></param>
         /// <param name="cockpitRepository"></param>
-        public ConnextionUseCase(ISimulatorRepository simulatorRepository, ICockpitRepository cockpitRepository, IConnexionPresenter presenter)
+        public ConnextionUseCase(ISimulatorConnexionRepository simulatorRepository, ICockpitRepository cockpitRepository, IConnexionPresenter presenter)
         {
             this.simulatorRepository = simulatorRepository;
             this.cockpitRepository = cockpitRepository;

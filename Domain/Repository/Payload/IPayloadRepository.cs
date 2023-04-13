@@ -11,14 +11,12 @@ namespace A320_Cockpit.Domain.Repository.Payload
     /// <summary>
     /// Interface mère de tous les répositories des frames
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public interface IPayloadRepository<T> where T : PayloadEntity
+    public interface IPayloadRepository
     {
-
         /// <summary>
         /// Met à jour et récupère l'entité
         /// </summary>
         /// <returns></returns>
-        public T Find(CockpitEvent e);
+        public PayloadEntity Find();
     }
 }

@@ -13,6 +13,10 @@ namespace A320_Cockpit.Domain.Repository.Cockpit
     public interface ICockpitRepository
     {
         /// <summary>
+        /// Reception des events du cockpit
+        /// </summary>
+        public event EventHandler<Frame> ?FrameReceived;
+        /// <summary>
         /// Ouvre la connexion au cockpit
         /// </summary>
         public void Open();

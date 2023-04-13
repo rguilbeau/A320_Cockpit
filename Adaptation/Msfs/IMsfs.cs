@@ -1,4 +1,5 @@
-﻿using A320_Cockpit.Adaptation.Msfs.Model;
+﻿using A320_Cockpit.Adaptation.Msfs.Model.Event;
+using A320_Cockpit.Adaptation.Msfs.Model.Variable;
 
 namespace A320_Cockpit.Adaptation.Msfs
 {
@@ -26,6 +27,18 @@ namespace A320_Cockpit.Adaptation.Msfs
         /// <param name="variable"></param>
         public void Read<T>(SimVar<T> variable);
 
+        /// <summary>
+        /// Envoi d'un event
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="kEvent"></param>
+        public void Send<T>(KEvent<T> kEvent);
+
+        /// <summary>
+        /// Envoi d'un HTML event
+        /// </summary>
+        /// <param name="hEvent"></param>
+        public void Send(HEvent hEvent);
 
         /// <summary>
         /// Démarre une transaction (une transaction ne lit qu'une seule fois la même variable)

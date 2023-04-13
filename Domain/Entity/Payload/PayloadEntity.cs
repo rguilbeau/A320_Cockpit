@@ -1,4 +1,5 @@
-﻿using System;
+﻿using A320_Cockpit.Domain.Entity.Cockpit;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,6 +12,11 @@ namespace A320_Cockpit.Domain.Entity.Payload
     /// </summary>
     public abstract class PayloadEntity
     {
+        /// <summary>
+        /// La frame
+        /// </summary>
+        public abstract Frame Frame { get; }
+
         /// <summary>
         /// L'id de la frame
         /// </summary>

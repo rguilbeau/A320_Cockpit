@@ -1,4 +1,5 @@
-﻿using A320_Cockpit.Domain.Enum;
+﻿using A320_Cockpit.Domain.Entity.Cockpit;
+using A320_Cockpit.Domain.Enum;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +21,29 @@ namespace A320_Cockpit.Domain.Entity.Payload.Glareshield
         private bool fcuAppr = false;
         private bool fcuExped = false;
         private bool fcuIsPowerOn = false;
+
+        /// <summary>
+        /// Retourne l'entité converti en Frame
+        /// </summary>
+        public override Frame Frame
+        {
+            get
+            {
+                Frame frame = new(Id, Size);
+                bool[] fcuLight = new bool[8];
+                fcuLight[0] = FcuAp1;
+                fcuLight[1] = FcuAp2;
+                fcuLight[2] = FcuAthr;
+                fcuLight[3] = FcuLoc;
+                fcuLight[4] = FcuExped;
+                fcuLight[5] = FcuAppr;
+                fcuLight[6] = false; // not used
+                fcuLight[7] = FcuIsPowerOn;
+
+                frame.Data[0] = Frame.BitArrayToByte(fcuLight);
+                return frame;
+            }
+        }
 
         /// <summary>
         /// L'id de la frame

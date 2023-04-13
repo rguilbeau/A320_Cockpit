@@ -5,12 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace A320_Cockpit.Domain.UseCase.Send
+namespace A320_Cockpit.Domain.UseCase.SendPayload
 {
-    /// <summary>
-    /// Présenteur des frames envoyées
-    /// </summary>
-    public interface ISendPresenter
+    public interface ISendPayloadPresenter
     {
         /// <summary>
         /// La frame traité

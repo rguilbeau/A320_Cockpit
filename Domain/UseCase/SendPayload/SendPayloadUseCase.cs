@@ -1,68 +1,68 @@
 ﻿using A320_Cockpit.Domain.Entity.Cockpit;
+using A320_Cockpit.Domain.Entity.Payload;
 using A320_Cockpit.Domain.Repository.Cockpit;
+using A320_Cockpit.Domain.Repository.Payload;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace A320_Cockpit.Domain.UseCase.Send
+namespace A320_Cockpit.Domain.UseCase.SendPayload
 {
     /// <summary>
-    /// Classe mère de tous les UsesCase d'envoi de frame.
-    /// Dans les enfants, il faut implémenter la contruiction de la frame à partir de l'entité
+    /// UseCase pour l'envoi d'une frame
     /// </summary>
-    public abstract class SendUseCase
+    public class SendPayloadUseCase
     {
+        private readonly ISendPayloadPresenter presenter;
         private readonly ICockpitRepository cockpitRepository;
+        private readonly IPayloadRepository payloadRepository;
         private readonly static Dictionary<int, Frame> frameHistory = new();
-        private readonly ISendPresenter presenter;
-
+        
         /// <summary>
         /// Création du UseCase
         /// </summary>
         /// <param name="cockpitRepository"></param>
         /// <param name="presenter"></param>
-        public SendUseCase(ICockpitRepository cockpitRepository, ISendPresenter presenter)
+        public SendPayloadUseCase(ICockpitRepository cockpitRepository, IPayloadRepository payloadRepository, ISendPayloadPresenter presenter)
         {
-            this.cockpitRepository = cockpitRepository;
             this.presenter = presenter;
+            this.cockpitRepository = cockpitRepository;
+            this.payloadRepository = payloadRepository;
         }
 
         /// <summary>
-        /// Méthode à implémenter dans les enfants pour la contruction de la frame à partir de l'entié
-        /// </summary>
-        /// <returns></returns>
-        protected abstract Frame BuildFrame();
-
-        /// <summary>
-        /// Execution du UseCase
+        /// Execute le UseCase
         /// </summary>
         public void Exec()
         {
-            Frame frame = BuildFrame();
+            PayloadEntity payload = payloadRepository.Find();
+            Frame frame = payload.Frame;
 
             // Si la frame n'a pas changé, il ne sert à rien de la renvoyer
             bool alreadySent = frameHistory.ContainsKey(frame.Id) && frame.Equals(frameHistory[frame.Id]);
-            presenter.IsSent = false;
 
-            if (!alreadySent)
+            if (alreadySent)
             {
+                presenter.IsSent = false;
+            } else { 
                 try
                 {
                     cockpitRepository.Send(frame);
                     presenter.IsSent = true;
+                    presenter.Frame = frame;
                     frameHistory[frame.Id] = frame;
-                }
-                catch (Exception ex)
+                } catch (Exception ex)
                 {
+                    presenter.IsSent= false;
                     presenter.Error = ex;
-                    presenter.IsSent = false;
                     frameHistory.Remove(frame.Id);
                 }
             }
 
             presenter.Present();
         }
+
     }
 }

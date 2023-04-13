@@ -147,7 +147,7 @@ namespace A320_Cockpit.Adaptation.Canbus.CANtact
                 }
 
                 serialPort.Write("t" + canFrameData);
-                Console.WriteLine(frame.ToString());
+                Console.WriteLine("-> " + frame.ToString());
                 serialPort.Write("\r");
             }
         }
@@ -163,20 +163,21 @@ namespace A320_Cockpit.Adaptation.Canbus.CANtact
             {
                 if (MessageReceived != null)
                 {
-                    string frame = serialPort.ReadExisting();
-                    if (frame != null && frame.StartsWith("t"))
+                    string message = serialPort.ReadExisting();
+                    if (message != null && message.StartsWith("t"))
                     {
-                        int id = int.Parse(frame.Substring(1, 3), System.Globalization.NumberStyles.HexNumber);
-                        int size = int.Parse(frame.Substring(4, 1));
+                        int id = int.Parse(message.Substring(1, 3), System.Globalization.NumberStyles.HexNumber);
+                        int size = int.Parse(message.Substring(4, 1));
 
-                        Frame message = new(id, size);
+                        Frame frame = new(id, size);
 
                         for (int i = 0; i < size; i++)
                         {
-                            message.Data[i] = byte.Parse(frame.Substring(5 + i * 2, 2), System.Globalization.NumberStyles.HexNumber);
+                            frame.Data[i] = byte.Parse(message.Substring(5 + i * 2, 2), System.Globalization.NumberStyles.HexNumber);
                         }
 
-                        MessageReceived.Invoke(this, message);
+                        Console.WriteLine("<- " + frame.ToString());
+                        MessageReceived.Invoke(this, frame);
                     }
                 }
             }

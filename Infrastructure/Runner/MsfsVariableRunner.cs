@@ -1,21 +1,14 @@
-﻿using A320_Cockpit.Adaptation.Canbus;
-using A320_Cockpit.Adaptation.Log;
-using A320_Cockpit.Adaptation.Msfs;
+﻿using A320_Cockpit.Adaptation.Log;
 using A320_Cockpit.Domain.Repository.Cockpit;
-using A320_Cockpit.Domain.Repository.Payload.Glareshield;
-using A320_Cockpit.Domain.UseCase.Send;
-using A320_Cockpit.Domain.UseCase.Send.SendPayload.Brightness;
-using A320_Cockpit.Domain.UseCase.Send.SendPayload.Glareshield;
-using A320_Cockpit.Domain.UseCase.Send.SendPayload.Overhead;
-using A320_Cockpit.Infrastructure.Repository.Payload.A32nx.Brightness;
-using A320_Cockpit.Infrastructure.Repository.Payload.A32nx.Glareshield;
-using A320_Cockpit.Infrastructure.Repository.Payload.A32nx.Overhead;
+using A320_Cockpit.Domain.Repository.Payload;
+using A320_Cockpit.Domain.UseCase.ListenEvent;
+using A320_Cockpit.Domain.UseCase.SendPayload;
+using A320_Cockpit.Infrastructure.EventHandler;
+using A320_Cockpit.Infrastructure.Repository.Payload.A32nx;
 using A320_Cockpit.Infrastructure.Repository.Simulator;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
+using System.Threading;
+
 
 namespace A320_Cockpit.Infrastructure.Runner
 {
@@ -24,11 +17,15 @@ namespace A320_Cockpit.Infrastructure.Runner
     /// </summary>
     public class MsfsVariableRunner : IRunner
     {
-
         private readonly ILogHandler logger;
         private readonly MsfsSimulatorRepository msfs;
         private bool running = false;
-        private readonly List<SendUseCase> sendUseCases;
+        private readonly List<SendPayloadUseCase> sendPayloadUseCase;
+        private readonly ListenEventUseCase listenEventUseCase;
+        private readonly Stopwatch stopwatch;
+        private readonly CockpitEventDispatcher eventDispatcher;
+        private Thread? thread;
+        private bool reading = true;
 
         /// <summary>
         /// Création du thread
@@ -37,19 +34,26 @@ namespace A320_Cockpit.Infrastructure.Runner
         /// <param name="logger"></param>
         /// <param name="presenter"></param>
         /// <param name="cockpitRepository"></param>
-        public MsfsVariableRunner(MsfsSimulatorRepository msfs, ILogHandler logger, ISendPresenter presenter, ICockpitRepository cockpitRepository)
-        {
+        public MsfsVariableRunner(
+            MsfsSimulatorRepository msfs, 
+            ILogHandler logger, 
+            ISendPayloadPresenter presenter, 
+            IListenEventPresenter listentEventPresenter, 
+            ICockpitRepository cockpitRepository
+        ) {
             this.msfs = msfs;
             this.logger = logger;
 
-            // La liste de toutes les mises à jours à faire
-            sendUseCases = new()
+            sendPayloadUseCase = new();
+            foreach(IPayloadRepository payloadRepository in GlobalFactory.Get().PayloadRepositories)
             {
-                new SendFcuDisplay(cockpitRepository, presenter, new A32nxFcuDisplayRepository(msfs)),
-                new SendGlareshieldIndicators(cockpitRepository, presenter, new A32nxGlareshieldIndicatorsRepository(msfs)),
-                new SendBrightness(cockpitRepository, presenter, new A32nxBrightnessRepository(msfs)),
-                new SendLightIndicator(cockpitRepository, presenter, new A32nxLightIndicatorsRepository(msfs))
-            };
+                sendPayloadUseCase.Add(new SendPayloadUseCase(cockpitRepository, payloadRepository, presenter));
+            }
+
+            listenEventUseCase = new(cockpitRepository, listentEventPresenter);
+            
+            eventDispatcher = CockpitEventDispatcher.Get(GlobalFactory.Get().PayloadEventHandlers);
+            stopwatch = new();
         }
 
         /// <summary>
@@ -65,56 +69,75 @@ namespace A320_Cockpit.Infrastructure.Runner
         /// </summary>
         public void Start() 
         {
-
-            CanBusFactory.Get().MessageReceived += MsfsThread_MessageReceived;
-
             running = true;
-            new Thread(() =>
+            listenEventUseCase.Listen();
+
+            thread = new Thread(() =>
             {
-                while(true)
+                listenEventUseCase.EventReceived += ListenEventUseCase_EventReceived;
+
+                while (true)
                 {
-                    if(!running)
+                    stopwatch.Restart();
+
+                    if (!running)
                     {
                         // Il a été demandé d'arrêter le thread
+                        listenEventUseCase.Stop();
+                        listenEventUseCase.EventReceived -= ListenEventUseCase_EventReceived;
                         break;
                     }
 
-                    if(!msfs.IsOpen)
+                    if (!msfs.IsOpen)
                     {
                         // La connexion n'est pas établie on attend un peu avant de réessayer
                         Thread.Sleep(1000);
                         continue;
                     }
-                    
+
                     // Mise à jour
                     try
                     {
-                        // Demarre une transaction (pour s'assurer de mettre à jour une seule fois la même variable par tour de boucle)
-                        msfs.StartTransaction();
+                        //A32nxVariables.ReadAll(msfs);
 
-                        foreach(SendUseCase sendUseCase in sendUseCases)
+                        if(!reading)
                         {
-                            // Mise à jour de toutes les variables
-                            sendUseCase.Exec();
+                            Thread.Sleep(1000);
+                            //A32nxVariables.ReadAll(msfs);
+                            reading = true;
                         }
 
-                        msfs.StopTransaction();
-                    } catch(Exception ex)
+                        foreach (SendPayloadUseCase sendUseCase in sendPayloadUseCase)
+                        {
+                            //sendUseCase.Exec();
+                        }
+                       
+                    }
+                    catch (Exception ex)
                     {
                         logger.Error(ex);
                     }
+
+                    stopwatch.Stop();
+                    //Console.WriteLine("Loop time:" + stopwatch.ElapsedMilliseconds + "ms");
                 }
-            }).Start();
+            });
+            thread.Start();
         }
 
         /// <summary>
-        /// Nouveau message du 
+        /// Recepetion d'un nouvel event du cockpit
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void MsfsThread_MessageReceived(object? sender, Domain.Entity.Cockpit.Frame e)
+        private void ListenEventUseCase_EventReceived(object? sender, ListenEventArgs listenEventArgs)
         {
-            int i = 0;
+            reading = false;
+            for(int i = 0; i < 10; i++)
+            {
+                eventDispatcher.Dispatch(listenEventArgs.Event, listenEventArgs.Value);
+            }
+
         }
     }
 }

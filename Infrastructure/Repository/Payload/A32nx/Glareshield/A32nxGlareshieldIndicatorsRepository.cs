@@ -1,6 +1,7 @@
-﻿using A320_Cockpit.Domain.Entity.Payload.Glareshield;
+﻿using A320_Cockpit.Domain.Entity.Payload;
+using A320_Cockpit.Domain.Entity.Payload.Glareshield;
 using A320_Cockpit.Domain.Enum;
-using A320_Cockpit.Domain.Repository.Payload.Glareshield;
+using A320_Cockpit.Domain.Repository.Payload;
 using A320_Cockpit.Infrastructure.Repository.Simulator;
 using System;
 using System.Collections.Generic;
@@ -14,70 +15,14 @@ namespace A320_Cockpit.Infrastructure.Repository.Payload.A32nx.Glareshield
     /// <summary>
     /// Repository pour la mise à jour et la récupération de l'entité du des témoins des panels du Glareshield
     /// </summary>
-    public class A32nxGlareshieldIndicatorsRepository : A32nxPayloadRepository<GlareshieldIndicators>, IFcuGlareshieldIndicators
+    public class A32nxGlareshieldIndicatorsRepository : IPayloadRepository
     {
         private static readonly GlareshieldIndicators glareshieldIndicators = new();
 
         /// <summary>
-        /// Création du repository
-        /// </summary>
-        /// <param name="msfs"></param>
-        public A32nxGlareshieldIndicatorsRepository(MsfsSimulatorRepository msfs) : base(msfs)
-        {
-        }
-
-        /// <summary>
-        /// Retourne l'entité GlareshieldIndicators
-        /// </summary>
-        protected override GlareshieldIndicators Payload => glareshieldIndicators;
-
-        /// <summary>
-        /// Met à jour les valeurs des variables MSFS (LVar, SimVar...)
-        /// Si en event est passé, on ne met à jour que les varibales susceptibles d'avoir été modifiées
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void Refresh(CockpitEvent e)
-        {
-            if (e == CockpitEvent.NONE || e == CockpitEvent.FCU_AP1)
-            {
-                msfs.Read(A32nxVariables.Autopilot1Active);
-            }
-
-            if(e == CockpitEvent.NONE || e == CockpitEvent.FCU_AP2)
-            {
-                msfs.Read(A32nxVariables.Autopilot2Active);
-            }
-
-            if (e == CockpitEvent.NONE || e == CockpitEvent.FCU_ATHR)
-            {
-                msfs.Read(A32nxVariables.AutoThrustStatus);
-            }
-
-            if(e == CockpitEvent.NONE || e == CockpitEvent.FCU_LOC)
-            {
-                msfs.Read(A32nxVariables.LocModeActive);
-            }
-
-            if(e == CockpitEvent.NONE || e == CockpitEvent.FCU_EXPED)
-            {
-                msfs.Read(A32nxVariables.ExpedModeActive);
-            }
-
-            if(e == CockpitEvent.NONE || e == CockpitEvent.FCU_APPR)
-            {
-                msfs.Read(A32nxVariables.ApprModeActive);
-            }
-
-            if (e == CockpitEvent.NONE)
-            {
-                msfs.Read(A32nxVariables.IsElectricityAc1BusPowered);
-            }
-        }
-
-        /// <summary>
         /// Mise à jour de l'entité avec les variables MSFS
         /// </summary>
-        protected override void UpdateEntity()
+        public PayloadEntity Find()
         {
             glareshieldIndicators.FcuAp1 = A32nxVariables.Autopilot1Active.Value;
             glareshieldIndicators.FcuAp2 = A32nxVariables.Autopilot2Active.Value;
@@ -86,6 +31,7 @@ namespace A320_Cockpit.Infrastructure.Repository.Payload.A32nx.Glareshield
             glareshieldIndicators.FcuExped = A32nxVariables.ExpedModeActive.Value;
             glareshieldIndicators.FcuAppr = A32nxVariables.ApprModeActive.Value;
             glareshieldIndicators.FcuIsPowerOn = A32nxVariables.IsElectricityAc1BusPowered.Value;
+            return glareshieldIndicators;
         }
     }
 }

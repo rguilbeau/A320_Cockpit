@@ -1,4 +1,5 @@
-﻿using A320_Cockpit.Domain.Enum;
+﻿using A320_Cockpit.Domain.Entity.Cockpit;
+using A320_Cockpit.Domain.Enum;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,6 +30,80 @@ namespace A320_Cockpit.Domain.Entity.Payload.Glareshield
         private bool isAltitudeDash = false;
         private bool isVerticalSpeedDash = false;
         private bool isPowerOn = false;
+
+        /// <summary>
+        /// Retoune l'entité converti en frame
+        /// </summary>
+        public override Frame Frame
+        {
+            get
+            {
+                Frame frame = new(Id, Size);
+
+                int speed = (int)Speed;
+                if (IsMach)
+                {
+                    speed = (int)(Math.Round(Speed * 100));
+                }
+
+                int speedHundreds = speed / 100 * 100;
+                int headingHundreds = Heading / 100 * 100;
+
+                bool[] hundreds = new bool[8];
+                hundreds[0] = speedHundreds == 100;
+                hundreds[1] = speedHundreds == 200;
+                hundreds[2] = speedHundreds == 300;
+                hundreds[3] = speedHundreds == 400;
+                hundreds[4] = speedHundreds == 500;
+                hundreds[5] = headingHundreds == 100;
+                hundreds[6] = headingHundreds == 200;
+                hundreds[7] = headingHundreds == 300;
+
+                frame.Data[0] = (byte)(speed - speedHundreds);
+                frame.Data[1] = (byte)(Heading - headingHundreds);
+                frame.Data[2] = Frame.BitArrayToByte(hundreds);
+
+                bool[] indicators = new bool[8];
+                indicators[0] = IsMach;
+                indicators[1] = IsTrack;
+                indicators[2] = IsLat;
+                indicators[3] = IsFpa;
+                indicators[4] = IsSpeedDot;
+                indicators[5] = IsHeadingDot;
+                indicators[6] = IsAltitudeDot;
+                indicators[7] = VerticalSpeed >= 0;
+                frame.Data[3] = Frame.BitArrayToByte(indicators);
+
+                int altitude = Altitude / 100;
+                frame.Data[4] = (byte)(altitude > byte.MaxValue ? byte.MaxValue : altitude);
+                frame.Data[5] = (byte)(altitude > byte.MaxValue ? altitude - byte.MaxValue : 0);
+
+                double verticalSpeedPositive = Math.Abs(VerticalSpeed);
+                if (IsFpa)
+                {
+                    verticalSpeedPositive = Math.Round(verticalSpeedPositive, 1);
+                    frame.Data[6] = (byte)(verticalSpeedPositive * 10);
+                }
+                else
+                {
+                    frame.Data[6] = (byte)(verticalSpeedPositive / 100);
+                }
+
+                bool[] hiddens = new bool[8];
+                hiddens[0] = IsSpeedDash;
+                hiddens[1] = IsHeadingDash;
+                hiddens[2] = IsAltitudeDash;
+                hiddens[3] = IsVerticalSpeedDash;
+                hiddens[4] = false; //not used
+                hiddens[5] = false; //not used
+                hiddens[6] = false; //not used
+                hiddens[7] = IsPowerOn;
+
+                frame.Data[7] = Frame.BitArrayToByte(hiddens);
+
+                return frame;
+            }
+        }
 
         /// <summary>
         /// L'id de la frame

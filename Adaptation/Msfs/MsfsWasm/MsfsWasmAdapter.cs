@@ -6,7 +6,8 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
-using A320_Cockpit.Adaptation.Msfs.Model;
+using A320_Cockpit.Adaptation.Msfs.Model.Event;
+using A320_Cockpit.Adaptation.Msfs.Model.Variable;
 using Microsoft.FlightSimulator.SimConnect;
 
 
@@ -161,6 +162,10 @@ namespace A320_Cockpit.Adaptation.Msfs.MsfsWasm
             simConnect.CreateClientData((ID_CLIENT)2, (uint)Marshal.SizeOf<ResponseError>(), SIMCONNECT_CREATE_CLIENT_DATA_FLAG.DEFAULT);
             simConnect.AddToClientDataDefinition((ID_DEFINITION)2, 0, (uint)Marshal.SizeOf<ResponseError>(), 0, 0);
             simConnect.RegisterStruct<SIMCONNECT_RECV_CLIENT_DATA, ResponseError>((ID_DEFINITION)2);
+
+            simConnect.MapClientDataNameToID("A320_Cockpit.SEND_EVENT", (ID_CLIENT)3);
+            simConnect.CreateClientData((ID_CLIENT)3, 256, SIMCONNECT_CREATE_CLIENT_DATA_FLAG.DEFAULT);
+            simConnect.AddToClientDataDefinition((ID_DEFINITION)3, 0, 256, 0, 0);
 
             simConnect.RequestClientData(
                 (ID_CLIENT)1,
@@ -328,6 +333,40 @@ namespace A320_Cockpit.Adaptation.Msfs.MsfsWasm
                     asyncTask = null;
                 }
             }
+        }
+
+        /// <summary>
+        /// Envoi d'un event
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="kEvent"></param>
+        public void Send<T>(KEvent<T> kEvent)
+        {
+            if (!isOpen || simConnect == null)
+            {
+                throw new Exception("Unable to read SimVar, SimConnect is closed");
+            }
+
+            StructStr cmd;
+            cmd.value = "";
+
+            if (kEvent.Value != null)
+            {
+                cmd.value += kEvent.Value + " ";
+            }
+
+            cmd.value += "(>K:" + kEvent.Name + ")";
+            Console.WriteLine(cmd.value);
+            simConnect.SetClientData((ID_CLIENT)3, (ID_DEFINITION)3, SIMCONNECT_CLIENT_DATA_SET_FLAG.DEFAULT, 0, cmd);
+        }
+
+        /// <summary>
+        /// Envoi d'un event HTML
+        /// </summary>
+        /// <param name="hEvent"></param>
+        public void Send(HEvent hEvent)
+        {
+
         }
 
         /// <summary>

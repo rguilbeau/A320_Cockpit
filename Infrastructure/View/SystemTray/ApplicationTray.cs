@@ -13,6 +13,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using A320_Cockpit.Domain.Repository.Cockpit;
+using A320_Cockpit.Infrastructure.Presenter.ListenEvent;
 
 namespace A320_Cockpit.Infrastructure.View.SystemTray
 {
@@ -25,7 +27,6 @@ namespace A320_Cockpit.Infrastructure.View.SystemTray
         private readonly System.Windows.Forms.Timer timerConnexion;
 
         private readonly IRunner msfsVariableRunner;
-        private readonly IRunner cockpitEventRunner;
         private readonly ConnextionUseCase connextionUseCase;
 
         /// <summary>
@@ -34,19 +35,18 @@ namespace A320_Cockpit.Infrastructure.View.SystemTray
         public ApplicationTray()
         {
             connextionUseCase = new(
-                new MsfsSimulatorRepository(MsfsFactory.Get()),
-                new SerialBusCockpitRepository(CanBusFactory.Get()),
-                new TrayConnexionPresenter(this, LogFactory.Get())
+                GlobalFactory.Get().SimulatorConnexionRepository,
+                GlobalFactory.Get().CockpitRepository,
+                GlobalFactory.Get().ConnexionPresenter
             );
 
             msfsVariableRunner = new MsfsVariableRunner(
-                new MsfsSimulatorRepository(MsfsFactory.Get()),
-                LogFactory.Get(),
-                new TraySendPresenter(this, LogFactory.Get()),
-                new SerialBusCockpitRepository(CanBusFactory.Get())
+                GlobalFactory.Get().MsfsSimulatorRepository,
+                GlobalFactory.Get().Log,
+                GlobalFactory.Get().SendPayloadPresenter,
+                GlobalFactory.Get().ListenEventPresenter,
+                GlobalFactory.Get().CockpitRepository
             );
-
-            cockpitEventRunner = new CockpitEventRunner();
 
             timerConnexion = new() { Interval = 5000 };
             timerConnexion.Tick += TimerConnexion_Tick;
@@ -69,9 +69,7 @@ namespace A320_Cockpit.Infrastructure.View.SystemTray
             };
 
             trayIcon.ShowBalloonTip(3);
-
             msfsVariableRunner.Start();
-            cockpitEventRunner.Start();
         }
 
         /// <summary>
@@ -113,7 +111,6 @@ namespace A320_Cockpit.Infrastructure.View.SystemTray
         {
             trayIcon.Visible = false;
             msfsVariableRunner.Stop();
-            cockpitEventRunner.Stop();
             Dispose();
             Application.Exit();
         }
@@ -126,7 +123,7 @@ namespace A320_Cockpit.Infrastructure.View.SystemTray
         /// <exception cref="NotImplementedException"></exception>
         private void Log_OnClick(object? sender, EventArgs e)
         {
-            LogFactory.Get().OpenInEditor();
+            GlobalFactory.Get().Log.OpenInEditor();
         }
 
         /// <summary>

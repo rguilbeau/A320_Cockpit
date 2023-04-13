@@ -9,7 +9,7 @@ namespace A320_Cockpit.Domain.Repository.Simulator
     /// <summary>
     /// Repository du simulateur
     /// </summary>
-    public interface ISimulatorRepository
+    public interface ISimulatorConnexionRepository
     {
         /// <summary>
         /// Etat de la connexion

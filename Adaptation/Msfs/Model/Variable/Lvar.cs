@@ -1,4 +1,4 @@
-﻿namespace A320_Cockpit.Adaptation.Msfs.Model
+﻿namespace A320_Cockpit.Adaptation.Msfs.Model.Variable
 {
     /// <summary>
     /// Définition d'une LVAR

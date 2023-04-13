@@ -1,7 +1,8 @@
 ﻿using A320_Cockpit.Adaptation.Msfs;
+using A320_Cockpit.Domain.Entity.Payload;
 using A320_Cockpit.Domain.Entity.Payload.Overhead;
 using A320_Cockpit.Domain.Enum;
-using A320_Cockpit.Domain.Repository.Payload.Overhead;
+using A320_Cockpit.Domain.Repository.Payload;
 using A320_Cockpit.Infrastructure.Repository.Simulator;
 using System;
 using System.Collections.Generic;
@@ -14,43 +15,17 @@ namespace A320_Cockpit.Infrastructure.Repository.Payload.A32nx.Overhead
     /// <summary>
     /// Repository pour la mise à jour et la récupération de l'entité du contrôle des LED témoins (boutons) du cockpit
     /// </summary>
-    public class A32nxLightIndicatorsRepository : A32nxPayloadRepository<LightIndicators>, ILightIndicatorsRepository
+    public class A32nxLightIndicatorsRepository : IPayloadRepository
     {
         private static readonly LightIndicators lightIndicators = new();
 
         /// <summary>
-        /// Création du repository
-        /// </summary>
-        /// <param name="msfs"></param>
-        public A32nxLightIndicatorsRepository(MsfsSimulatorRepository msfs) : base(msfs)
-        {
-        }
-
-        /// <summary>
-        /// Retourne l'entité LightIndicators
-        /// </summary>
-        protected override LightIndicators Payload => lightIndicators;
-
-        /// <summary>
-        /// Met à jour les valeurs des variables MSFS (LVar, SimVar...)
-        /// Si en event est passé, on ne met à jour que les varibales susceptibles d'avoir été modifiées
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void Refresh(CockpitEvent e)
-        {
-            if (e == CockpitEvent.NONE || e == CockpitEvent.OHP_TEST_LIGHT)
-            {
-                msfs.Read(A32nxVariables.LightIndicatorStatus);
-            }
-
-        }
-
-        /// <summary>
         /// Mise à jour de l'entité avec les variables MSFS Mise à jour de l'entité avec les variables MSFS
         /// </summary>
-        protected override void UpdateEntity()
+        public PayloadEntity Find()
         {
             lightIndicators.TestIndicatorsLight = A32nxVariables.LightIndicatorStatus.Value == 0;
+            return lightIndicators;
         }
     }
 }

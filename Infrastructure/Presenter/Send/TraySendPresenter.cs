@@ -1,6 +1,6 @@
 ﻿using A320_Cockpit.Adaptation.Log;
 using A320_Cockpit.Domain.Entity.Cockpit;
-using A320_Cockpit.Domain.UseCase.Send;
+using A320_Cockpit.Domain.UseCase.SendPayload;
 using A320_Cockpit.Infrastructure.View.SystemTray;
 using System;
 using System.Collections.Generic;
@@ -13,12 +13,11 @@ namespace A320_Cockpit.Infrastructure.Presenter.Send
     /// <summary>
     /// Présenter pour le system tray, afin de gérer l'affichage des frames envoyées
     /// </summary>
-    public class TraySendPresenter : ISendPresenter
+    public class TraySendPresenter : ISendPayloadPresenter
     {
         private Frame? frame;
         private Exception? error;
         private bool isSent = false;
-        private readonly ApplicationTray applicationTray;
         private readonly ILogHandler logger;
 
 
@@ -27,9 +26,8 @@ namespace A320_Cockpit.Infrastructure.Presenter.Send
         /// </summary>
         /// <param name="applicationTray">Le system tray</param>
         /// <param name="logger">Lo logger</param>
-        public TraySendPresenter(ApplicationTray applicationTray, ILogHandler logger)
+        public TraySendPresenter(ILogHandler logger)
         {
-            this.applicationTray = applicationTray;
             this.logger = logger;
         }
 
@@ -60,7 +58,7 @@ namespace A320_Cockpit.Infrastructure.Presenter.Send
             }
             else if (isSent)
             {
-                applicationTray.BlinkIcon();
+                //applicationTray.BlinkIcon();
             }
         }
     }

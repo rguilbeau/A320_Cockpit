@@ -1,5 +1,6 @@
 ﻿using A320_Cockpit.Adaptation.Msfs;
-using A320_Cockpit.Adaptation.Msfs.Model;
+using A320_Cockpit.Adaptation.Msfs.Model.Event;
+using A320_Cockpit.Adaptation.Msfs.Model.Variable;
 using A320_Cockpit.Domain.Entity.Cockpit;
 using A320_Cockpit.Domain.Repository.Cockpit;
 using A320_Cockpit.Domain.Repository.Simulator;
@@ -14,9 +15,10 @@ namespace A320_Cockpit.Infrastructure.Repository.Simulator
     /// <summary>
     /// Repository du Simulateur MSFS2020
     /// </summary>
-    public class MsfsSimulatorRepository : ISimulatorRepository
+    public class MsfsSimulatorRepository : ISimulatorConnexionRepository
     {
         private readonly IMsfs msfs;
+        private bool hasReadVariable;
 
         /// <summary>
         /// Création du repository
@@ -25,6 +27,20 @@ namespace A320_Cockpit.Infrastructure.Repository.Simulator
         public MsfsSimulatorRepository(IMsfs msfs)
         {
             this.msfs = msfs;
+            hasReadVariable = false;
+        }
+
+        /// <summary>
+        /// Détect si une variable a été lu
+        /// </summary>
+        public bool HasReadVariable => hasReadVariable;
+
+        /// <summary>
+        /// Démarre la surveillance de lecture de variable
+        /// </summary>
+        public void StartWatchRead()
+        {
+            hasReadVariable = false;
         }
 
         /// <summary>
@@ -56,6 +72,7 @@ namespace A320_Cockpit.Infrastructure.Repository.Simulator
         public void Read<T>(Lvar<T> variable)
         {
             msfs.Read(variable);
+            hasReadVariable = true;
         }
 
         /// <summary>
@@ -66,6 +83,26 @@ namespace A320_Cockpit.Infrastructure.Repository.Simulator
         public void Read<T>(SimVar<T> variable)
         {
             msfs.Read(variable);
+            hasReadVariable = true;
+        }
+
+        /// <summary>
+        /// Envoi d'un KEvent
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="kEvent"></param>
+        public void Send<T>(KEvent<T> kEvent)
+        {
+            msfs.Send(kEvent);
+        }
+
+        /// <summary>
+        /// Envoi d'un event HTML
+        /// </summary>
+        /// <param name="hEvent"></param>
+        public void Send(HEvent hEvent)
+        {
+            msfs.Send(hEvent);
         }
 
         /// <summary>

@@ -1,4 +1,5 @@
-﻿using A320_Cockpit.Domain.Enum;
+﻿using A320_Cockpit.Domain.Entity.Cockpit;
+using A320_Cockpit.Domain.Enum;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,19 @@ namespace A320_Cockpit.Domain.Entity.Payload.Brightness
     {
         private const int SIZE = 1;
         private byte fcuDisplay = 100;
+
+        /// <summary>
+        /// Retourne l'entité converti en frame
+        /// </summary>
+        public override Frame Frame
+        {
+            get
+            {
+                Frame frame = new(Id, Size);
+                frame.Data[0] = FcuDisplay;
+                return frame;
+            }
+        }
 
         /// <summary>
         /// L'id de la frame

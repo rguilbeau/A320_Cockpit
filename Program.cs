@@ -1,5 +1,8 @@
 using A320_Cockpit.Adaptation.Canbus;
 using A320_Cockpit.Adaptation.Log;
+using A320_Cockpit.Infrastructure;
+using A320_Cockpit.Infrastructure.Repository.Payload.A32nx;
+using A320_Cockpit.Infrastructure.View.StartupDialog;
 using A320_Cockpit.Infrastructure.View.SystemTray;
 
 namespace A320_Cockpit
@@ -25,7 +28,7 @@ namespace A320_Cockpit
         /// <param name="e"></param>
         private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            LogFactory.Get().Error(new Exception("Unhandled exception", (Exception)e.ExceptionObject));
+            GlobalFactory.Get().Log.Error(new Exception("Unhandled exception", (Exception)e.ExceptionObject));
             {
                 Application.Exit();
             }

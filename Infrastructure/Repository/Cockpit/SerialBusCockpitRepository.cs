@@ -23,12 +23,18 @@ namespace A320_Cockpit.Infrastructure.Repository.Cockpit
         public SerialBusCockpitRepository(ICanbus canbus)
         {
             this.canbus = canbus;
+            this.canbus.MessageReceived += Canbus_MessageReceived;
         }
 
         /// <summary>
         /// Retourne si la connexion est ouverte
         /// </summary>
         public bool IsOpen => canbus.IsOpen;
+
+        /// <summary>
+        /// Reception des messages du cockpit
+        /// </summary>
+        public event EventHandler<Frame> ?FrameReceived;
 
         /// <summary>
         /// Ferme la connexion
@@ -53,6 +59,17 @@ namespace A320_Cockpit.Infrastructure.Repository.Cockpit
         public void Send(Frame frame)
         {
             canbus.Send(frame);
+        }
+
+        /// <summary>
+        /// Reception des messages du cockpit
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void Canbus_MessageReceived(object? sender, Frame e)
+        {
+            FrameReceived?.Invoke(this, e);
         }
     }
 }
