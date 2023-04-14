@@ -1,14 +1,13 @@
 ﻿using A320_Cockpit.Adaptation.Log;
+using A320_Cockpit.Domain.Enum;
 using A320_Cockpit.Domain.Repository.Cockpit;
 using A320_Cockpit.Domain.Repository.Payload;
 using A320_Cockpit.Domain.UseCase.ListenEvent;
 using A320_Cockpit.Domain.UseCase.SendPayload;
 using A320_Cockpit.Infrastructure.EventHandler;
-using A320_Cockpit.Infrastructure.Repository.Payload.A32nx;
 using A320_Cockpit.Infrastructure.Repository.Simulator;
 using System.Diagnostics;
-using System.Threading;
-
+using System.Timers;
 
 namespace A320_Cockpit.Infrastructure.Runner
 {
@@ -24,8 +23,8 @@ namespace A320_Cockpit.Infrastructure.Runner
         private readonly ListenEventUseCase listenEventUseCase;
         private readonly Stopwatch stopwatch;
         private readonly CockpitEventDispatcher eventDispatcher;
-        private Thread? thread;
-        private bool reading = true;
+        private CockpitEvent cockpitEvent;
+        private readonly System.Timers.Timer eventReadTimeout;
 
         /// <summary>
         /// Création du thread
@@ -51,8 +50,12 @@ namespace A320_Cockpit.Infrastructure.Runner
             }
 
             listenEventUseCase = new(cockpitRepository, listentEventPresenter);
-            
+            listenEventUseCase.EventReceived += ListenEventUseCase_EventReceived;
+
             eventDispatcher = CockpitEventDispatcher.Get(GlobalFactory.Get().PayloadEventHandlers);
+            cockpitEvent = CockpitEvent.ALL;
+            eventReadTimeout = new() { Interval = 600 };
+            eventReadTimeout.Elapsed += EventReadTimeout_Elapsed;
             stopwatch = new();
         }
 
@@ -62,6 +65,8 @@ namespace A320_Cockpit.Infrastructure.Runner
         public void Stop()
         {
             running = false;
+            listenEventUseCase.Stop();
+            listenEventUseCase.EventReceived -= ListenEventUseCase_EventReceived;
         }
 
         /// <summary>
@@ -72,46 +77,26 @@ namespace A320_Cockpit.Infrastructure.Runner
             running = true;
             listenEventUseCase.Listen();
 
-            thread = new Thread(() =>
+            new Thread(() =>
             {
-                listenEventUseCase.EventReceived += ListenEventUseCase_EventReceived;
-
                 while (true)
                 {
+                    msfs.StartTransaction();
                     stopwatch.Restart();
 
-                    if (!running)
-                    {
-                        // Il a été demandé d'arrêter le thread
-                        listenEventUseCase.Stop();
-                        listenEventUseCase.EventReceived -= ListenEventUseCase_EventReceived;
-                        break;
-                    }
+                    // Arrêt du thread
+                    if (!running) { break; }
 
-                    if (!msfs.IsOpen)
-                    {
-                        // La connexion n'est pas établie on attend un peu avant de réessayer
-                        Thread.Sleep(1000);
-                        continue;
-                    }
+                    // La connexion n'est pas ouverte, on attend un peut
+                    if (!msfs.IsOpen) { Thread.Sleep(1000); continue;}
 
-                    // Mise à jour
                     try
                     {
-                        //A32nxVariables.ReadAll(msfs);
-
-                        if(!reading)
-                        {
-                            Thread.Sleep(1000);
-                            //A32nxVariables.ReadAll(msfs);
-                            reading = true;
-                        }
-
+                        // Mise à jour des payload
                         foreach (SendPayloadUseCase sendUseCase in sendPayloadUseCase)
                         {
-                            //sendUseCase.Exec();
+                            sendUseCase.Exec(cockpitEvent);
                         }
-                       
                     }
                     catch (Exception ex)
                     {
@@ -119,10 +104,10 @@ namespace A320_Cockpit.Infrastructure.Runner
                     }
 
                     stopwatch.Stop();
+                    msfs.StopTransaction();
                     //Console.WriteLine("Loop time:" + stopwatch.ElapsedMilliseconds + "ms");
                 }
-            });
-            thread.Start();
+            }).Start();
         }
 
         /// <summary>
@@ -132,11 +117,24 @@ namespace A320_Cockpit.Infrastructure.Runner
         /// <param name="e"></param>
         private void ListenEventUseCase_EventReceived(object? sender, ListenEventArgs listenEventArgs)
         {
-            reading = false;
-            for(int i = 0; i < 10; i++)
-            {
-                eventDispatcher.Dispatch(listenEventArgs.Event, listenEventArgs.Value);
-            }
+            msfs.StopRead();
+            eventDispatcher.Dispatch(listenEventArgs.Event, listenEventArgs.Value);
+            cockpitEvent = listenEventArgs.Event;
+            msfs.ResumeRead();
+            eventReadTimeout.Stop();
+            eventReadTimeout.Start();
+        }
+
+        /// <summary>
+        /// Fin de la priorité de l'évenement
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void EventReadTimeout_Elapsed(object? sender, ElapsedEventArgs e)
+        {
+            cockpitEvent = CockpitEvent.ALL;
+            eventReadTimeout.Stop();
 
         }
     }

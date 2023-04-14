@@ -51,6 +51,16 @@ namespace A320_Cockpit.Adaptation.Msfs
         public void StopTransaction();
 
         /// <summary>
+        /// Force l'arrêt de la lecture des variables
+        /// </summary>
+        public void StopRead();
+
+        /// <summary>
+        /// Reprend la lecture des variables
+        /// </summary>
+        public void ResumeRead();
+
+        /// <summary>
         /// Retourne si la connexion est ouverte
         /// </summary>
         public bool IsOpen { get; }

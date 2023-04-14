@@ -22,26 +22,17 @@ namespace A320_Cockpit.Infrastructure.EventHandler.A32nx.Glareshield
     public class A32nxFcuBugEventHandler : IPayloadEventHandler
     {
         private readonly MsfsSimulatorRepository msfsSimulatorRepository;
-        private readonly ICockpitRepository cockpitRepository;
-        private readonly ISendPayloadPresenter presenter;
-        private readonly A32nxFcuDisplayRepository fcuDisplayRepository;
 
         public A32nxFcuBugEventHandler(
-            MsfsSimulatorRepository msfsSimulatorRepository,
-            A32nxFcuDisplayRepository fcuDisplayRepository,
-            ICockpitRepository cockpitRepository, 
-            ISendPayloadPresenter presenter
+            MsfsSimulatorRepository msfsSimulatorRepository
         ) {
             this.msfsSimulatorRepository = msfsSimulatorRepository;
-            this.cockpitRepository = cockpitRepository;
-            this.presenter = presenter;
-            this.fcuDisplayRepository = fcuDisplayRepository;
         }
 
         /// <summary>
         /// Les évenements à écouter
         /// </summary>
-        public List<CockpitEvent> EventSubscriber => new() { CockpitEvent.FCU_AP1 };
+        public List<CockpitEvent> EventSubscriber => new() { CockpitEvent.FCU_SPEED_BUG };
 
         /// <summary>
         /// Gestion de l'évenement
@@ -49,8 +40,6 @@ namespace A320_Cockpit.Infrastructure.EventHandler.A32nx.Glareshield
         /// <param name="frame"></param>
         public void Handle(CockpitEvent e, double value)
         {
-            FcuDisplay fcuDisplay = (FcuDisplay)fcuDisplayRepository.Find();
-
             if(value == 0)
             {
                 msfsSimulatorRepository.Send(A32nxEvents.FcuSpeedIncr);
@@ -59,11 +48,6 @@ namespace A320_Cockpit.Infrastructure.EventHandler.A32nx.Glareshield
             {
                 msfsSimulatorRepository.Send(A32nxEvents.FcuSpeedDecr);
             }
-
-            msfsSimulatorRepository.Read(A32nxVariables.SpeedSelected);
-            msfsSimulatorRepository.Read(A32nxVariables.IsSpeedManagedDash);
-
-            new SendPayloadUseCase(cockpitRepository, new A32nxFcuDisplayRepository(), presenter).Exec();
         }
     }
 }

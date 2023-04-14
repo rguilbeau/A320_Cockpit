@@ -8,8 +8,8 @@ namespace A320_Cockpit.Adaptation.Msfs.Model.Event
 {
     public class KEvent<T>
     {
-        private string name;
-        private T? value;
+        private readonly string name;
+        private readonly T? value;
 
         public KEvent(string name)
         {

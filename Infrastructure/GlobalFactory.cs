@@ -43,10 +43,11 @@ namespace A320_Cockpit.Infrastructure
         {
             ICanbus canbus = new CANtactAdapter(new System.IO.Ports.SerialPort(), "COM6", 9600, "125Kbit");
             IMsfs msfs = new MsfsWasmAdapter();
+            MsfsSimulatorRepository = new MsfsSimulatorRepository(msfs);
 
-            A32nxBrightnessRepository a32NxBrightnessRepository = new();
-            A32nxFcuDisplayRepository a32NxFcuDisplayRepository = new();
-            A32nxGlareshieldIndicatorsRepository a32NxGlareshieldIndicatorsRepository = new();
+            A32nxBrightnessRepository a32NxBrightnessRepository = new(MsfsSimulatorRepository);
+            A32nxFcuDisplayRepository a32NxFcuDisplayRepository = new(MsfsSimulatorRepository);
+            A32nxGlareshieldIndicatorsRepository a32NxGlareshieldIndicatorsRepository = new(MsfsSimulatorRepository);
 
             Log = new SirelogAdapter("");
 
@@ -55,7 +56,7 @@ namespace A320_Cockpit.Infrastructure
             ListenEventPresenter = new TrayListenEventPresenter();
 
             CockpitRepository = new SerialBusCockpitRepository(canbus);
-            MsfsSimulatorRepository = new MsfsSimulatorRepository(msfs);
+            
             SimulatorConnexionRepository = MsfsSimulatorRepository;
 
 
@@ -69,7 +70,7 @@ namespace A320_Cockpit.Infrastructure
 
             List<IPayloadEventHandler> allEvents = new()
             {
-                new A32nxFcuBugEventHandler(MsfsSimulatorRepository, a32NxFcuDisplayRepository, CockpitRepository, SendPayloadPresenter),
+                new A32nxFcuBugEventHandler(MsfsSimulatorRepository),
             };
             PayloadEventHandlers = allEvents;
         }

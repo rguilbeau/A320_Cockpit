@@ -19,14 +19,58 @@ namespace A320_Cockpit.Infrastructure.Repository.Payload.A32nx.Glareshield
     /// Repository pour la mise à jour et la récupération de l'entité du des valeurs 
     /// à afficher sur les écrans du FCU
     /// </summary>
-    public class A32nxFcuDisplayRepository : IPayloadRepository
+    public class A32nxFcuDisplayRepository : PayloadRepository<FcuDisplay>
     {
         private static readonly FcuDisplay fcuDisplay = new();
+
+        protected override FcuDisplay Payload => fcuDisplay;
+
+        /// <summary>
+        /// Création du repository
+        /// </summary>
+        /// <param name="msfsSimulatorRepository"></param>
+        public A32nxFcuDisplayRepository(MsfsSimulatorRepository msfsSimulatorRepository) : base(msfsSimulatorRepository)
+        {
+        }
+
+        /// <summary>
+        /// Met à jour l'entité
+        /// </summary>
+        protected override bool Refresh(CockpitEvent e)
+        {
+            msfsSimulatorRepository.StartWatchRead();
+
+            switch(e)
+            {
+                case CockpitEvent.ALL:
+                    msfsSimulatorRepository.Read(A32nxVariables.IsManagedSpeedInMach);
+                    msfsSimulatorRepository.Read(A32nxVariables.SpeedSelected);
+                    msfsSimulatorRepository.Read(A32nxVariables.IsSpeedDot);
+                    msfsSimulatorRepository.Read(A32nxVariables.IsSpeedManagedDash);
+                    msfsSimulatorRepository.Read(A32nxVariables.IsHeadingDot);
+                    msfsSimulatorRepository.Read(A32nxVariables.IsHeadingManageDash);
+                    msfsSimulatorRepository.Read(A32nxVariables.HeadingSelected);
+                    msfsSimulatorRepository.Read(A32nxVariables.IsTrackFpa);
+                    msfsSimulatorRepository.Read(A32nxVariables.AltitudeSelected);
+                    msfsSimulatorRepository.Read(A32nxVariables.AltitudeManaged);
+                    msfsSimulatorRepository.Read(A32nxVariables.VerticalSpeedSelectedFpa);
+                    msfsSimulatorRepository.Read(A32nxVariables.VerticalSpeedSelectedFpm);
+                    msfsSimulatorRepository.Read(A32nxVariables.VerticalSpeedManaged);
+                    msfsSimulatorRepository.Read(A32nxVariables.IsElectricityAc1BusPowered);
+                    break;
+                case CockpitEvent.FCU_SPEED_BUG:
+                    msfsSimulatorRepository.Read(A32nxVariables.SpeedSelected);
+                    msfsSimulatorRepository.Read(A32nxVariables.IsSpeedManagedDash);
+                    break;
+            }
+
+            return msfsSimulatorRepository.HasReadVariable;
+        }
 
         /// <summary>
         /// Mise à jour de l'entité avec les variables MSFS
         /// </summary>
-        public PayloadEntity Find()
+        protected override FcuDisplay BuildPayload()
         {
             if (A32nxVariables.SpeedSelected.Value <= 0)
             {

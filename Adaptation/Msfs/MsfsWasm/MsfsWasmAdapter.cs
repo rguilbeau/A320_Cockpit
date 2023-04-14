@@ -24,6 +24,7 @@ namespace A320_Cockpit.Adaptation.Msfs.MsfsWasm
         private readonly List<string> registeredSimVars;
         private bool isOpen;
         private bool isTransaction;
+        private bool isForceStopRead;
         private readonly List<string> transactionVariables;
 
         AsyncTask? asyncTask;
@@ -76,6 +77,7 @@ namespace A320_Cockpit.Adaptation.Msfs.MsfsWasm
             registeredSimVars = new();
             transactionVariables = new();
             isTransaction = false;
+            isForceStopRead = false;
         }
 
         /// <summary>
@@ -102,6 +104,22 @@ namespace A320_Cockpit.Adaptation.Msfs.MsfsWasm
         {
             isTransaction = false;
             transactionVariables.Clear();
+        }
+
+        /// <summary>
+        /// Force l'arrêt de la lecture des variables
+        /// </summary>
+        public void StopRead()
+        {
+            isForceStopRead = true;
+        }
+
+        /// <summary>
+        /// Reprend la lecture des variables
+        /// </summary>
+        public void ResumeRead()
+        {
+            isForceStopRead = false;
         }
 
         /// <summary>
@@ -240,7 +258,7 @@ namespace A320_Cockpit.Adaptation.Msfs.MsfsWasm
                 throw new Exception("Unable to read LVar, SimConnect is closed");
             }
 
-            if (!isTransaction || !transactionVariables.Contains(lvar.Identifier))
+            if (!isForceStopRead || !isTransaction || !transactionVariables.Contains(lvar.Identifier))
             {
                 transactionVariables.Add(lvar.Identifier);
 
@@ -274,7 +292,6 @@ namespace A320_Cockpit.Adaptation.Msfs.MsfsWasm
                     asyncTask = null;
                     throw new Exception("Unable to read lvar, null received");
                 }
-
             }
         }
 
@@ -292,7 +309,7 @@ namespace A320_Cockpit.Adaptation.Msfs.MsfsWasm
                 throw new Exception("Unable to read SimVar, SimConnect is closed");
             }
 
-            if (!isTransaction || !transactionVariables.Contains(simVar.Identifier))
+            if (!isForceStopRead || !isTransaction || !transactionVariables.Contains(simVar.Identifier))
             {
                 if (!registeredSimVars.Contains(simVar.Name))
                 {
@@ -356,7 +373,6 @@ namespace A320_Cockpit.Adaptation.Msfs.MsfsWasm
             }
 
             cmd.value += "(>K:" + kEvent.Name + ")";
-            Console.WriteLine(cmd.value);
             simConnect.SetClientData((ID_CLIENT)3, (ID_DEFINITION)3, SIMCONNECT_CLIENT_DATA_SET_FLAG.DEFAULT, 0, cmd);
         }
 

@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,14 +16,50 @@ namespace A320_Cockpit.Infrastructure.Repository.Payload.A32nx.Glareshield
     /// <summary>
     /// Repository pour la mise à jour et la récupération de l'entité du des témoins des panels du Glareshield
     /// </summary>
-    public class A32nxGlareshieldIndicatorsRepository : IPayloadRepository
+    public class A32nxGlareshieldIndicatorsRepository : PayloadRepository<GlareshieldIndicators>
     {
         private static readonly GlareshieldIndicators glareshieldIndicators = new();
 
         /// <summary>
+        /// Retourne l'entité
+        /// </summary>
+        protected override GlareshieldIndicators Payload => glareshieldIndicators;
+
+        /// <summary>
+        /// Création du repository
+        /// </summary>
+        /// <param name="msfsSimulatorRepository"></param>
+        public A32nxGlareshieldIndicatorsRepository(MsfsSimulatorRepository msfsSimulatorRepository) : base(msfsSimulatorRepository)
+        {
+        }
+
+        /// <summary>
+        /// Mise à jour de l'entité
+        /// </summary>
+        protected override bool Refresh(CockpitEvent e)
+        {
+            msfsSimulatorRepository.StartWatchRead();
+
+            switch(e)
+            {
+                case CockpitEvent.ALL:
+                    msfsSimulatorRepository.Read(A32nxVariables.Autopilot1Active);
+                    msfsSimulatorRepository.Read(A32nxVariables.Autopilot2Active);
+                    msfsSimulatorRepository.Read(A32nxVariables.AutoThrustStatus);
+                    msfsSimulatorRepository.Read(A32nxVariables.LocModeActive);
+                    msfsSimulatorRepository.Read(A32nxVariables.ExpedModeActive);
+                    msfsSimulatorRepository.Read(A32nxVariables.ApprModeActive);
+                    msfsSimulatorRepository.Read(A32nxVariables.IsElectricityAc1BusPowered);
+                    break;
+            }
+
+            return msfsSimulatorRepository.HasReadVariable;
+        }
+
+        /// <summary>
         /// Mise à jour de l'entité avec les variables MSFS
         /// </summary>
-        public PayloadEntity Find()
+        protected override GlareshieldIndicators BuildPayload()
         {
             glareshieldIndicators.FcuAp1 = A32nxVariables.Autopilot1Active.Value;
             glareshieldIndicators.FcuAp2 = A32nxVariables.Autopilot2Active.Value;

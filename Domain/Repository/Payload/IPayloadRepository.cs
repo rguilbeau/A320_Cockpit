@@ -14,9 +14,10 @@ namespace A320_Cockpit.Domain.Repository.Payload
     public interface IPayloadRepository
     {
         /// <summary>
-        /// Met à jour et récupère l'entité
+        /// Récupère l'entité
         /// </summary>
+        /// <param name="e"></param>
         /// <returns></returns>
-        public PayloadEntity Find();
+        public PayloadEntity Find(CockpitEvent e);
     }
 }

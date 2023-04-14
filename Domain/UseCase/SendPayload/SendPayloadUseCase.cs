@@ -1,5 +1,6 @@
 ﻿using A320_Cockpit.Domain.Entity.Cockpit;
 using A320_Cockpit.Domain.Entity.Payload;
+using A320_Cockpit.Domain.Enum;
 using A320_Cockpit.Domain.Repository.Cockpit;
 using A320_Cockpit.Domain.Repository.Payload;
 using System;
@@ -35,9 +36,9 @@ namespace A320_Cockpit.Domain.UseCase.SendPayload
         /// <summary>
         /// Execute le UseCase
         /// </summary>
-        public void Exec()
+        public void Exec(CockpitEvent e)
         {
-            PayloadEntity payload = payloadRepository.Find();
+            PayloadEntity payload = payloadRepository.Find(e);
             Frame frame = payload.Frame;
 
             // Si la frame n'a pas changé, il ne sert à rien de la renvoyer

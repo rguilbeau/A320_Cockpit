@@ -114,6 +114,22 @@ namespace A320_Cockpit.Infrastructure.Repository.Simulator
         }
 
         /// <summary>
+        /// Force l'arrêt de la lecture des variables
+        /// </summary>
+        public void StopRead()
+        {
+            msfs.StopRead();
+        }
+
+        /// <summary>
+        /// Reprend la lecture des variables
+        /// </summary>
+        public void ResumeRead()
+        {
+            msfs.ResumeRead();
+        }
+
+        /// <summary>
         /// Arrête une transaction (une transaction ne lit qu'une seule fois la même variable)
         /// </summary>
         public void StopTransaction()

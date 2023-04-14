@@ -52,7 +52,7 @@ namespace A320_Cockpit.Domain.UseCase.ListenEvent
                     if (System.Enum.IsDefined(typeof(CockpitEvent), idEvent))
                     {
                         CockpitEvent e = (CockpitEvent)System.Enum.Parse(typeof(CockpitEvent), idEvent.ToString());
-                        EventReceived?.Invoke(this, new ListenEventArgs(e, value));
+                        EventReceived?.Invoke(this, new ListenEventArgs(CockpitEvent.FCU_SPEED_BUG, value));
                         presenter.Present(e);
                     }
                 }
