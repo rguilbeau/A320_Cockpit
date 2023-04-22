@@ -20,7 +20,7 @@ namespace A320_Cockpit.Infrastructure.EventHandler.FakeA320.Glareshield
     /// <summary>
     /// Evenement liée au bouton rotatif de la vitesse
     /// </summary>
-    public class FakeA320FcuBugEventHandler : IPayloadEventHandler
+    public class FakeA320FcuSpdBugEventHandler : IPayloadEventHandler
     {
         private readonly FakeA320FcuDisplayRepository fcuDisplayRepository;
 
@@ -28,7 +28,7 @@ namespace A320_Cockpit.Infrastructure.EventHandler.FakeA320.Glareshield
         /// 
         /// </summary>
         /// <param name="fcuDisplayRepository"></param>
-        public FakeA320FcuBugEventHandler(FakeA320FcuDisplayRepository fcuDisplayRepository)
+        public FakeA320FcuSpdBugEventHandler(FakeA320FcuDisplayRepository fcuDisplayRepository)
         {
             this.fcuDisplayRepository = fcuDisplayRepository;
         }
@@ -52,7 +52,8 @@ namespace A320_Cockpit.Infrastructure.EventHandler.FakeA320.Glareshield
             switch(e)
             {
                 case CockpitEvent.FCU_SPEED_BUG:
-                    fcuDisplay.Speed += value > 0 ? 1 : -1;
+                    double incr = fcuDisplay.IsMach ? 0.1 : 1;
+                    fcuDisplay.Speed += value > 0 ? incr : -incr;
                     break;
                 case CockpitEvent.FCU_SPEED_PUSH:
                     fcuDisplay.IsSpeedDash = true;

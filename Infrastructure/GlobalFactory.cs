@@ -64,7 +64,10 @@ namespace A320_Cockpit.Infrastructure
 
                 List<IPayloadEventHandler> allEvents = new()
                 {
-                    new FakeA320FcuBugEventHandler((FakeA320FcuDisplayRepository)fcuDisplayRepository)
+                    new FakeA320FcuAltBugEventHandler((FakeA320FcuDisplayRepository)fcuDisplayRepository),
+                    new FakeA320FcuHdgBugEventHandler((FakeA320FcuDisplayRepository)fcuDisplayRepository),
+                    new FakeA320FcuSpdBugEventHandler((FakeA320FcuDisplayRepository)fcuDisplayRepository),
+                    new FakeA320FcuVsBugEventHandler((FakeA320FcuDisplayRepository)fcuDisplayRepository)
                 };
                 PayloadEventHandlers = allEvents;
             } else
