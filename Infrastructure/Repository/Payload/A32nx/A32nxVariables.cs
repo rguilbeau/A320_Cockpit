@@ -54,46 +54,5 @@ namespace A320_Cockpit.Infrastructure.Repository.Payload.A32nx
         //
         public static readonly Lvar<short> LightIndicatorStatus = new("A32NX_OVHD_INTLT_ANN");
 
-        /// <summary>
-        /// Lecture de toutes les variables
-        /// </summary>
-        /// <param name="msfsSimulatorRepository"></param>
-        public static void ReadAll(MsfsSimulatorRepository msfsSimulatorRepository)
-        {
-            foreach (FieldInfo field in typeof(A32nxVariables).GetFields(BindingFlags.Public | BindingFlags.Static))
-            {
-                object ?value = field.GetValue(null);
-                if(value != null)
-                {
-                    switch (value)
-                    {
-                        case Lvar<bool> lvar:
-                            msfsSimulatorRepository.Read(lvar);
-                            break;
-                        case Lvar<double> lvar:
-                            msfsSimulatorRepository.Read(lvar);
-                            break;
-                        case Lvar<short> lvar:
-                            msfsSimulatorRepository.Read(lvar);
-                            break;
-                        case Lvar<int> lvar:
-                            msfsSimulatorRepository.Read(lvar);
-                            break;
-                        case SimVar<bool> simVar:
-                            msfsSimulatorRepository.Read(simVar);
-                            break;
-                        case SimVar<double> simVar:
-                            msfsSimulatorRepository.Read(simVar);
-                            break;
-                        case SimVar<short> simVar:
-                            msfsSimulatorRepository.Read(simVar);
-                            break;
-                        case SimVar<int> simVar:
-                            msfsSimulatorRepository.Read(simVar);
-                            break;
-                    }
-                }
-            }
-        }
     }
 }
