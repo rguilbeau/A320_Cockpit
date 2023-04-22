@@ -3,6 +3,7 @@ using A320_Cockpit.Adaptation.Canbus.CANtact;
 using A320_Cockpit.Adaptation.Log;
 using A320_Cockpit.Adaptation.Log.Sirelog;
 using A320_Cockpit.Adaptation.Msfs;
+using A320_Cockpit.Adaptation.Msfs.FakeMsfs;
 using A320_Cockpit.Adaptation.Msfs.MsfsWasm;
 using A320_Cockpit.Domain.Repository.Cockpit;
 using A320_Cockpit.Domain.Repository.Payload;
@@ -34,10 +35,9 @@ namespace A320_Cockpit.Infrastructure
 {
     public class GlobalFactory
     {
+        public static bool DEBUG { get; set; }
 
         private static GlobalFactory? instance;
-
-        private const bool DEBUG = true;
 
         public static GlobalFactory Get()
         {
@@ -48,7 +48,17 @@ namespace A320_Cockpit.Infrastructure
         public GlobalFactory() 
         {
             ICanbus canbus = new CANtactAdapter(new System.IO.Ports.SerialPort(), "COM6", 9600, "125Kbit");
-            IMsfs msfs = new MsfsWasmAdapter();
+
+            IMsfs msfs;
+
+            if (DEBUG)
+            {
+                msfs = new FakeMsfs();
+            } else
+            {
+                msfs = new MsfsWasmAdapter();
+            }
+            
             MsfsSimulatorRepository = new MsfsSimulatorRepository(msfs);
 
 

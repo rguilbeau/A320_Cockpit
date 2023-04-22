@@ -12,7 +12,7 @@ namespace A320_Cockpit.Infrastructure.EventHandler.FakeA320.Glareshield
     public class FakeA320FcuVsBugEventHandler : IPayloadEventHandler
     {
 
-        private FakeA320FcuDisplayRepository fcuDisplayRepository;
+        private readonly FakeA320FcuDisplayRepository fcuDisplayRepository;
 
         public FakeA320FcuVsBugEventHandler(FakeA320FcuDisplayRepository fcuDisplayRepository)
         {

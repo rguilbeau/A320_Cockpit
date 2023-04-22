@@ -53,7 +53,7 @@ namespace A320_Cockpit.Infrastructure.Repository.Simulator
         /// </summary>
         public void Open()
         {
-            //msfs.Open();
+            msfs.Open();
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace A320_Cockpit.Infrastructure.Repository.Simulator
         /// </summary>
         public void Close()
         {
-            //msfs.Close();
+            msfs.Close();
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace A320_Cockpit.Infrastructure.Repository.Simulator
         /// <param name="variable"></param>
         public void Read<T>(Lvar<T> variable)
         {
-            //msfs.Read(variable);
+            msfs.Read(variable);
             hasReadVariable = true;
         }
 
@@ -82,7 +82,7 @@ namespace A320_Cockpit.Infrastructure.Repository.Simulator
         /// <param name="variable"></param>
         public void Read<T>(SimVar<T> variable)
         {
-            //msfs.Read(variable);
+            msfs.Read(variable);
             hasReadVariable = true;
         }
 
@@ -93,7 +93,7 @@ namespace A320_Cockpit.Infrastructure.Repository.Simulator
         /// <param name="kEvent"></param>
         public void Send<T>(KEvent<T> kEvent)
         {
-            //msfs.Send(kEvent);
+            msfs.Send(kEvent);
         }
 
         /// <summary>
@@ -102,7 +102,7 @@ namespace A320_Cockpit.Infrastructure.Repository.Simulator
         /// <param name="hEvent"></param>
         public void Send(HEvent hEvent)
         {
-           // msfs.Send(hEvent);
+            msfs.Send(hEvent);
         }
 
         /// <summary>
@@ -110,7 +110,7 @@ namespace A320_Cockpit.Infrastructure.Repository.Simulator
         /// </summary>
         public void StartTransaction()
         {
-            //msfs.StartTransaction();
+            msfs.StartTransaction();
         }
 
         /// <summary>
@@ -118,7 +118,7 @@ namespace A320_Cockpit.Infrastructure.Repository.Simulator
         /// </summary>
         public void StopRead()
         {
-            //msfs.StopRead();
+            msfs.StopRead();
         }
 
         /// <summary>
@@ -126,7 +126,7 @@ namespace A320_Cockpit.Infrastructure.Repository.Simulator
         /// </summary>
         public void ResumeRead()
         {
-           // msfs.ResumeRead();
+           msfs.ResumeRead();
         }
 
         /// <summary>
@@ -134,7 +134,7 @@ namespace A320_Cockpit.Infrastructure.Repository.Simulator
         /// </summary>
         public void StopTransaction()
         {
-           // msfs.StopTransaction();
+           msfs.StopTransaction();
         }
     }
 }
