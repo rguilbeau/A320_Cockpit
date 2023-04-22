@@ -12,6 +12,7 @@ using A320_Cockpit.Domain.UseCase.ListenEvent;
 using A320_Cockpit.Domain.UseCase.SendPayload;
 using A320_Cockpit.Infrastructure.EventHandler;
 using A320_Cockpit.Infrastructure.EventHandler.A32nx.Glareshield;
+using A320_Cockpit.Infrastructure.EventHandler.FakeA320.Glareshield;
 using A320_Cockpit.Infrastructure.Presenter.Connexion;
 using A320_Cockpit.Infrastructure.Presenter.ListenEvent;
 using A320_Cockpit.Infrastructure.Presenter.Send;
@@ -19,9 +20,12 @@ using A320_Cockpit.Infrastructure.Repository.Cockpit;
 using A320_Cockpit.Infrastructure.Repository.Payload.A32nx.Brightness;
 using A320_Cockpit.Infrastructure.Repository.Payload.A32nx.Glareshield;
 using A320_Cockpit.Infrastructure.Repository.Payload.A32nx.Overhead;
+using A320_Cockpit.Infrastructure.Repository.Payload.FakeA320.Brightness;
+using A320_Cockpit.Infrastructure.Repository.Payload.FakeA320.Glareshield;
 using A320_Cockpit.Infrastructure.Repository.Simulator;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,6 +36,8 @@ namespace A320_Cockpit.Infrastructure
     {
 
         private static GlobalFactory? instance;
+
+        private const bool DEBUG = true;
 
         public static GlobalFactory Get()
         {
@@ -45,9 +51,35 @@ namespace A320_Cockpit.Infrastructure
             IMsfs msfs = new MsfsWasmAdapter();
             MsfsSimulatorRepository = new MsfsSimulatorRepository(msfs);
 
-            A32nxBrightnessRepository a32NxBrightnessRepository = new(MsfsSimulatorRepository);
-            A32nxFcuDisplayRepository a32NxFcuDisplayRepository = new(MsfsSimulatorRepository);
-            A32nxGlareshieldIndicatorsRepository a32NxGlareshieldIndicatorsRepository = new(MsfsSimulatorRepository);
+
+            IPayloadRepository brightnessRepository;
+            IPayloadRepository fcuDisplayRepository;
+            IPayloadRepository glareshieldIndicatorsRepository;
+
+            if (DEBUG)
+            {
+                brightnessRepository = new FakeA320BrightnessRepository();
+                fcuDisplayRepository = new FakeA320FcuDisplayRepository();
+                glareshieldIndicatorsRepository = new FakeA320GlareshieldIndicatorsRepository();
+
+                List<IPayloadEventHandler> allEvents = new()
+                {
+                    new FakeA320FcuBugEventHandler((FakeA320FcuDisplayRepository)fcuDisplayRepository)
+                };
+                PayloadEventHandlers = allEvents;
+            } else
+            {
+                brightnessRepository = new A32nxBrightnessRepository(MsfsSimulatorRepository);
+                fcuDisplayRepository = new A32nxFcuDisplayRepository(MsfsSimulatorRepository);
+                glareshieldIndicatorsRepository = new A32nxGlareshieldIndicatorsRepository(MsfsSimulatorRepository);
+
+                List<IPayloadEventHandler> allEvents = new()
+                {
+                    new A32nxFcuBugEventHandler(MsfsSimulatorRepository),
+                };
+                PayloadEventHandlers = allEvents;
+            }
+            
 
             Log = new SirelogAdapter("");
 
@@ -62,17 +94,11 @@ namespace A320_Cockpit.Infrastructure
 
             List<IPayloadRepository> allRepository = new()
             {
-                a32NxBrightnessRepository,
-                a32NxFcuDisplayRepository,
-                a32NxGlareshieldIndicatorsRepository
+                brightnessRepository,
+                fcuDisplayRepository,
+                glareshieldIndicatorsRepository
             };
             PayloadRepositories = allRepository;
-
-            List<IPayloadEventHandler> allEvents = new()
-            {
-                new A32nxFcuBugEventHandler(MsfsSimulatorRepository),
-            };
-            PayloadEventHandlers = allEvents;
         }
 
         public ILogHandler Log { get; private set; }

@@ -16,7 +16,7 @@ namespace A320_Cockpit.Infrastructure.Repository.Payload.A32nx.Glareshield
     /// <summary>
     /// Repository pour la mise à jour et la récupération de l'entité du des témoins des panels du Glareshield
     /// </summary>
-    public class A32nxGlareshieldIndicatorsRepository : PayloadRepository<GlareshieldIndicators>
+    public class A32nxGlareshieldIndicatorsRepository : A32nxPayloadRepository<GlareshieldIndicators>
     {
         private static readonly GlareshieldIndicators glareshieldIndicators = new();
 

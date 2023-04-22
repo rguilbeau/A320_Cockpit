@@ -37,24 +37,25 @@ namespace A320_Cockpit.Domain.UseCase.ListenEvent
         /// <param name="frame"></param>
         private void CockpitRepository_FrameReceived(object? sender, Frame frame)
         {
-            if (frame.Id == 0x000)
+            if (frame.Id == 0x000 && frame.Size == 6)
             {
-                if(frame.Size > 1)
+                int idEvent = (frame.Data[0] << 8) | (frame.Data[1]);
+
+                byte[] bytes = new byte[] { frame.Data[2], frame.Data[3], frame.Data[4], frame.Data[5] };
+                
+                if(!BitConverter.IsLittleEndian) 
                 {
-                    int idEvent = (frame.Data[0] << 8) | (frame.Data[1]);
+                    Array.Reverse(bytes);
+                }
 
-                    double value = 0;
-                    if(frame.Size > 4)
-                    {
-                        value = (frame.Data[1] << 8) | (frame.Data[2]);
-                    }
 
-                    if (System.Enum.IsDefined(typeof(CockpitEvent), idEvent))
-                    {
-                        CockpitEvent e = (CockpitEvent)System.Enum.Parse(typeof(CockpitEvent), idEvent.ToString());
-                        EventReceived?.Invoke(this, new ListenEventArgs(CockpitEvent.FCU_SPEED_BUG, value));
-                        presenter.Present(e);
-                    }
+                float data = BitConverter.ToSingle(bytes, 0);
+
+                if (System.Enum.IsDefined(typeof(CockpitEvent), idEvent))
+                {
+                    CockpitEvent e = (CockpitEvent)System.Enum.Parse(typeof(CockpitEvent), idEvent.ToString());
+                    EventReceived?.Invoke(this, new ListenEventArgs(e, data));
+                    presenter.Present(e);
                 }
             }
         }

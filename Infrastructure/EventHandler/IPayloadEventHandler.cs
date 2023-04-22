@@ -24,6 +24,6 @@ namespace A320_Cockpit.Infrastructure.EventHandler
         /// Gestion de l'évenement
         /// </summary>
         /// <param name="frame"></param>
-        public void Handle(CockpitEvent cockpitEvent, double value);
+        public void Handle(CockpitEvent cockpitEvent, float value);
     }
 }

@@ -8,18 +8,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace A320_Cockpit.Infrastructure.Repository.Payload.A32nx
+namespace A320_Cockpit.Infrastructure.Repository.Payload.FakeA320
 {
-    public abstract class PayloadRepository<T> : IPayloadRepository where T: PayloadEntity
+    public abstract class FakeA320PayloadRepository<T> : IPayloadRepository where T: PayloadEntity
     {
-        protected readonly MsfsSimulatorRepository msfsSimulatorRepository;
+        private bool askRefresh;
 
-        protected abstract T Payload { get; }
+        public abstract T Payload { get; }
 
-        public PayloadRepository(MsfsSimulatorRepository msfsSimulatorRepository)
+        public FakeA320PayloadRepository()
         {
-            this.msfsSimulatorRepository = msfsSimulatorRepository;
+            askRefresh = true;
         }
+
+        public bool AskRefresh { get { return askRefresh; } set { askRefresh = value; } }
 
         protected abstract T BuildPayload();
 
@@ -29,12 +31,13 @@ namespace A320_Cockpit.Infrastructure.Repository.Payload.A32nx
         {
             if(Refresh(e))
             {
+                askRefresh = false;
                 return BuildPayload();
             } else
             {
+                askRefresh = false;
                 return Payload;
             }
-            
         }
 
     }

@@ -38,7 +38,7 @@ namespace A320_Cockpit.Infrastructure.EventHandler.A32nx.Glareshield
         /// Gestion de l'évenement
         /// </summary>
         /// <param name="frame"></param>
-        public void Handle(CockpitEvent e, double value)
+        public void Handle(CockpitEvent e, float value)
         {
             if(value == 0)
             {

@@ -23,6 +23,7 @@ namespace A320_Cockpit.Infrastructure.Runner
         private readonly ListenEventUseCase listenEventUseCase;
         private readonly Stopwatch stopwatch;
         private readonly CockpitEventDispatcher eventDispatcher;
+        private readonly ICockpitRepository cockpitRepository;
         private CockpitEvent cockpitEvent;
         private readonly System.Timers.Timer eventReadTimeout;
 
@@ -49,6 +50,7 @@ namespace A320_Cockpit.Infrastructure.Runner
                 sendPayloadUseCase.Add(new SendPayloadUseCase(cockpitRepository, payloadRepository, presenter));
             }
 
+            this.cockpitRepository = cockpitRepository;
             listenEventUseCase = new(cockpitRepository, listentEventPresenter);
             listenEventUseCase.EventReceived += ListenEventUseCase_EventReceived;
 
@@ -87,8 +89,8 @@ namespace A320_Cockpit.Infrastructure.Runner
                     // Arrêt du thread
                     if (!running) { break; }
 
-                    // La connexion n'est pas ouverte, on attend un peut
-                    if (!msfs.IsOpen) { Thread.Sleep(1000); continue;}
+                    // Les connexions ne sont pas ouvertes, on attend un peut
+                    if (!msfs.IsOpen || !cockpitRepository.IsOpen) { Thread.Sleep(1000); continue;}
 
                     try
                     {

@@ -10,26 +10,26 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace A320_Cockpit.Infrastructure.Repository.Payload.A32nx.Brightness
+namespace A320_Cockpit.Infrastructure.Repository.Payload.FakeA320.Brightness
 {
     /// <summary>
     /// Repository pour la mise à jour et la récupération de l'entité du rétroaiclairage
     /// </summary>
-    public class A32nxBrightnessRepository : A32nxPayloadRepository<BrightnessCockpit>
+    public class FakeA320BrightnessRepository : FakeA320PayloadRepository<BrightnessCockpit>
     {
         private static readonly BrightnessCockpit brightness = new();
         
         /// <summary>
         /// Retourne l'entité
         /// </summary>
-        protected override BrightnessCockpit Payload => brightness;
+        public override BrightnessCockpit Payload => brightness;
 
         /// <summary>
         /// Création du repository
         /// </summary>
-        /// <param name="msfsSimulatorRepository"></param>
-        public A32nxBrightnessRepository(MsfsSimulatorRepository msfsSimulatorRepository) : base(msfsSimulatorRepository)
+        public FakeA320BrightnessRepository() : base()
         {
+            brightness.FcuDisplay = 100;
         }
 
         /// <summary>
@@ -37,13 +37,7 @@ namespace A320_Cockpit.Infrastructure.Repository.Payload.A32nx.Brightness
         /// </summary>
         protected override bool Refresh(CockpitEvent e)
         {
-            if(e == CockpitEvent.ALL)
-            {
-                return true;
-            } else
-            {
-                return false;
-            }
+            return AskRefresh;
         }
 
         /// <summary>
@@ -51,7 +45,6 @@ namespace A320_Cockpit.Infrastructure.Repository.Payload.A32nx.Brightness
         /// </summary>
         protected override BrightnessCockpit BuildPayload()
         {
-            brightness.FcuDisplay = 100;
             return brightness;
         }
     }

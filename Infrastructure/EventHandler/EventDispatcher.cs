@@ -53,7 +53,7 @@ namespace A320_Cockpit.Infrastructure.EventHandler
         /// Lance le FireEvent des classes associées à l'evenement
         /// </summary>
         /// <param name="e"></param>
-        public void Dispatch(CockpitEvent e, double value)
+        public void Dispatch(CockpitEvent e, float value)
         {
             foreach(IPayloadEventHandler eventClass in eventDictionary[e])
             {

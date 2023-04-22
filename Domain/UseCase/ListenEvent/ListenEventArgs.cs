@@ -14,14 +14,14 @@ namespace A320_Cockpit.Domain.UseCase.ListenEvent
     public class ListenEventArgs : EventArgs
     {
         private readonly CockpitEvent cockpitEvent;
-        private readonly double value;
+        private readonly float value;
 
         /// <summary>
         /// Création des arguments de l'event
         /// </summary>
         /// <param name="cockpitEvent"></param>
         /// <param name="value"></param>
-        public ListenEventArgs(CockpitEvent cockpitEvent, double value)
+        public ListenEventArgs(CockpitEvent cockpitEvent, float value)
         {
             this.cockpitEvent = cockpitEvent;
             this.value = value;
@@ -35,6 +35,6 @@ namespace A320_Cockpit.Domain.UseCase.ListenEvent
         /// <summary>
         /// Retourne la frame
         /// </summary>
-        public double Value { get { return value; } }
+        public float Value { get { return value; } }
     }
 }
