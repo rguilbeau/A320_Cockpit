@@ -54,11 +54,4 @@
     </None>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Infrastructure\EventHandler\A32nx\Brightness\" />
-    <Folder Include="Infrastructure\EventHandler\A32nx\Overhead\" />
-    <Folder Include="Infrastructure\EventHandler\FakeA320\Brightness\" />
-    <Folder Include="Infrastructure\EventHandler\FakeA320\Overhead\" />
-  </ItemGroup>
-
 </Project>

@@ -29,6 +29,9 @@ namespace A320_Cockpit.Adaptation.Msfs.MsfsWasm
 
         AsyncTask? asyncTask;
 
+        private readonly object lockSend = new();
+        private readonly object lockRead = new();
+
         /// <summary>
         /// La structure d'une variable en string
         /// </summary>
@@ -253,44 +256,47 @@ namespace A320_Cockpit.Adaptation.Msfs.MsfsWasm
         /// <exception cref="Exception"></exception>
         public void Read<T>(Lvar<T> lvar)
         {
-            if (!isOpen || simConnect == null)
+            lock(lockRead)
             {
-                throw new Exception("Unable to read LVar, SimConnect is closed");
-            }
-
-            if (!isForceStopRead || !isTransaction || !transactionVariables.Contains(lvar.Identifier))
-            {
-                transactionVariables.Add(lvar.Identifier);
-
-                StructStr cmd;
-                cmd.value = lvar.Name;
-
-                int definition = 0;
-
-                asyncTask = new(definition, typeof(double));
-
-                simConnect.SetClientData((ID_CLIENT)0, (ID_DEFINITION)definition, SIMCONNECT_CLIENT_DATA_SET_FLAG.DEFAULT, 0, cmd);
-
-                while (!asyncTask.IsCompleted)
+                if (!isOpen || simConnect == null)
                 {
-                    simConnect.ReceiveMessage();
+                    throw new Exception("Unable to read LVar, SimConnect is closed");
                 }
 
-                if (asyncTask.Exception != null)
+                if (!isForceStopRead || !isTransaction || !transactionVariables.Contains(lvar.Identifier))
                 {
-                    Exception e = asyncTask.Exception;
-                    asyncTask = null;
-                    throw e;
-                }
-                else if (asyncTask.Value != null)
-                {
-                    lvar.Value = TypeConverter.Convert<T>((double)asyncTask.Value);
-                    asyncTask = null;
-                }
-                else
-                {
-                    asyncTask = null;
-                    throw new Exception("Unable to read lvar, null received");
+                    transactionVariables.Add(lvar.Identifier);
+
+                    StructStr cmd;
+                    cmd.value = lvar.Name;
+
+                    int definition = 0;
+
+                    asyncTask = new(definition, typeof(double), lvar.Name);
+
+                    simConnect.SetClientData((ID_CLIENT)0, (ID_DEFINITION)definition, SIMCONNECT_CLIENT_DATA_SET_FLAG.DEFAULT, 0, cmd);
+
+                    while (!asyncTask.IsCompleted)
+                    {
+                        simConnect.ReceiveMessage();
+                    }
+
+                    if (asyncTask.Exception != null)
+                    {
+                        Exception e = asyncTask.Exception;
+                        asyncTask = null;
+                        throw e;
+                    }
+                    else if (asyncTask.Value != null)
+                    {
+                        lvar.Value = TypeConverter.Convert<T>((double)asyncTask.Value);
+                        asyncTask = null;
+                    }
+                    else
+                    {
+                        asyncTask = null;
+                        throw new Exception("Unable to read lvar, null received");
+                    }
                 }
             }
         }
@@ -304,50 +310,53 @@ namespace A320_Cockpit.Adaptation.Msfs.MsfsWasm
         /// <exception cref="Exception"></exception>
         public void Read<T>(SimVar<T> simVar)
         {
-            if (!isOpen || simConnect == null)
+            lock(lockRead)
             {
-                throw new Exception("Unable to read SimVar, SimConnect is closed");
-            }
-
-            if (!isForceStopRead || !isTransaction || !transactionVariables.Contains(simVar.Identifier))
-            {
-                if (!registeredSimVars.Contains(simVar.Name))
+                if (!isOpen || simConnect == null)
                 {
-                    RegisterSimVar(simVar);
+                    throw new Exception("Unable to read SimVar, SimConnect is closed");
                 }
 
-                transactionVariables.Add(simVar.Identifier);
+                if (!isForceStopRead || !isTransaction || !transactionVariables.Contains(simVar.Identifier))
+                {
+                    if (!registeredSimVars.Contains(simVar.Name))
+                    {
+                        RegisterSimVar(simVar);
+                    }
 
-                int definition = registeredSimVars.IndexOf(simVar.Name);
-                asyncTask = new(definition, typeof(T));
+                    transactionVariables.Add(simVar.Identifier);
 
-                simConnect.RequestDataOnSimObjectType((ID_DEFINITION)definition, (ID_DEFINITION)definition, 0, SIMCONNECT_SIMOBJECT_TYPE.ALL);
+                    int definition = registeredSimVars.IndexOf(simVar.Name);
+                    asyncTask = new(definition, typeof(T), simVar.Name);
 
-                while (!asyncTask.IsCompleted)
-                {
-                    simConnect.ReceiveMessage();
-                }
+                    simConnect.RequestDataOnSimObjectType((ID_DEFINITION)definition, (ID_DEFINITION)definition, 0, SIMCONNECT_SIMOBJECT_TYPE.ALL);
 
-                if (asyncTask.Exception != null)
-                {
-                    Exception e = asyncTask.Exception;
-                    asyncTask = null;
-                    throw e;
-                }
-                else if (asyncTask.Value == null)
-                {
-                    asyncTask = null;
-                    throw new Exception("Unable to read simvar, null received");
-                }
-                else if (typeof(T) == typeof(string))
-                {
-                    simVar.Value = (T?)asyncTask.Value;
-                    asyncTask = null;
-                }
-                else
-                {
-                    simVar.Value = TypeConverter.Convert<T>((double)asyncTask.Value);
-                    asyncTask = null;
+                    while (!asyncTask.IsCompleted)
+                    {
+                        simConnect.ReceiveMessage();
+                    }
+
+                    if (asyncTask.Exception != null)
+                    {
+                        Exception e = asyncTask.Exception;
+                        asyncTask = null;
+                        throw e;
+                    }
+                    else if (asyncTask.Value == null)
+                    {
+                        asyncTask = null;
+                        throw new Exception("Unable to read simvar, null received");
+                    }
+                    else if (typeof(T) == typeof(string))
+                    {
+                        simVar.Value = (T?)asyncTask.Value;
+                        asyncTask = null;
+                    }
+                    else
+                    {
+                        simVar.Value = TypeConverter.Convert<T>((double)asyncTask.Value);
+                        asyncTask = null;
+                    }
                 }
             }
         }
@@ -359,21 +368,27 @@ namespace A320_Cockpit.Adaptation.Msfs.MsfsWasm
         /// <param name="kEvent"></param>
         public void Send<T>(KEvent<T> kEvent)
         {
-            if (!isOpen || simConnect == null)
+            lock(lockSend)
             {
-                throw new Exception("Unable to read SimVar, SimConnect is closed");
+                if (!isOpen || simConnect == null)
+                {
+                    throw new Exception("Unable to read SimVar, SimConnect is closed");
+                }
+
+                StructStr cmd;
+                cmd.value = "";
+
+                if (kEvent.Value != null)
+                {
+                    cmd.value += kEvent.Value + " ";
+                }
+
+                cmd.value += "(>K:" + kEvent.Name + ")";
+
+                simConnect.SetClientData((ID_CLIENT)3, (ID_DEFINITION)3, SIMCONNECT_CLIENT_DATA_SET_FLAG.DEFAULT, 0, cmd);
+
+                //Thread.Sleep(10);
             }
-
-            StructStr cmd;
-            cmd.value = "";
-
-            if (kEvent.Value != null)
-            {
-                cmd.value += kEvent.Value + " ";
-            }
-
-            cmd.value += "(>K:" + kEvent.Name + ")";
-            simConnect.SetClientData((ID_CLIENT)3, (ID_DEFINITION)3, SIMCONNECT_CLIENT_DATA_SET_FLAG.DEFAULT, 0, cmd);
         }
 
         /// <summary>
@@ -382,7 +397,10 @@ namespace A320_Cockpit.Adaptation.Msfs.MsfsWasm
         /// <param name="hEvent"></param>
         public void Send(HEvent hEvent)
         {
+            lock(lockSend)
+            {
 
+            }
         }
 
         /// <summary>

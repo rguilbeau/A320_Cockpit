@@ -20,7 +20,6 @@ using A320_Cockpit.Infrastructure.Presenter.Send;
 using A320_Cockpit.Infrastructure.Repository.Cockpit;
 using A320_Cockpit.Infrastructure.Repository.Payload.A32nx.Brightness;
 using A320_Cockpit.Infrastructure.Repository.Payload.A32nx.Glareshield;
-using A320_Cockpit.Infrastructure.Repository.Payload.A32nx.Overhead;
 using A320_Cockpit.Infrastructure.Repository.Payload.FakeA320.Brightness;
 using A320_Cockpit.Infrastructure.Repository.Payload.FakeA320.Glareshield;
 using A320_Cockpit.Infrastructure.Repository.Simulator;
@@ -88,7 +87,10 @@ namespace A320_Cockpit.Infrastructure
 
                 List<IPayloadEventHandler> allEvents = new()
                 {
-                    new A32nxFcuBugEventHandler(MsfsSimulatorRepository),
+                    new A32nxFcuSpdBugEventHandler(MsfsSimulatorRepository),
+                    new A32nxFcuHdgBugEventHandler(MsfsSimulatorRepository),
+                    new A32nxAltBugEventHandler(MsfsSimulatorRepository),
+                    new A32nxFcuVsBugEventHandler(MsfsSimulatorRepository)
                 };
                 PayloadEventHandlers = allEvents;
             }

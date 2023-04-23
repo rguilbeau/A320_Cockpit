@@ -46,7 +46,7 @@ namespace A320_Cockpit.Infrastructure.Repository.Simulator
         /// <summary>
         /// Reoutne si la connexion est ouverte
         /// </summary>
-        public bool IsOpen => true;
+        public bool IsOpen => msfs.IsOpen;
 
         /// <summary>
         /// Ouvre la connexion

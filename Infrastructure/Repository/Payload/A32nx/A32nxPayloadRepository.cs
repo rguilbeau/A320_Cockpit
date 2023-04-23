@@ -14,7 +14,7 @@ namespace A320_Cockpit.Infrastructure.Repository.Payload.A32nx
     {
         protected readonly MsfsSimulatorRepository msfsSimulatorRepository;
 
-        protected abstract T Payload { get; }
+        public abstract T Payload { get; }
 
         public A32nxPayloadRepository(MsfsSimulatorRepository msfsSimulatorRepository)
         {

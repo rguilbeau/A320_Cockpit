@@ -130,6 +130,7 @@ namespace A320_Cockpit.Adaptation.Canbus.CANtact
         /// <exception cref="Exception"></exception>
         public void Send(Frame frame)
         {
+           
             if (!serialPort.IsOpen)
             {
                 throw new Exception("Unable to send frame over bus, serial port is closed");

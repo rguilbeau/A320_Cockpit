@@ -17,12 +17,12 @@ namespace A320_Cockpit.Infrastructure.Repository.Payload.A32nx.Brightness
     /// </summary>
     public class A32nxBrightnessRepository : A32nxPayloadRepository<BrightnessCockpit>
     {
-        private static readonly BrightnessCockpit brightness = new();
+        private readonly BrightnessCockpit brightness = new();
         
         /// <summary>
         /// Retourne l'entité
         /// </summary>
-        protected override BrightnessCockpit Payload => brightness;
+        public override BrightnessCockpit Payload => brightness;
 
         /// <summary>
         /// Création du repository
@@ -37,13 +37,14 @@ namespace A320_Cockpit.Infrastructure.Repository.Payload.A32nx.Brightness
         /// </summary>
         protected override bool Refresh(CockpitEvent e)
         {
+            msfsSimulatorRepository.StartWatchRead();
+
             if(e == CockpitEvent.ALL)
             {
-                return true;
-            } else
-            {
-                return false;
+                msfsSimulatorRepository.Read(A32nxVariables.LightIndicatorStatus);
             }
+
+            return msfsSimulatorRepository.HasReadVariable;
         }
 
         /// <summary>
@@ -51,7 +52,13 @@ namespace A320_Cockpit.Infrastructure.Repository.Payload.A32nx.Brightness
         /// </summary>
         protected override BrightnessCockpit BuildPayload()
         {
-            brightness.FcuDisplay = 100;
+            brightness.SegmentScreens = 255;
+            brightness.GlareshieldPanel = 255;
+            brightness.OverheadPanel = 255;
+            brightness.PedestalPanel = 255;
+            brightness.Indicators = 255;
+            brightness.Buttons = 255;
+            brightness.TestLight = A32nxVariables.LightIndicatorStatus.Value == 0;
             return brightness;
         }
     }

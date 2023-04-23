@@ -23,7 +23,7 @@ namespace A320_Cockpit.Infrastructure.Repository.Payload.A32nx.Glareshield
     {
         private static readonly FcuDisplay fcuDisplay = new();
 
-        protected override FcuDisplay Payload => fcuDisplay;
+        public override FcuDisplay Payload => fcuDisplay;
 
         /// <summary>
         /// Création du repository
@@ -60,7 +60,79 @@ namespace A320_Cockpit.Infrastructure.Repository.Payload.A32nx.Glareshield
                     break;
                 case CockpitEvent.FCU_SPEED_BUG:
                     msfsSimulatorRepository.Read(A32nxVariables.SpeedSelected);
+
+                    if (A32nxVariables.IsSpeedManagedDash.Value)
+                    {
+                        msfsSimulatorRepository.Read(A32nxVariables.IsSpeedManagedDash);
+                    }                    
+                    break;
+                case CockpitEvent.FCU_SPEED_PUSH:
+                case CockpitEvent.FCU_SPEED_PULL:
+                    msfsSimulatorRepository.Read(A32nxVariables.SpeedSelected);
+                    msfsSimulatorRepository.Read(A32nxVariables.IsSpeedDot);
                     msfsSimulatorRepository.Read(A32nxVariables.IsSpeedManagedDash);
+                    break;
+                case CockpitEvent.FCU_HEADING_BUG:
+                    msfsSimulatorRepository.Read(A32nxVariables.HeadingSelected);
+
+                    if (A32nxVariables.IsHeadingManageDash.Value)
+                    {
+                        msfsSimulatorRepository.Read(A32nxVariables.IsHeadingManageDash);
+                    }
+                    break;
+                case CockpitEvent.FCU_HEADING_PUSH:
+                case CockpitEvent.FCU_HEADING_PULL:
+                    msfsSimulatorRepository.Read(A32nxVariables.HeadingSelected);
+                    msfsSimulatorRepository.Read(A32nxVariables.IsHeadingDot);
+                    msfsSimulatorRepository.Read(A32nxVariables.IsHeadingManageDash);
+                    break;
+                case CockpitEvent.FCU_ALTITUDE_BUG:
+                    msfsSimulatorRepository.Read(A32nxVariables.AltitudeSelected);
+                    msfsSimulatorRepository.Read(A32nxVariables.VerticalSpeedManaged);
+                    msfsSimulatorRepository.Read(A32nxVariables.AltitudeManaged);
+
+                    if (A32nxVariables.IsTrackFpa.Value)
+                    {
+                        msfsSimulatorRepository.Read(A32nxVariables.VerticalSpeedSelectedFpa);
+                    }
+                    else
+                    {
+                        msfsSimulatorRepository.Read(A32nxVariables.VerticalSpeedSelectedFpm);
+                    }
+                    break;
+                case CockpitEvent.FCU_ALTITUDE_PUSH:
+                case CockpitEvent.FCU_ALTITUDE_PULL:
+                    msfsSimulatorRepository.Read(A32nxVariables.AltitudeSelected);
+                    msfsSimulatorRepository.Read(A32nxVariables.AltitudeManaged);
+                    msfsSimulatorRepository.Read(A32nxVariables.VerticalSpeedManaged);
+                    break;
+                case CockpitEvent.FCU_VS_BUG:
+                    if(A32nxVariables.IsTrackFpa.Value)
+                    {
+                        msfsSimulatorRepository.Read(A32nxVariables.VerticalSpeedSelectedFpa);
+                    } else
+                    {
+                        msfsSimulatorRepository.Read(A32nxVariables.VerticalSpeedSelectedFpm);
+                    }
+                    
+                    if(A32nxVariables.VerticalSpeedManaged.Value)
+                    {
+                        msfsSimulatorRepository.Read(A32nxVariables.VerticalSpeedManaged);
+                    }
+                    break;
+                case CockpitEvent.FCU_VS_PUSH:
+                case CockpitEvent.FCU_VS_PULL:
+                    if (A32nxVariables.IsTrackFpa.Value)
+                    {
+                        msfsSimulatorRepository.Read(A32nxVariables.VerticalSpeedSelectedFpa);
+                    }
+                    else
+                    {
+                        msfsSimulatorRepository.Read(A32nxVariables.VerticalSpeedSelectedFpm);
+                    }
+
+                    msfsSimulatorRepository.Read(A32nxVariables.VerticalSpeedManaged);
+                    msfsSimulatorRepository.Read(A32nxVariables.AltitudeManaged);
                     break;
             }
 
@@ -72,19 +144,24 @@ namespace A320_Cockpit.Infrastructure.Repository.Payload.A32nx.Glareshield
         /// </summary>
         protected override FcuDisplay BuildPayload()
         {
-            if (A32nxVariables.SpeedSelected.Value <= 0)
+            if(A32nxVariables.SpeedSelected.Value != 0)
             {
-                fcuDisplay.IsMach = A32nxVariables.IsManagedSpeedInMach.Value;
+                if (A32nxVariables.SpeedSelected.Value <= 0)
+                {
+                    fcuDisplay.IsMach = A32nxVariables.IsManagedSpeedInMach.Value;
+                }
+                else
+                {
+                    fcuDisplay.IsMach = A32nxVariables.SpeedSelected.Value > 0 && A32nxVariables.SpeedSelected.Value < 1;
+                }
+
+                fcuDisplay.Speed = Math.Round(A32nxVariables.SpeedSelected.Value, 2);
             }
-            else
-            {
-                fcuDisplay.IsMach = A32nxVariables.SpeedSelected.Value > 0 && A32nxVariables.SpeedSelected.Value < 1;
-            }
+            
 
             fcuDisplay.IsSpeedDot = A32nxVariables.IsSpeedDot.Value;
             fcuDisplay.IsSpeedDash = A32nxVariables.IsSpeedManagedDash.Value;
-            fcuDisplay.Speed = Math.Round(A32nxVariables.SpeedSelected.Value, 2);
-
+            
             fcuDisplay.IsHeadingDot = A32nxVariables.IsHeadingDot.Value;
             fcuDisplay.IsHeadingDash = A32nxVariables.IsHeadingManageDash.Value;
             fcuDisplay.Heading = A32nxVariables.HeadingSelected.Value;

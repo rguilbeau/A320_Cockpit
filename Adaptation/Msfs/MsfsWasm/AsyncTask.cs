@@ -8,17 +8,20 @@ namespace A320_Cockpit.Adaptation.Msfs.MsfsWasm
     {
         private readonly Type typeVar;
         private readonly int idRequest;
+        private readonly string name;
         private object? value;
         private Exception? exception;
 
         /// <summary>
         /// Création d'une nouvelle attente
         /// </summary>
-        /// <param name="idRequest">L'ID de la request de MSFS</param>
-        /// <param name="typeVar">Le type de la variable</param>
-        public AsyncTask(int idRequest, Type typeVar) : base() {
+        /// <param name="idRequest"></param>
+        /// <param name="typeVar"></param>
+        /// <param name="name"></param>
+        public AsyncTask(int idRequest, Type typeVar, String name) : base() {
             this.typeVar = typeVar;
             this.idRequest = idRequest;
+            this.name = name;
             value = null;
             exception = null;
         }
@@ -55,6 +58,11 @@ namespace A320_Cockpit.Adaptation.Msfs.MsfsWasm
             get { return value; }
             set { this.value = value; }
         }
+
+        /// <summary>
+        /// Retourne le nom de l'attente
+        /// </summary>
+        public string Name { get { return name; } }
 
         /// <summary>
         /// L'Exception en cas d'erreur de lecture

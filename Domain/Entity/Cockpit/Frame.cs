@@ -58,7 +58,7 @@ namespace A320_Cockpit.Domain.Entity.Cockpit
         /// <returns></returns>
         public override string ToString()
         {
-            string message = Id.ToString("X2") + "\t" + Size.ToString();
+            string message = "0x" + Id.ToString("X3") + " (" + Size.ToString() + ")";
 
             for (int i = 0; i < Data.Length; i++)
             {

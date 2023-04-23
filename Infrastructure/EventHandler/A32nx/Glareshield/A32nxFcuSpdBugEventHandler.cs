@@ -19,20 +19,24 @@ namespace A320_Cockpit.Infrastructure.EventHandler.A32nx.Glareshield
     /// <summary>
     /// Evenement liée au bouton rotatif de la vitesse
     /// </summary>
-    public class A32nxFcuBugEventHandler : IPayloadEventHandler
+    public class A32nxFcuSpdBugEventHandler : IPayloadEventHandler
     {
         private readonly MsfsSimulatorRepository msfsSimulatorRepository;
 
-        public A32nxFcuBugEventHandler(
-            MsfsSimulatorRepository msfsSimulatorRepository
-        ) {
+        public A32nxFcuSpdBugEventHandler(MsfsSimulatorRepository msfsSimulatorRepository) 
+        {
             this.msfsSimulatorRepository = msfsSimulatorRepository;
         }
 
         /// <summary>
         /// Les évenements à écouter
         /// </summary>
-        public List<CockpitEvent> EventSubscriber => new() { CockpitEvent.FCU_SPEED_BUG };
+        public List<CockpitEvent> EventSubscriber => new() 
+        { 
+            CockpitEvent.FCU_SPEED_BUG,
+            CockpitEvent.FCU_SPEED_PUSH,
+            CockpitEvent.FCU_SPEED_PULL
+        };
 
         /// <summary>
         /// Gestion de l'évenement
@@ -40,13 +44,18 @@ namespace A320_Cockpit.Infrastructure.EventHandler.A32nx.Glareshield
         /// <param name="frame"></param>
         public void Handle(CockpitEvent e, float value)
         {
-            if(value == 0)
+            switch(e)
             {
-                msfsSimulatorRepository.Send(A32nxEvents.FcuSpeedIncr);
-            }
-            else
-            {
-                msfsSimulatorRepository.Send(A32nxEvents.FcuSpeedDecr);
+                case CockpitEvent.FCU_SPEED_BUG:
+                    msfsSimulatorRepository.Send(value > 0 ? A32nxEvents.FcuSpeedIncr : A32nxEvents.FcuSpeedDecr);
+                    break;
+                case CockpitEvent.FCU_SPEED_PUSH:
+                    msfsSimulatorRepository.Send(A32nxEvents.FcuSpeedPush);
+                    break;
+                case CockpitEvent.FCU_SPEED_PULL:
+                    msfsSimulatorRepository.Send(A32nxEvents.FcuSpeedPull);
+                    break;
+
             }
         }
     }

@@ -56,7 +56,7 @@ namespace A320_Cockpit.Infrastructure.Runner
 
             eventDispatcher = CockpitEventDispatcher.Get(GlobalFactory.Get().PayloadEventHandlers);
             cockpitEvent = CockpitEvent.ALL;
-            eventReadTimeout = new() { Interval = 600 };
+            eventReadTimeout = new() { Interval = 1000 };
             eventReadTimeout.Elapsed += EventReadTimeout_Elapsed;
             stopwatch = new();
         }

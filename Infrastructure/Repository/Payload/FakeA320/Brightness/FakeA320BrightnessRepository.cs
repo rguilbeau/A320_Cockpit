@@ -3,6 +3,7 @@ using A320_Cockpit.Domain.Entity.Payload;
 using A320_Cockpit.Domain.Entity.Payload.Brightness;
 using A320_Cockpit.Domain.Enum;
 using A320_Cockpit.Domain.Repository.Payload;
+using A320_Cockpit.Infrastructure.Repository.Payload.A32nx;
 using A320_Cockpit.Infrastructure.Repository.Simulator;
 using System;
 using System.Collections.Generic;
@@ -29,7 +30,13 @@ namespace A320_Cockpit.Infrastructure.Repository.Payload.FakeA320.Brightness
         /// </summary>
         public FakeA320BrightnessRepository() : base()
         {
-            brightness.FcuDisplay = 100;
+            brightness.SegmentScreens = 255;
+            brightness.GlareshieldPanel = 50;
+            brightness.OverheadPanel = 255;
+            brightness.PedestalPanel = 255;
+            brightness.Indicators = 255;
+            brightness.Buttons = 255;
+            brightness.TestLight = false;
         }
 
         /// <summary>

@@ -23,7 +23,7 @@ namespace A320_Cockpit.Infrastructure.Repository.Payload.A32nx.Glareshield
         /// <summary>
         /// Retourne l'entité
         /// </summary>
-        protected override GlareshieldIndicators Payload => glareshieldIndicators;
+        public override GlareshieldIndicators Payload => glareshieldIndicators;
 
         /// <summary>
         /// Création du repository

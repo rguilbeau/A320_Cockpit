@@ -17,11 +17,6 @@ namespace A320_Cockpit.Domain.Enum
         // Glareshield panel (0x1##)
         //
         FCU_DISPLAY                 = 0x101,
-        GLARESHIELD_INDICATORS      = 0x102,
-        
-        //
-        // Overhead panel (0x2##)
-        //
-        LIGHT_INDICATOR             = 0x201
+        GLARESHIELD_INDICATORS      = 0x102
     }
 }

@@ -9,7 +9,7 @@ namespace A320_Cockpit.Adaptation.Msfs.Model.Event
     public class KEvent<T>
     {
         private readonly string name;
-        private readonly T? value;
+        private T? value;
 
         public KEvent(string name)
         {
@@ -18,7 +18,7 @@ namespace A320_Cockpit.Adaptation.Msfs.Model.Event
 
         public string Name { get { return name; } }
 
-        public T? Value => value;
+        public T? Value { get { return value; } set { this.value = value; } }
     }
 
     public class KEventEmpty { }
