@@ -62,6 +62,14 @@ namespace A320_Cockpit.Infrastructure.Repository.Cockpit
         }
 
         /// <summary>
+        /// Active le ping toutes les secondes
+        /// </summary>
+        public void ActivePing()
+        {
+            canbus.ActivePing(1000);
+        }
+
+        /// <summary>
         /// Reception des messages du cockpit
         /// </summary>
         /// <param name="sender"></param>

@@ -137,7 +137,6 @@ namespace A320_Cockpit.Infrastructure.Runner
         {
             cockpitEvent = CockpitEvent.ALL;
             eventReadTimeout.Stop();
-
         }
     }
 }

@@ -36,5 +36,10 @@ namespace A320_Cockpit.Domain.Repository.Cockpit
         /// Etat de la connexion au cockpit
         /// </summary>
         public bool IsOpen { get; }
+
+        /// <summary>
+        /// Active le ping toutes les secondes
+        /// </summary>
+        public void ActivePing();
     }
 }

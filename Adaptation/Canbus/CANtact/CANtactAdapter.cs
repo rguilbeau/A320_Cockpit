@@ -1,4 +1,5 @@
 ﻿using A320_Cockpit.Domain.Entity.Cockpit;
+using System;
 using System.IO.Ports;
 
 namespace A320_Cockpit.Adaptation.Canbus.CANtact
@@ -14,6 +15,7 @@ namespace A320_Cockpit.Adaptation.Canbus.CANtact
         private readonly string comPort;
         private readonly int serialBaudRate;
         private readonly string canBaudRate;
+        private readonly System.Timers.Timer ping;
 
         /// <summary>
         /// Création d'une nouvelle connexion
@@ -29,6 +31,8 @@ namespace A320_Cockpit.Adaptation.Canbus.CANtact
             this.serialBaudRate = serialBaudRate;
             this.canBaudRate = canBaudRate;
             this.serialPort.DataReceived += SerialPort_DataReceived;
+            ping = new();
+            ping.Elapsed += Ping_Elapsed;
         }
 
         /// <summary>
@@ -37,6 +41,16 @@ namespace A320_Cockpit.Adaptation.Canbus.CANtact
         public bool IsOpen
         {
             get { return serialPort.IsOpen; }
+        }
+
+        /// <summary>
+        /// Active le ping
+        /// </summary>
+        /// <param name="interval"></param>
+        public void ActivePing(int interval)
+        {
+            ping.Interval = interval;
+            ping.Start();
         }
 
         /// <summary>
@@ -185,6 +199,19 @@ namespace A320_Cockpit.Adaptation.Canbus.CANtact
             catch (TimeoutException)
             {
             }
+        }
+
+        /// <summary>
+        /// Timer pour lancer un ping
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void Ping_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
+        {
+            Frame frame = new(0xFFF, 1);
+            frame.Data[0] = (byte)new Random().Next(256);
+            Send(frame);
         }
 
         /// <summary>

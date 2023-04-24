@@ -51,6 +51,9 @@ namespace A320_Cockpit.Infrastructure.Repository.Payload.A32nx.Glareshield
                     msfsSimulatorRepository.Read(A32nxVariables.ApprModeActive);
                     msfsSimulatorRepository.Read(A32nxVariables.IsElectricityAc1BusPowered);
                     break;
+                case CockpitEvent.FCU_LOC:
+                    msfsSimulatorRepository.Read(A32nxVariables.LocModeActive);
+                    break;
             }
 
             return msfsSimulatorRepository.HasReadVariable;

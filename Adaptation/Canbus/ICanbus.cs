@@ -26,6 +26,11 @@ namespace A320_Cockpit.Adaptation.Canbus
         /// </summary>
         /// <param name="frame">La frame à envoyer</param>
         public void Send(Frame frame);
+        /// <summary>
+        /// Active le ping
+        /// </summary>
+        /// <param name="interval"></param>
+        public void ActivePing(int interval);
 
         /// <summary>
         /// Etat de la connexion du CAN Bus

@@ -50,6 +50,7 @@ namespace A320_Cockpit.Domain.UseCase.Connexion
                 try
                 {
                     cockpitRepository.Open();
+                    cockpitRepository.ActivePing();
                 }
                 catch (Exception ex)
                 {

@@ -134,6 +134,17 @@ namespace A320_Cockpit.Infrastructure.Repository.Payload.A32nx.Glareshield
                     msfsSimulatorRepository.Read(A32nxVariables.VerticalSpeedManaged);
                     msfsSimulatorRepository.Read(A32nxVariables.AltitudeManaged);
                     break;
+                case CockpitEvent.FCU_SPEED_MACH:
+                    msfsSimulatorRepository.Read(A32nxVariables.IsManagedSpeedInMach);
+                    msfsSimulatorRepository.Read(A32nxVariables.SpeedSelected);
+                    msfsSimulatorRepository.Read(A32nxVariables.IsSpeedDot);
+                    msfsSimulatorRepository.Read(A32nxVariables.IsSpeedManagedDash);
+                    break;
+                case CockpitEvent.FCU_VS_FPA:
+                    msfsSimulatorRepository.Read(A32nxVariables.VerticalSpeedSelectedFpa);
+                    msfsSimulatorRepository.Read(A32nxVariables.VerticalSpeedSelectedFpm);
+                    msfsSimulatorRepository.Read(A32nxVariables.IsTrackFpa);
+                    break;
             }
 
             return msfsSimulatorRepository.HasReadVariable;

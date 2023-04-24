@@ -52,7 +52,7 @@ namespace A320_Cockpit.Infrastructure.EventHandler.FakeA320.Glareshield
             switch(e)
             {
                 case CockpitEvent.FCU_SPEED_BUG:
-                    double incr = fcuDisplay.IsMach ? 0.1 : 1;
+                    double incr = fcuDisplay.IsMach ? 0.01 : 1;
                     fcuDisplay.Speed += value > 0 ? incr : -incr;
                     break;
                 case CockpitEvent.FCU_SPEED_PUSH:

@@ -76,7 +76,8 @@ namespace A320_Cockpit.Infrastructure
                     new FakeA320FcuAltBugEventHandler((FakeA320FcuDisplayRepository)fcuDisplayRepository),
                     new FakeA320FcuHdgBugEventHandler((FakeA320FcuDisplayRepository)fcuDisplayRepository),
                     new FakeA320FcuSpdBugEventHandler((FakeA320FcuDisplayRepository)fcuDisplayRepository),
-                    new FakeA320FcuVsBugEventHandler((FakeA320FcuDisplayRepository)fcuDisplayRepository)
+                    new FakeA320FcuVsBugEventHandler((FakeA320FcuDisplayRepository)fcuDisplayRepository),
+                    new FakeA320FcuGlareshieldButtonsEventHandler((FakeA320GlareshieldIndicatorsRepository)glareshieldIndicatorsRepository, (FakeA320FcuDisplayRepository)fcuDisplayRepository)
                 };
                 PayloadEventHandlers = allEvents;
             } else
@@ -90,7 +91,8 @@ namespace A320_Cockpit.Infrastructure
                     new A32nxFcuSpdBugEventHandler(MsfsSimulatorRepository),
                     new A32nxFcuHdgBugEventHandler(MsfsSimulatorRepository),
                     new A32nxAltBugEventHandler(MsfsSimulatorRepository),
-                    new A32nxFcuVsBugEventHandler(MsfsSimulatorRepository)
+                    new A32nxFcuVsBugEventHandler(MsfsSimulatorRepository),
+                    new A32nxFcuGlareshieldButtonsEventHandler(MsfsSimulatorRepository)
                 };
                 PayloadEventHandlers = allEvents;
             }

@@ -53,7 +53,7 @@ namespace A320_Cockpit.Infrastructure.Repository.Payload.A32nx.Brightness
         protected override BrightnessCockpit BuildPayload()
         {
             brightness.SegmentScreens = 255;
-            brightness.GlareshieldPanel = 255;
+            brightness.GlareshieldPanel = 100;
             brightness.OverheadPanel = 255;
             brightness.PedestalPanel = 255;
             brightness.Indicators = 255;

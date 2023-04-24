@@ -35,6 +35,14 @@ namespace A320_Cockpit.Infrastructure.EventHandler.A32nx
         public static readonly KEvent<KEventEmpty> FcuVsDecr = new("A32NX.FCU_VS_DEC");
         public static readonly KEvent<KEventEmpty> FcuVsPush = new("A32NX.FCU_VS_PUSH");
         public static readonly KEvent<KEventEmpty> FcuVsPull = new("A32NX.FCU_VS_PULL");
-
+        // Buttons
+        public static readonly KEvent<KEventEmpty> FcuLocPush = new("A32NX.FCU_LOC_PUSH");
+        public static readonly KEvent<KEventEmpty> FcuExpedPush = new("A32NX.FCU_EXPED_PUSH");
+        public static readonly KEvent<KEventEmpty> FcuApprPush = new("A32NX.FCU_APPR_PUSH");
+        public static readonly KEvent<KEventEmpty> FcuAp1Push = new("A32NX.FCU_AP_1_PUSH");
+        public static readonly KEvent<KEventEmpty> FcuAp2Push = new("A32NX.FCU_AP_2_PUSH");
+        public static readonly KEvent<KEventEmpty> FcuAthrPush = new("A32NX.FCU_ATHR_PUSH");
+        public static readonly KEvent<KEventEmpty> FcuSpdMachTogglePush = new("A32NX.FCU_SPD_MACH_TOGGLE_PUSH");
+        public static readonly KEvent<KEventEmpty> FcuTrkFpaTogglePush = new("A32NX.FCU_TRK_FPA_TOGGLE_PUSH");
     }
 }

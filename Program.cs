@@ -15,7 +15,7 @@ namespace A320_Cockpit
         [STAThread]
         static void Main()
         {
-            GlobalFactory.DEBUG = true;
+            GlobalFactory.DEBUG = false;
 
             AllocConsole();
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;

@@ -33,7 +33,7 @@ namespace A320_Cockpit.Infrastructure.Repository.Payload.FakeA320.Glareshield
             glareshieldIndicators.FcuAp1 = false;
             glareshieldIndicators.FcuAp2 = false;
             glareshieldIndicators.FcuAthr = false;
-            glareshieldIndicators.FcuLoc = false;
+            glareshieldIndicators.FcuLoc = true;
             glareshieldIndicators.FcuExped = false;
             glareshieldIndicators.FcuAppr = false;
             glareshieldIndicators.FcuIsPowerOn = true;
