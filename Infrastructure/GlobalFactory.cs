@@ -47,7 +47,7 @@ namespace A320_Cockpit.Infrastructure
 
         public GlobalFactory() 
         {
-            ICanbus canbus = new ArduinoSerialCanAdapter(new System.IO.Ports.SerialPort(), "COM5");
+            ICanbus canbus = new ArduinoSerialCanAdapter(new System.IO.Ports.SerialPort(), "COM4");
 
             IMsfs msfs;
 

@@ -22,6 +22,7 @@ namespace A320_Cockpit.Infrastructure.EventHandler.A32nx.Glareshield
         public A32nxFcuBugEventHandler(MsfsSimulatorRepository msfsSimulatorRepository)
         {
             this.msfsSimulatorRepository = msfsSimulatorRepository;
+            A32nxEvents.FcuAltIncr.Value = 1000;
         }
 
         /// <summary>

@@ -31,7 +31,7 @@ namespace A320_Cockpit.Infrastructure.Repository.Payload.FakeA320.Brightness
         public FakeA320BrightnessRepository() : base()
         {
             brightness.SegmentScreens = 255;
-            brightness.GlareshieldPanel = 50;
+            brightness.GlareshieldPanel = 255;
             brightness.OverheadPanel = 255;
             brightness.PedestalPanel = 255;
             brightness.Indicators = 255;

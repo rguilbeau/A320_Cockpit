@@ -56,7 +56,7 @@ namespace A320_Cockpit.Infrastructure.Repository.Payload.A32nx.Brightness
             brightness.GlareshieldPanel = 100;
             brightness.OverheadPanel = 255;
             brightness.PedestalPanel = 255;
-            brightness.Indicators = 255;
+            brightness.Indicators = 100;
             brightness.Buttons = 255;
             brightness.TestLight = A32nxVariables.LightIndicatorStatus.Value == 0;
             return brightness;

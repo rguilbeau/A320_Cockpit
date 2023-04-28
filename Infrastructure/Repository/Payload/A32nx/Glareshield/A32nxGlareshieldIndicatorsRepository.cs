@@ -51,9 +51,27 @@ namespace A320_Cockpit.Infrastructure.Repository.Payload.A32nx.Glareshield
                     msfsSimulatorRepository.Read(A32nxVariables.ApprModeActive);
                     msfsSimulatorRepository.Read(A32nxVariables.IsElectricityAc1BusPowered);
                     break;
+                case CockpitEvent.FCU_AP1:
+                    msfsSimulatorRepository.Read(A32nxVariables.Autopilot1Active);
+                    msfsSimulatorRepository.Read(A32nxVariables.Autopilot2Active);
+                    break;
+                case CockpitEvent.FCU_AP2:
+                    msfsSimulatorRepository.Read(A32nxVariables.Autopilot1Active);
+                    msfsSimulatorRepository.Read(A32nxVariables.Autopilot2Active);
+                    break;
+                case CockpitEvent.FCU_ATHR:
+                    msfsSimulatorRepository.Read(A32nxVariables.AutoThrustStatus);
+                    break;
                 case CockpitEvent.FCU_LOC:
                     msfsSimulatorRepository.Read(A32nxVariables.LocModeActive);
                     break;
+                case CockpitEvent.FCU_EXPED:
+                    msfsSimulatorRepository.Read(A32nxVariables.ExpedModeActive);
+                    break;
+                case CockpitEvent.FCU_APPR:
+                    msfsSimulatorRepository.Read(A32nxVariables.ApprModeActive);
+                    break;
+
             }
 
             return msfsSimulatorRepository.HasReadVariable;

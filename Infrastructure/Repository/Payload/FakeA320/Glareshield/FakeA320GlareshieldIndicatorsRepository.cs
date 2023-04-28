@@ -30,12 +30,12 @@ namespace A320_Cockpit.Infrastructure.Repository.Payload.FakeA320.Glareshield
         /// </summary>
         public FakeA320GlareshieldIndicatorsRepository() : base()
         {
-            glareshieldIndicators.FcuAp1 = false;
-            glareshieldIndicators.FcuAp2 = false;
-            glareshieldIndicators.FcuAthr = false;
+            glareshieldIndicators.FcuAp1 = true;
+            glareshieldIndicators.FcuAp2 = true;
+            glareshieldIndicators.FcuAthr = true;
             glareshieldIndicators.FcuLoc = true;
-            glareshieldIndicators.FcuExped = false;
-            glareshieldIndicators.FcuAppr = false;
+            glareshieldIndicators.FcuExped = true;
+            glareshieldIndicators.FcuAppr = true;
             glareshieldIndicators.FcuIsPowerOn = true;
         }
 

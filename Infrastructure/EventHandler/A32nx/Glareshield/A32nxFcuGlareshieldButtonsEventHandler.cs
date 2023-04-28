@@ -76,7 +76,7 @@ namespace A320_Cockpit.Infrastructure.EventHandler.A32nx.Glareshield
                     msfsSimulatorRepository.Send(A32nxEvents.FcuTrkFpaTogglePush);
                     break;
                 case CockpitEvent.FCU_METRICT_ALT:
-                    //todo: event non trouvé
+                    // todo: event non trouvé
                     break;
 
             }
