@@ -57,18 +57,37 @@ namespace A320_Cockpit.Domain.Entity.Payload.Brightness
         /// L'id de la frame
         /// </summary>
         public override int Id => (int)FrameId.BRIGHTNESS;
-
         /// <summary>
         /// La taille de la frame
         /// </summary>
         public override int Size => SIZE;
-
+        /// <summary>
+        /// Le niveau de rétroéclairage des afficheurs à segements (0 à 255)
+        /// </summary>
         public byte SegmentScreens { get => segmentScreens; set => segmentScreens = value; }
+        /// <summary>
+        /// Le niveau de rétroéclairage des panels du Glareshield (0 à 255)
+        /// </summary>
         public byte GlareshieldPanel { get => glareshieldPanel; set => glareshieldPanel = value; }
+        /// <summary>
+        /// Le niveau de rétroéclairage des panels de l'Overhead (0 à 255)
+        /// </summary>
         public byte OverheadPanel { get => overheadPanel; set => overheadPanel = value; }
+        /// <summary>
+        /// Le niveau de rétroéclairage des panels du Pedestal (0 à 255)
+        /// </summary>
         public byte PedestalPanel { get => pedestalPanel; set => pedestalPanel = value; }
+        /// <summary>
+        /// Le niveau de rétroéclairage des indicteurs des boutons de tous le cockpit (par exemple le témoins AP1 actif)
+        /// </summary>
         public byte Indicators { get => indicators; set => indicators = value; }
+        /// <summary>
+        /// Le niveau de rétroéclairage des boutons de tous le cockpit (le texte ou simbole des boutons)
+        /// </summary>
         public byte Buttons { get => buttons; set => buttons = value; }
+        /// <summary>
+        /// Mode de test des temoins (allume tous les témoins de tous le cockpit)
+        /// </summary>
         public bool TestLight { get => testLight; set => testLight = value; }
     }
 }

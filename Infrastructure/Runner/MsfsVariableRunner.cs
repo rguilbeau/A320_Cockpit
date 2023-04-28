@@ -113,7 +113,7 @@ namespace A320_Cockpit.Infrastructure.Runner
         }
 
         /// <summary>
-        /// Recepetion d'un nouvel event du cockpit
+        /// Reception d'un nouvel event du cockpit
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -121,7 +121,7 @@ namespace A320_Cockpit.Infrastructure.Runner
         {
             msfs.StopRead();
             eventDispatcher.Dispatch(listenEventArgs.Event, listenEventArgs.Value);
-            cockpitEvent = listenEventArgs.Event;
+            cockpitEvent = listenEventArgs.Event; // Priorité sur cet evenement
             msfs.ResumeRead();
             eventReadTimeout.Stop();
             eventReadTimeout.Start();

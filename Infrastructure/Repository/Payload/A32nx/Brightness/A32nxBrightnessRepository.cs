@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace A320_Cockpit.Infrastructure.Repository.Payload.A32nx.Brightness
 {
     /// <summary>
-    /// Repository pour la mise à jour et la récupération de l'entité du rétroaiclairage
+    /// Repository pour la mise à jour et la récupération de l'entité du rétroaiclairage (pour l'A32NX)
     /// </summary>
     public class A32nxBrightnessRepository : A32nxPayloadRepository<BrightnessCockpit>
     {

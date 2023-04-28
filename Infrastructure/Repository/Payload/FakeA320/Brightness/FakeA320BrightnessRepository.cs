@@ -14,14 +14,14 @@ using System.Threading.Tasks;
 namespace A320_Cockpit.Infrastructure.Repository.Payload.FakeA320.Brightness
 {
     /// <summary>
-    /// Repository pour la mise à jour et la récupération de l'entité du rétroaiclairage
+    /// Repository pour la mise à jour et la récupération de l'entité du rétroaiclairage (pour de debug)
     /// </summary>
     public class FakeA320BrightnessRepository : FakeA320PayloadRepository<BrightnessCockpit>
     {
         private static readonly BrightnessCockpit brightness = new();
         
         /// <summary>
-        /// Retourne l'entité
+        /// L'entité
         /// </summary>
         public override BrightnessCockpit Payload => brightness;
 
@@ -48,7 +48,7 @@ namespace A320_Cockpit.Infrastructure.Repository.Payload.FakeA320.Brightness
         }
 
         /// <summary>
-        /// Mise à jour de l'entité avec les variables MSFS
+        /// Mise à jour de l'entité
         /// </summary>
         protected override BrightnessCockpit BuildPayload()
         {

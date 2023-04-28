@@ -13,6 +13,9 @@ using Microsoft.FlightSimulator.SimConnect;
 
 namespace A320_Cockpit.Adaptation.Msfs.MsfsWasm
 {
+    /// <summary>
+    /// Adapteur MSFS qui utilise le plugin A320 - Cockpit
+    /// </summary>
     public class MsfsWasmAdapter : IMsfs
     {
         private const string NAME = "A320 - Cockpit";

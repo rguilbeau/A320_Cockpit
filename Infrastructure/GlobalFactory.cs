@@ -1,4 +1,5 @@
 ﻿using A320_Cockpit.Adaptation.Canbus;
+using A320_Cockpit.Adaptation.Canbus.ArduinoSerialCan;
 using A320_Cockpit.Adaptation.Canbus.CANtact;
 using A320_Cockpit.Adaptation.Log;
 using A320_Cockpit.Adaptation.Log.Sirelog;
@@ -46,7 +47,7 @@ namespace A320_Cockpit.Infrastructure
 
         public GlobalFactory() 
         {
-            ICanbus canbus = new CANtactAdapter(new System.IO.Ports.SerialPort(), "COM6", 9600, "125Kbit");
+            ICanbus canbus = new ArduinoSerialCanAdapter(new System.IO.Ports.SerialPort(), "COM5");
 
             IMsfs msfs;
 
@@ -73,10 +74,7 @@ namespace A320_Cockpit.Infrastructure
 
                 List<IPayloadEventHandler> allEvents = new()
                 {
-                    new FakeA320FcuAltBugEventHandler((FakeA320FcuDisplayRepository)fcuDisplayRepository),
-                    new FakeA320FcuHdgBugEventHandler((FakeA320FcuDisplayRepository)fcuDisplayRepository),
-                    new FakeA320FcuSpdBugEventHandler((FakeA320FcuDisplayRepository)fcuDisplayRepository),
-                    new FakeA320FcuVsBugEventHandler((FakeA320FcuDisplayRepository)fcuDisplayRepository),
+                    new FakeA320FcuBugEventHandler((FakeA320FcuDisplayRepository)fcuDisplayRepository),
                     new FakeA320FcuGlareshieldButtonsEventHandler((FakeA320GlareshieldIndicatorsRepository)glareshieldIndicatorsRepository, (FakeA320FcuDisplayRepository)fcuDisplayRepository)
                 };
                 PayloadEventHandlers = allEvents;
@@ -88,10 +86,7 @@ namespace A320_Cockpit.Infrastructure
 
                 List<IPayloadEventHandler> allEvents = new()
                 {
-                    new A32nxFcuSpdBugEventHandler(MsfsSimulatorRepository),
-                    new A32nxFcuHdgBugEventHandler(MsfsSimulatorRepository),
-                    new A32nxAltBugEventHandler(MsfsSimulatorRepository),
-                    new A32nxFcuVsBugEventHandler(MsfsSimulatorRepository),
+                    new A32nxFcuBugEventHandler(MsfsSimulatorRepository),
                     new A32nxFcuGlareshieldButtonsEventHandler(MsfsSimulatorRepository)
                 };
                 PayloadEventHandlers = allEvents;

@@ -1,7 +1,7 @@
 ﻿namespace A320_Cockpit.Adaptation.Msfs.MsfsWasm
 {
     /// <summary>
-    /// Utilitaire pour la version des valeurs recu de MSFS vers les variables
+    /// Utilitaire pour la conversion des valeurs recu de MSFS vers les variables
     /// </summary>
     public class TypeConverter
     {

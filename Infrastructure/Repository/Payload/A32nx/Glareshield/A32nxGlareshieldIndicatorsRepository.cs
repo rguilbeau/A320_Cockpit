@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 namespace A320_Cockpit.Infrastructure.Repository.Payload.A32nx.Glareshield
 {
     /// <summary>
-    /// Repository pour la mise à jour et la récupération de l'entité du des témoins des panels du Glareshield
+    /// Repository pour la mise à jour et la récupération de l'entité du des témoins des panels du Glareshield (pour l'A32NX)
     /// </summary>
     public class A32nxGlareshieldIndicatorsRepository : A32nxPayloadRepository<GlareshieldIndicators>
     {

@@ -17,12 +17,15 @@ namespace A320_Cockpit.Infrastructure.Repository.Payload.FakeA320.Glareshield
 {
     /// <summary>
     /// Repository pour la mise à jour et la récupération de l'entité du des valeurs 
-    /// à afficher sur les écrans du FCU
+    /// à afficher sur les écrans du FCU (pour le debug)
     /// </summary>
     public class FakeA320FcuDisplayRepository : FakeA320PayloadRepository<FcuDisplay>
     {
         private static readonly FcuDisplay fcuDisplay = new();
 
+        /// <summary>
+        /// L'entité
+        /// </summary>
         public override FcuDisplay Payload => fcuDisplay;
 
         /// <summary>
@@ -57,7 +60,7 @@ namespace A320_Cockpit.Infrastructure.Repository.Payload.FakeA320.Glareshield
         }
 
         /// <summary>
-        /// Mise à jour de l'entité avec les variables MSFS
+        /// Mise à jour de l'entité
         /// </summary>
         protected override FcuDisplay BuildPayload()
         {

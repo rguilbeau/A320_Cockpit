@@ -31,7 +31,7 @@ namespace A320_Cockpit.Domain.UseCase.ListenEvent
         }
 
         /// <summary>
-        /// Evenement recus
+        /// Evenement recu
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="frame"></param>

@@ -1,6 +1,8 @@
 ﻿using A320_Cockpit.Domain.Entity.Cockpit;
 using System;
 using System.IO.Ports;
+using System.Linq.Expressions;
+using System.Text;
 
 namespace A320_Cockpit.Adaptation.Canbus.CANtact
 {
@@ -162,7 +164,7 @@ namespace A320_Cockpit.Adaptation.Canbus.CANtact
                 }
 
                 serialPort.Write("t" + canFrameData);
-                Console.WriteLine("-> " + frame.ToString());
+                    Console.WriteLine("-> " + frame.ToString());
                 serialPort.Write("\r");
             }
         }

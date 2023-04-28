@@ -14,14 +14,14 @@ using System.Threading.Tasks;
 namespace A320_Cockpit.Infrastructure.Repository.Payload.FakeA320.Glareshield
 {
     /// <summary>
-    /// Repository pour la mise à jour et la récupération de l'entité du des témoins des panels du Glareshield
+    /// Repository pour la mise à jour et la récupération de l'entité du des témoins des panels du Glareshield (pour le debug)
     /// </summary>
     public class FakeA320GlareshieldIndicatorsRepository : FakeA320PayloadRepository<GlareshieldIndicators>
     {
         private static readonly GlareshieldIndicators glareshieldIndicators = new();
 
         /// <summary>
-        /// Retourne l'entité
+        /// L'entité
         /// </summary>
         public override GlareshieldIndicators Payload => glareshieldIndicators;
 
@@ -48,7 +48,7 @@ namespace A320_Cockpit.Infrastructure.Repository.Payload.FakeA320.Glareshield
         }
 
         /// <summary>
-        /// Mise à jour de l'entité avec les variables MSFS
+        /// Mise à jour de l'entité
         /// </summary>
         protected override GlareshieldIndicators BuildPayload()
         {

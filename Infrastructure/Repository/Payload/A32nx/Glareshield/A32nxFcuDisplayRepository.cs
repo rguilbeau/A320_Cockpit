@@ -17,7 +17,7 @@ namespace A320_Cockpit.Infrastructure.Repository.Payload.A32nx.Glareshield
 {
     /// <summary>
     /// Repository pour la mise à jour et la récupération de l'entité du des valeurs 
-    /// à afficher sur les écrans du FCU
+    /// à afficher sur les écrans du FCU (pour l'A32NX)
     /// </summary>
     public class A32nxFcuDisplayRepository : A32nxPayloadRepository<FcuDisplay>
     {
