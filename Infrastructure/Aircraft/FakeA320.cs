@@ -73,10 +73,23 @@ namespace A320_Cockpit.Infrastructure.Aircraft
         /// </summary>
         public ILogHandler Logger => logger;
 
+        /// <summary>
+        /// Le repository de connexion au simulateur du FakeA320 (debug)
+        /// </summary>
         public ISimulatorConnexionRepository SimulatorConnexionRepository => simulatorConnexionRepository;
 
+        /// <summary>
+        /// Le repository du cockpit du FakeA320 (debug)
+        /// </summary>
         public ICockpitRepository CockpitRepository => cockpitRepository;
 
+        /// <summary>
+        /// Création du runner du FakeA320 (debug)
+        /// </summary>
+        /// <param name="connexionPresenter"></param>
+        /// <param name="listenEventPresenter"></param>
+        /// <param name="sendPayloadPresenter"></param>
+        /// <returns></returns>
         public IRunner CreateRunner(IConnexionPresenter connexionPresenter, IListenEventPresenter listenEventPresenter, ISendPayloadPresenter sendPayloadPresenter)
         {
             return new MsfsVariableRunner(
@@ -89,7 +102,5 @@ namespace A320_Cockpit.Infrastructure.Aircraft
                 listenEventPresenter
             );
         }
-
-
     }
 }

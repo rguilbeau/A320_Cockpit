@@ -33,8 +33,14 @@ namespace A320_Cockpit.Infrastructure.Aircraft
         /// </summary>
         public ILogHandler Logger { get; }
 
+        /// <summary>
+        /// Le repository de la connexion au simulateur
+        /// </summary>
         public ISimulatorConnexionRepository SimulatorConnexionRepository { get; }
 
+        /// <summary>
+        /// Le repository du cockpit
+        /// </summary>
         public ICockpitRepository CockpitRepository { get; }
     }
 }

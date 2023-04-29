@@ -75,10 +75,23 @@ namespace A320_Cockpit.Infrastructure.Aircraft
         /// </summary>
         public ILogHandler Logger => logger;
 
+        /// <summary>
+        /// Le repository de connexion au simulateur de l'A32NX
+        /// </summary>
         public ISimulatorConnexionRepository SimulatorConnexionRepository => simulatorConnexionRepository;
 
+        /// <summary>
+        /// Le repository du cockpit de l'A32NX
+        /// </summary>
         public ICockpitRepository CockpitRepository => cockpitRepository;
 
+        /// <summary>
+        /// Création du runner de l'A32NX
+        /// </summary>
+        /// <param name="connexionPresenter"></param>
+        /// <param name="listenEventPresenter"></param>
+        /// <param name="sendPayloadPresenter"></param>
+        /// <returns></returns>
         public IRunner CreateRunner(IConnexionPresenter connexionPresenter, IListenEventPresenter listenEventPresenter, ISendPayloadPresenter sendPayloadPresenter)
         {
             return new MsfsVariableRunner(
