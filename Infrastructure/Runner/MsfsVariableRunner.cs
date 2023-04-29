@@ -19,7 +19,7 @@ namespace A320_Cockpit.Infrastructure.Runner
         private readonly ILogHandler logger;
         private readonly MsfsSimulatorRepository msfs;
         private bool running = false;
-        private readonly List<SendPayloadUseCase> sendPayloadUseCase;
+        private readonly List<SendPayloadUseCase> sendPayloadUseCases;
         private readonly ListenEventUseCase listenEventUseCase;
         private readonly Stopwatch stopwatch;
         private readonly CockpitEventDispatcher eventDispatcher;
@@ -37,24 +37,19 @@ namespace A320_Cockpit.Infrastructure.Runner
         public MsfsVariableRunner(
             MsfsSimulatorRepository msfs, 
             ILogHandler logger, 
-            ISendPayloadPresenter presenter, 
-            IListenEventPresenter listentEventPresenter, 
-            ICockpitRepository cockpitRepository
+            ICockpitRepository cockpitRepository,
+            ListenEventUseCase listenEventUseCase,
+            List<IPayloadEventHandler> payloadEventHandlers,
+            List<SendPayloadUseCase> sendPayloadUseCases
         ) {
             this.msfs = msfs;
             this.logger = logger;
-
-            sendPayloadUseCase = new();
-            foreach(IPayloadRepository payloadRepository in GlobalFactory.Get().PayloadRepositories)
-            {
-                sendPayloadUseCase.Add(new SendPayloadUseCase(cockpitRepository, payloadRepository, presenter));
-            }
-
+            this.sendPayloadUseCases = sendPayloadUseCases;
             this.cockpitRepository = cockpitRepository;
-            listenEventUseCase = new(cockpitRepository, listentEventPresenter);
+            this.listenEventUseCase = listenEventUseCase;
             listenEventUseCase.EventReceived += ListenEventUseCase_EventReceived;
 
-            eventDispatcher = CockpitEventDispatcher.Get(GlobalFactory.Get().PayloadEventHandlers);
+            eventDispatcher = CockpitEventDispatcher.Get(payloadEventHandlers);
             cockpitEvent = CockpitEvent.ALL;
             eventReadTimeout = new() { Interval = 1000 };
             eventReadTimeout.Elapsed += EventReadTimeout_Elapsed;
@@ -95,7 +90,7 @@ namespace A320_Cockpit.Infrastructure.Runner
                     try
                     {
                         // Mise à jour des payload
-                        foreach (SendPayloadUseCase sendUseCase in sendPayloadUseCase)
+                        foreach (SendPayloadUseCase sendUseCase in sendPayloadUseCases)
                         {
                             sendUseCase.Exec(cockpitEvent);
                         }

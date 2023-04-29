@@ -15,6 +15,7 @@ using System.Text;
 using System.Threading.Tasks;
 using A320_Cockpit.Domain.Repository.Cockpit;
 using A320_Cockpit.Infrastructure.Presenter.ListenEvent;
+using A320_Cockpit.Infrastructure.Aircraft;
 
 namespace A320_Cockpit.Infrastructure.View.SystemTray
 {
@@ -28,25 +29,16 @@ namespace A320_Cockpit.Infrastructure.View.SystemTray
 
         private readonly IRunner msfsVariableRunner;
         private readonly ConnextionUseCase connextionUseCase;
+        private readonly ILogHandler logger;
 
         /// <summary>
         /// Création du système tray
         /// </summary>
-        public ApplicationTray()
+        public ApplicationTray(IAircraft aircraft)
         {
-            connextionUseCase = new(
-                GlobalFactory.Get().SimulatorConnexionRepository,
-                GlobalFactory.Get().CockpitRepository,
-                GlobalFactory.Get().ConnexionPresenter
-            );
-
-            msfsVariableRunner = new MsfsVariableRunner(
-                GlobalFactory.Get().MsfsSimulatorRepository,
-                GlobalFactory.Get().Log,
-                GlobalFactory.Get().SendPayloadPresenter,
-                GlobalFactory.Get().ListenEventPresenter,
-                GlobalFactory.Get().CockpitRepository
-            );
+            connextionUseCase = aircraft.ConnextionUseCase;
+            msfsVariableRunner = aircraft.Runner;
+            logger = aircraft.Logger;
 
             timerConnexion = new() { Interval = 5000 };
             timerConnexion.Tick += TimerConnexion_Tick;
@@ -89,9 +81,9 @@ namespace A320_Cockpit.Infrastructure.View.SystemTray
         /// <summary>
         /// Elève la pastille et la remet juste après
         /// </summary>
-        public void BlinkIcon()
+        public void BlinkIcon(TrayStatus status)
         {
-            trayIcon.Icon = AppResources.AppTrayIcon;
+            trayIcon.Icon = status == TrayStatus.SUCCESS ? AppResources.AppTrayIcon : AppResources.AppTrayIconError;
             System.Windows.Forms.Timer timer = new() { Interval = 20 };
             timer.Tick += (sender, args) =>
             {
@@ -123,7 +115,7 @@ namespace A320_Cockpit.Infrastructure.View.SystemTray
         /// <exception cref="NotImplementedException"></exception>
         private void Log_OnClick(object? sender, EventArgs e)
         {
-            GlobalFactory.Get().Log.OpenInEditor();
+            logger.OpenInEditor();
         }
 
         /// <summary>

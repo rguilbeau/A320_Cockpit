@@ -1,26 +1,24 @@
-using A320_Cockpit.Adaptation.Canbus;
-using A320_Cockpit.Adaptation.Log;
-using A320_Cockpit.Infrastructure;
-using A320_Cockpit.Infrastructure.Repository.Payload.A32nx;
-using A320_Cockpit.Infrastructure.View.StartupDialog;
+using A320_Cockpit.Adaptation.Log.Sirelog;
+using A320_Cockpit.Infrastructure.Aircraft;
 using A320_Cockpit.Infrastructure.View.SystemTray;
 
 namespace A320_Cockpit
 {
     internal static class Program
     {
+        static IAircraft ?aircraft;
         /// <summary>
         ///  The main entry point for the application.
         /// </summary>
         [STAThread]
         static void Main()
         {
-            GlobalFactory.DEBUG = false;
-
+            aircraft = new FakeA320(new SirelogAdapter(""), "COM5");
+            
             AllocConsole();
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             ApplicationConfiguration.Initialize();
-            Application.Run(new ApplicationTray());
+            Application.Run(new ApplicationTray(aircraft));
         }
 
         /// <summary>
@@ -30,10 +28,8 @@ namespace A320_Cockpit
         /// <param name="e"></param>
         private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            GlobalFactory.Get().Log.Error(new Exception("Unhandled exception", (Exception)e.ExceptionObject));
-            {
-                Application.Exit();
-            }
+            aircraft?.Logger.Error(new Exception("Unhandled exception", (Exception)e.ExceptionObject));
+            Application.Exit();
         }
 
         /// <summary>
