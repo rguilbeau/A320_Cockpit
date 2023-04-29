@@ -35,6 +35,7 @@
             button_start = new Button();
             button_cancel = new Button();
             label3 = new Label();
+            checkBox_monitoring = new CheckBox();
             SuspendLayout();
             // 
             // combobox_port
@@ -75,7 +76,7 @@
             // 
             // button_start
             // 
-            button_start.Location = new Point(199, 117);
+            button_start.Location = new Point(199, 140);
             button_start.Name = "button_start";
             button_start.Size = new Size(75, 23);
             button_start.TabIndex = 4;
@@ -85,7 +86,7 @@
             // 
             // button_cancel
             // 
-            button_cancel.Location = new Point(118, 117);
+            button_cancel.Location = new Point(118, 140);
             button_cancel.Name = "button_cancel";
             button_cancel.Size = new Size(75, 23);
             button_cancel.TabIndex = 5;
@@ -101,12 +102,23 @@
             label3.TabIndex = 6;
             label3.Text = "Avant de démarrer, assurez-vous que le cockpit est allimenté et que le MSFS est lancé.";
             // 
+            // checkBox_monitoring
+            // 
+            checkBox_monitoring.AutoSize = true;
+            checkBox_monitoring.Location = new Point(78, 111);
+            checkBox_monitoring.Name = "checkBox_monitoring";
+            checkBox_monitoring.Size = new Size(134, 19);
+            checkBox_monitoring.TabIndex = 7;
+            checkBox_monitoring.Text = "Ouvrir le monitoring";
+            checkBox_monitoring.UseVisualStyleBackColor = true;
+            // 
             // StartupDialog
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(286, 149);
+            ClientSize = new Size(286, 175);
             ControlBox = false;
+            Controls.Add(checkBox_monitoring);
             Controls.Add(label3);
             Controls.Add(button_cancel);
             Controls.Add(button_start);
@@ -133,5 +145,6 @@
         private Button button_start;
         private Button button_cancel;
         private Label label3;
+        private CheckBox checkBox_monitoring;
     }
 }

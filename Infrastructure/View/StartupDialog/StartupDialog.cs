@@ -48,34 +48,25 @@ namespace A320_Cockpit.Infrastructure.View.StartupDialog
         /// <param name="e"></param>
         private void Button_start_Click(object sender, EventArgs e)
         {
-            string ?port = combobox_port.SelectedItem?.ToString();
-            string ?aircraftName = combobox_aircraft.SelectedItem?.ToString();
-            IAircraft ?aircraft = null;
+            string? port = combobox_port.SelectedItem?.ToString();
+            string? aircraftName = combobox_aircraft.SelectedItem?.ToString();
 
-            if (port == null || aircraftName == null)
+            AircraftOptionsChecker optionsChecker = new(port, aircraftName, logger);
+            
+            if(optionsChecker.Aircraft == null || optionsChecker.Port == null)
             {
-                MessageBox.Show("Vous devez sélectionner un COM Port et un avion pour démarrer l'application", "Attention");
+                MessageBox.Show(optionsChecker.ErrorMessage, "Attention");
             } else
             {
-                switch (aircraftName)
+                ApplicationTray applicationTray = new(optionsChecker.Aircraft);
+
+                if (checkBox_monitoring.Checked)
                 {
-                    case A32nx.NAME:
-                        aircraft = new A32nx(logger, port);
-                        break;
-                    case FakeA320.NAME:
-                        aircraft = new FakeA320(logger, port);
-                        break;
+                    applicationTray.OpenMonitoring();
                 }
 
-                if (aircraft == null)
-                {
-                    MessageBox.Show("L'avion " + aircraftName + " est inconnu");
-                } else
-                {
-                    _ = new ApplicationTray(aircraft);
-                    portScannerTimer.Dispose();
-                    Hide(); // Obligé de garder la fenêtre caché, sinon le system tray ne répond plus
-                }
+                portScannerTimer.Dispose();
+                Hide(); // Obligé de garder la fenêtre caché, sinon le system tray ne répond plus
             }
         }
 

@@ -16,6 +16,8 @@ using System.Threading.Tasks;
 using A320_Cockpit.Domain.Repository.Cockpit;
 using A320_Cockpit.Infrastructure.Presenter.ListenEvent;
 using A320_Cockpit.Infrastructure.Aircraft;
+using A320_Cockpit.Infrastructure.View.Monitoring;
+using System.DirectoryServices.ActiveDirectory;
 
 namespace A320_Cockpit.Infrastructure.View.SystemTray
 {
@@ -30,6 +32,8 @@ namespace A320_Cockpit.Infrastructure.View.SystemTray
         private readonly IRunner msfsVariableRunner;
         private readonly ConnextionUseCase connextionUseCase;
         private readonly IAircraft aircraft;
+
+        private MonitoringForm ?monitoringForm;
 
         /// <summary>
         /// Création du système tray
@@ -59,7 +63,7 @@ namespace A320_Cockpit.Infrastructure.View.SystemTray
                 ContextMenuStrip = new ContextMenuStrip()
                 {
                     Items = {
-                        new ToolStripMenuItem(AppResources.Log, null, Log_OnClick),
+                        new ToolStripMenuItem("Monitoring", null, Monitoring_OnClick),
                         new ToolStripSeparator(),
                         new ToolStripMenuItem(AppResources.Exit, null, Exit_OnClick)
                     }
@@ -103,6 +107,25 @@ namespace A320_Cockpit.Infrastructure.View.SystemTray
         }
 
         /// <summary>
+        /// Ouvre la fenêtre de monitoring
+        /// </summary>
+        public void OpenMonitoring()
+        {
+            if (monitoringForm != null)
+            {
+                monitoringForm.Focus();
+            } else
+            {
+                monitoringForm = new();
+                monitoringForm.Disposed += (sender, e) =>
+                {
+                    monitoringForm = null;
+                };
+                monitoringForm.Show();
+            }
+        }
+
+        /// <summary>
         /// Quitte l'application
         /// </summary>
         /// <param name="sender"></param>
@@ -134,6 +157,16 @@ namespace A320_Cockpit.Infrastructure.View.SystemTray
         private void TimerConnexion_Tick(object? sender, EventArgs e)
         {
             connextionUseCase.Exec();
+        }
+
+        /// <summary>
+        /// Ouvre la fenêtre de monitoring des messages et des erreurs
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Monitoring_OnClick(object? sender, EventArgs e)
+        {
+            OpenMonitoring();
         }
     }
 }
