@@ -33,7 +33,7 @@ namespace A320_Cockpit.Infrastructure.View.SystemTray
         private readonly ConnextionUseCase connextionUseCase;
         private readonly IAircraft aircraft;
 
-        private MonitoringForm ?monitoringForm;
+        private MonitringForm ?monitoringForm;
 
         /// <summary>
         /// Création du système tray
