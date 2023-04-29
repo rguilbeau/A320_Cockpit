@@ -2,10 +2,10 @@
 using A320_Cockpit.Domain.Enum;
 using A320_Cockpit.Domain.Repository.Cockpit;
 using A320_Cockpit.Domain.Repository.Payload;
+using A320_Cockpit.Domain.UseCase.Connexion;
 using A320_Cockpit.Domain.UseCase.ListenEvent;
 using A320_Cockpit.Domain.UseCase.SendPayload;
 using A320_Cockpit.Infrastructure.EventHandler;
-using A320_Cockpit.Infrastructure.Presenter.Monitoring;
 using A320_Cockpit.Infrastructure.Repository.Simulator;
 using System.Diagnostics;
 using System.Timers;
@@ -23,15 +23,15 @@ namespace A320_Cockpit.Infrastructure.Runner
 
         private readonly List<SendPayloadUseCase> sendPayloadUseCases;
         private readonly ListenEventUseCase listenEventUseCase;
-
-        private MonitoringPresenter? monitoringPresenter;
+        private readonly ConnextionUseCase connexionUseCase;
 
         private readonly System.Timers.Timer eventReadTimeout;
+        private readonly System.Timers.Timer connexionTimer;
 
         private bool running = false;
         private CockpitEvent cockpitEvent;
 
-        private readonly Stopwatch stopWatch;
+        private readonly Stopwatch monitoring;
 
         /// <summary>
         /// Création du thread
@@ -54,11 +54,17 @@ namespace A320_Cockpit.Infrastructure.Runner
             listenEventUseCase = new ListenEventUseCase(cockpitRepository);
             listenEventUseCase.EventReceived += ListenEventUseCase_EventReceived;
 
+            connexionUseCase = new(msfs, cockpitRepository);
+
             eventDispatcher = CockpitEventDispatcher.Get(payloadEventHandlers);
             cockpitEvent = CockpitEvent.ALL;
             eventReadTimeout = new() { Interval = 1000 };
             eventReadTimeout.Elapsed += EventReadTimeout_Elapsed;
-            stopWatch = new();
+
+            connexionTimer = new() { Interval = 5000 };
+            connexionTimer.Elapsed += ConexionTimer_Elappsed;
+
+            monitoring = new();
         }
 
         /// <summary>
@@ -76,6 +82,9 @@ namespace A320_Cockpit.Infrastructure.Runner
         /// </summary>
         public void Start() 
         {
+            connexionUseCase.Exec();
+            connexionTimer.Start();
+
             running = true;
             listenEventUseCase.Listen();
 
@@ -84,7 +93,7 @@ namespace A320_Cockpit.Infrastructure.Runner
                 Thread.Sleep(2000);
                 while (true)
                 {
-                    stopWatch.Restart();
+                    monitoring.Restart();
 
                     msfs.StartTransaction();
 
@@ -104,79 +113,20 @@ namespace A320_Cockpit.Infrastructure.Runner
                     }
                     catch (Exception ex)
                     {
-                        if(monitoringPresenter != null)
-                        {
-                            monitoringPresenter.Exception = ex;
-                        }
+                        Console.WriteLine(ex.ToString());
                     }
+
+                    int cursorLeft = Console.CursorLeft;
+                    int cursorTop = Console.CursorTop;
+                    string header = monitoring.ElapsedMilliseconds + "ms";
+                    Console.Write(header);
+                    Console.SetCursorPosition(cursorLeft, cursorTop);
 
                     msfs.StopTransaction();
-
-                    stopWatch.Stop();
-
-                    if (monitoringPresenter != null)
-                    {
-                        monitoringPresenter.Timing = stopWatch.ElapsedMilliseconds;
-                        monitoringPresenter.Present();
-                    }
+                    
+                    
                 }
             }).Start();
-        }
-
-        /// <summary>
-        /// Ajout des présenter d'envoi de frame
-        /// </summary>
-        /// <param name="sendPayloadPresenter"></param>
-        public void AddSendPayloadPresenter(ISendPayloadPresenter sendPayloadPresenter)
-        {
-            sendPayloadUseCases.ForEach(sendPayloadUseCases => sendPayloadUseCases.AddPresenter(sendPayloadPresenter));
-        }
-
-        /// <summary>
-        /// Ajoute des présenter d'écoute de frame
-        /// </summary>
-        /// <param name="listenEventPresenter"></param>
-        public void AddListenEventPresenter(IListenEventPresenter listenEventPresenter)
-        {
-            listenEventUseCase.AddPresenter(listenEventPresenter);
-        }
-
-        /// <summary>
-        /// Ajout des présenter d'envoi de frame
-        /// </summary>
-        /// <param name="sendPayloadPresenter"></param>
-        public void RemoveSendPayloadPresenter(ISendPayloadPresenter sendPayloadPresenter)
-        {
-            sendPayloadUseCases.ForEach(sendPayloadUseCases => sendPayloadUseCases.RemovePresenter(sendPayloadPresenter));
-        }
-
-        /// <summary>
-        /// Ajoute des présenter d'écoute de frame
-        /// </summary>
-        /// <param name="listenEventPresenter"></param>
-        public void RemoveListenEventPresenter(IListenEventPresenter listenEventPresenter)
-        {
-            listenEventUseCase.RemovePresenter(listenEventPresenter);
-        }
-
-        /// <summary>
-        /// Ajoute le presenter du monitoring
-        /// </summary>
-        /// <param name="monitoringPresenter"></param>
-        /// <exception cref="NotImplementedException"></exception>
-        public void AddMonitoringPresenter(MonitoringPresenter monitoringPresenter)
-        {
-            this.monitoringPresenter = monitoringPresenter;
-        }
-
-        /// <summary>
-        /// Supprime le presenter du montoring
-        /// </summary>
-        /// <param name="monitoringPresenter"></param>
-        /// <exception cref="NotImplementedException"></exception>
-        public void RemoveMonitoringPresenter(MonitoringPresenter monitoringPresenter)
-        {
-            this.monitoringPresenter = null;
         }
 
         /// <summary>
@@ -204,6 +154,16 @@ namespace A320_Cockpit.Infrastructure.Runner
         {
             cockpitEvent = CockpitEvent.ALL;
             eventReadTimeout.Stop();
+        }
+
+        /// <summary>
+        /// Vérification de la connexion
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ConexionTimer_Elappsed(object ?sender, ElapsedEventArgs e)
+        {
+            connexionUseCase.Exec();
         }
     }
 }

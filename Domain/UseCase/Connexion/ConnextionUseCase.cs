@@ -15,7 +15,6 @@ namespace A320_Cockpit.Domain.UseCase.Connexion
     {
         private readonly ISimulatorConnexionRepository simulatorRepository;
         private readonly ICockpitRepository cockpitRepository;
-        private readonly List<IConnexionPresenter> presenters;
 
         /// <summary>
         /// Création du UseCase
@@ -25,7 +24,6 @@ namespace A320_Cockpit.Domain.UseCase.Connexion
         {
             this.simulatorRepository = simulatorRepository;
             this.cockpitRepository = cockpitRepository;
-            presenters = new();
         }
 
         /// <summary>
@@ -37,11 +35,12 @@ namespace A320_Cockpit.Domain.UseCase.Connexion
             {
                 try
                 {
+                    Console.WriteLine("Connexion au simulateur...");
                     simulatorRepository.Open();
                 }
                 catch (Exception ex)
                 {
-                    presenters.ForEach(presenter => presenter.AddException(ex));
+                    Console.WriteLine(ex.ToString());
                 }
             }
 
@@ -49,39 +48,15 @@ namespace A320_Cockpit.Domain.UseCase.Connexion
             {
                 try
                 {
+                    Console.WriteLine("Connexion au cockpit...");
                     cockpitRepository.Open();
                     cockpitRepository.ActivePing();
                 }
                 catch (Exception ex)
                 {
-                    presenters.ForEach(presenter => presenter.AddException(ex));
+                    Console.WriteLine(ex.ToString());
                 }
             }
-
-            foreach(IConnexionPresenter presenter in presenters) 
-            {
-                presenter.SimulatorStatus = simulatorRepository.IsOpen;
-                presenter.CockpitStatus = cockpitRepository.IsOpen;
-                presenter.Present();
-            }
-        }
-
-        /// <summary>
-        /// Ajoute un autre présenter
-        /// </summary>
-        /// <param name="presenter"></param>
-        public void AddPresenter(IConnexionPresenter presenter)
-        {
-            presenters.Add(presenter);
-        }
-
-        /// <summary>
-        /// Supprime un présenter
-        /// </summary>
-        /// <param name="presenter"></param>
-        public void RemovePresenter(IConnexionPresenter presenter) 
-        { 
-            presenters.Remove(presenter);
         }
     }
 }

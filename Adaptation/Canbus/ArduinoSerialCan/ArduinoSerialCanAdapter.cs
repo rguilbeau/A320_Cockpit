@@ -101,7 +101,7 @@ namespace A320_Cockpit.Adaptation.Canbus.ArduinoSerialCan
             byte[] buffer = Encoding.ASCII.GetBytes(canFrameData + "\n");
             serialPort.BaseStream.WriteAsync(buffer, 0, buffer.Length);
 
-            Console.WriteLine("-> " + frame.ToString());
+            Console.WriteLine("--> " + frame.ToString());
         }
 
         /// <summary>
@@ -128,7 +128,7 @@ namespace A320_Cockpit.Adaptation.Canbus.ArduinoSerialCan
                         frame.Data[i] = byte.Parse(message[indexStart..indexEnd], System.Globalization.NumberStyles.HexNumber); ;
                     }
 
-                    Console.WriteLine("<- " + frame.ToString());
+                    Console.WriteLine("<-- " + frame.ToString());
                     MessageReceived.Invoke(this, frame);
                 }
             }

@@ -7,7 +7,6 @@ using A320_Cockpit.Domain.UseCase.Connexion;
 using A320_Cockpit.Domain.UseCase.ListenEvent;
 using A320_Cockpit.Domain.UseCase.SendPayload;
 using A320_Cockpit.Infrastructure.EventHandler;
-using A320_Cockpit.Infrastructure.Presenter.Send;
 using A320_Cockpit.Infrastructure.Runner;
 using System;
 using System.Collections.Generic;
