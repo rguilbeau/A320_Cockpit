@@ -18,17 +18,14 @@ namespace A320_Cockpit.Infrastructure.Presenter.Send
         private Frame? frame;
         private Exception? error;
         private bool isSent = false;
-        private readonly ILogHandler logger;
         private readonly ApplicationTray applicationTray;
 
         /// <summary>
         /// Création du présenter
         /// </summary>
         /// <param name="applicationTray">Le system tray</param>
-        /// <param name="logger">Lo logger</param>
-        public TraySendPresenter(ILogHandler logger, ApplicationTray applicationTray)
+        public TraySendPresenter(ApplicationTray applicationTray)
         {
-            this.logger = logger;
             this.applicationTray = applicationTray;
         }
 
@@ -44,6 +41,7 @@ namespace A320_Cockpit.Infrastructure.Presenter.Send
         /// Si le message a été envoyé
         /// </summary>
         public bool IsSent { get => isSent; set => isSent = value; }
+
         /// <summary>
         /// Présente les éléments au system tray
         /// </summary>
@@ -53,7 +51,6 @@ namespace A320_Cockpit.Infrastructure.Presenter.Send
             if (error != null)
             {
                 applicationTray.BlinkIcon(TrayStatus.FAILURE);
-                logger.Error(error);
             }
             else if (isSent)
             {

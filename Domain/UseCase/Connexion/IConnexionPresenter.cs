@@ -24,6 +24,16 @@ namespace A320_Cockpit.Domain.UseCase.Connexion
         public void AddException(Exception exception);
 
         /// <summary>
+        /// Le status de connexion du simulateur
+        /// </summary>
+        public bool SimulatorStatus { get; set; }
+
+        /// <summary>
+        /// Le status du cockit (CAN bus)
+        /// </summary>
+        public bool CockpitStatus { get; set; }
+
+        /// <summary>
         /// Présente les résultats
         /// </summary>
         public void Present();

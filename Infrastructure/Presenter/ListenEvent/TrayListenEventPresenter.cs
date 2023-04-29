@@ -1,4 +1,5 @@
 ﻿using A320_Cockpit.Adaptation.Log;
+using A320_Cockpit.Domain.Entity.Cockpit;
 using A320_Cockpit.Domain.Enum;
 using A320_Cockpit.Domain.UseCase.ListenEvent;
 using A320_Cockpit.Infrastructure.View.SystemTray;
@@ -16,6 +17,7 @@ namespace A320_Cockpit.Infrastructure.Presenter.ListenEvent
     public class TrayListenEventPresenter : IListenEventPresenter
     {
         private readonly ApplicationTray applicationTray;
+        private Frame ?frame;
 
         /// <summary>
         /// Création du présenter
@@ -34,5 +36,10 @@ namespace A320_Cockpit.Infrastructure.Presenter.ListenEvent
         {
             applicationTray.BlinkIcon(TrayStatus.SUCCESS);    
         }
+
+        /// <summary>
+        /// La frame recu
+        /// </summary>
+        public Frame ?Frame { get => frame; set => frame = value; }
     }
 }

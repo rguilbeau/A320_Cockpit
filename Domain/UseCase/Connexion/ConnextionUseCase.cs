@@ -60,7 +60,9 @@ namespace A320_Cockpit.Domain.UseCase.Connexion
 
             foreach(IConnexionPresenter presenter in presenters) 
             {
-                presenters.ForEach(presenter => presenter.Present());
+                presenter.SimulatorStatus = simulatorRepository.IsOpen;
+                presenter.CockpitStatus = cockpitRepository.IsOpen;
+                presenter.Present();
             }
         }
 

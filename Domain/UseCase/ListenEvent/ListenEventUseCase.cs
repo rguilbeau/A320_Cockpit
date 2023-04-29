@@ -55,7 +55,10 @@ namespace A320_Cockpit.Domain.UseCase.ListenEvent
                 {
                     CockpitEvent e = (CockpitEvent)System.Enum.Parse(typeof(CockpitEvent), idEvent.ToString());
                     EventReceived?.Invoke(this, new ListenEventArgs(e, data));
-                    presenters.ForEach(presenter => presenter.Present(e));
+                    presenters.ForEach(presenter => {
+                        presenter.Frame = frame;
+                        presenter.Present(e);
+                    });
                 }
             }
         }

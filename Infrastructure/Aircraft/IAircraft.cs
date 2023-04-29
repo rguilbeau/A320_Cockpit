@@ -26,13 +26,7 @@ namespace A320_Cockpit.Infrastructure.Aircraft
         /// <summary>
         /// Le runner de l'avion
         /// </summary>
-        public IRunner CreateRunner(IConnexionPresenter connexionPresenter, IListenEventPresenter listenEventPresenter, ISendPayloadPresenter sendPayloadPresenter);
-
-        /// <summary>
-        /// Le logger de l'avion
-        /// </summary>
-        public ILogHandler Logger { get; }
-
+        public IRunner Runner { get; }
         /// <summary>
         /// Le repository de la connexion au simulateur
         /// </summary>

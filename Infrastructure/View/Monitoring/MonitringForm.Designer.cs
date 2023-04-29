@@ -65,7 +65,7 @@
             // label_timing
             // 
             label_timing.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
-            label_timing.Location = new Point(489, 8);
+            label_timing.Location = new Point(492, 9);
             label_timing.Name = "label_timing";
             label_timing.Size = new Size(57, 19);
             label_timing.TabIndex = 5;
@@ -75,10 +75,10 @@
             // progressBar
             // 
             progressBar.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            progressBar.Location = new Point(158, 5);
+            progressBar.Location = new Point(185, 7);
             progressBar.MarqueeAnimationSpeed = 0;
             progressBar.Name = "progressBar";
-            progressBar.Size = new Size(325, 23);
+            progressBar.Size = new Size(301, 23);
             progressBar.Style = ProgressBarStyle.Continuous;
             progressBar.TabIndex = 4;
             // 
@@ -106,12 +106,12 @@
             // 
             label_canbus.AutoSize = true;
             label_canbus.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            label_canbus.ForeColor = Color.ForestGreen;
+            label_canbus.ForeColor = Color.Red;
             label_canbus.Location = new Point(76, 0);
             label_canbus.Name = "label_canbus";
-            label_canbus.Size = new Size(60, 15);
+            label_canbus.Size = new Size(75, 15);
             label_canbus.TabIndex = 1;
-            label_canbus.Text = "Connecté";
+            label_canbus.Text = "Déconnecté";
             // 
             // label1
             // 

@@ -23,7 +23,6 @@ namespace A320_Cockpit.Domain.UseCase.SendPayload
         /// Si la frame a été envoyé
         /// </summary>
         public bool IsSent { get; set; }
-
         /// <summary>
         /// Présente les valeurs
         /// </summary>

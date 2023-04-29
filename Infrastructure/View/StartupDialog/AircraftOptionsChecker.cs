@@ -18,7 +18,7 @@ namespace A320_Cockpit.Infrastructure.View.StartupDialog
         private readonly IAircraft ?aircraft;
         private readonly string errorMessage;
 
-        public AircraftOptionsChecker(string? port, string? aircraftName, ILogHandler logger)
+        public AircraftOptionsChecker(string? port, string? aircraftName)
         {
             errorMessage = string.Empty;
 
@@ -31,10 +31,10 @@ namespace A320_Cockpit.Infrastructure.View.StartupDialog
                 switch (aircraftName)
                 {
                     case A32nx.NAME:
-                        aircraft = new A32nx(logger, port);
+                        aircraft = new A32nx(port);
                         break;
                     case FakeA320.NAME:
-                        aircraft = new FakeA320(logger, port);
+                        aircraft = new FakeA320(port);
                         break;
                 }
 

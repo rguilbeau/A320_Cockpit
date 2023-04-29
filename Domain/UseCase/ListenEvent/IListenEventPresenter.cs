@@ -1,4 +1,5 @@
-﻿using A320_Cockpit.Domain.Enum;
+﻿using A320_Cockpit.Domain.Entity.Cockpit;
+using A320_Cockpit.Domain.Enum;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,11 @@ namespace A320_Cockpit.Domain.UseCase.ListenEvent
     /// </summary>
     public interface IListenEventPresenter
     {
+
+        /// <summary>
+        /// La frame envoyé
+        /// </summary>
+        public Frame ?Frame { get; set; }
 
         /// <summary>
         /// Présente l'event recu

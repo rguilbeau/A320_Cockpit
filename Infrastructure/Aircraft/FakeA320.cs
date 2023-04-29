@@ -33,23 +33,22 @@ namespace A320_Cockpit.Infrastructure.Aircraft
     public class FakeA320 : IAircraft
     {
         private readonly MsfsSimulatorRepository msfsSimulatorRepository;
-        private readonly ILogHandler logger;
         private readonly ISimulatorConnexionRepository simulatorConnexionRepository;
         private readonly ICockpitRepository cockpitRepository;
 
         private readonly List<IPayloadRepository> payloadRepositories;
         private readonly List<IPayloadEventHandler> payloadEventHandlers;
 
+        private readonly IRunner runner;
+
         public const string NAME = "Debug";
 
         /// <summary>
         /// Chargement des dépendences liées au FakeA320 (debug)
         /// </summary>
-        /// <param name="logger"></param>
         /// <param name="comPort"></param>
-        public FakeA320(ILogHandler logger, string comPort)
+        public FakeA320(string comPort)
         {
-            this.logger = logger;
             IMsfs msfs = new FakeMsfs();
             msfsSimulatorRepository = new(msfs);
             simulatorConnexionRepository = msfsSimulatorRepository;
@@ -68,12 +67,14 @@ namespace A320_Cockpit.Infrastructure.Aircraft
                 new FakeA320FcuBugEventHandler(new FakeA320FcuDisplayRepository()),
                 new FakeA320FcuGlareshieldButtonsEventHandler(new FakeA320GlareshieldIndicatorsRepository(), new FakeA320FcuDisplayRepository())
             };
-        }
 
-        /// <summary>
-        /// Le logger du FakeA320 (debug)
-        /// </summary>
-        public ILogHandler Logger => logger;
+            runner = new MsfsVariableRunner(
+                msfsSimulatorRepository,
+                cockpitRepository,
+                payloadRepositories,
+                payloadEventHandlers
+            );
+        }
 
         /// <summary>
         /// Le repository de connexion au simulateur du FakeA320 (debug)
@@ -86,23 +87,8 @@ namespace A320_Cockpit.Infrastructure.Aircraft
         public ICockpitRepository CockpitRepository => cockpitRepository;
 
         /// <summary>
-        /// Création du runner du FakeA320 (debug)
+        /// Le runner du FakeA320 (debug)
         /// </summary>
-        /// <param name="connexionPresenter"></param>
-        /// <param name="listenEventPresenter"></param>
-        /// <param name="sendPayloadPresenter"></param>
-        /// <returns></returns>
-        public IRunner CreateRunner(IConnexionPresenter connexionPresenter, IListenEventPresenter listenEventPresenter, ISendPayloadPresenter sendPayloadPresenter)
-        {
-            return new MsfsVariableRunner(
-                msfsSimulatorRepository,
-                logger,
-                cockpitRepository,
-                payloadRepositories,
-                payloadEventHandlers,
-                sendPayloadPresenter,
-                listenEventPresenter
-            );
-        }
+        public IRunner Runner => runner;
     }
 }

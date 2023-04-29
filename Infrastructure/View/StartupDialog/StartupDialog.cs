@@ -18,7 +18,6 @@ namespace A320_Cockpit.Infrastructure.View.StartupDialog
 {
     public partial class StartupDialog : Form
     {
-        private readonly ILogHandler logger;
         private readonly string[] aircrafts;
 
         private readonly System.Windows.Forms.Timer portScannerTimer;
@@ -26,10 +25,9 @@ namespace A320_Cockpit.Infrastructure.View.StartupDialog
         /// <summary>
         /// Création de la modale d'ouverture
         /// </summary>
-        public StartupDialog(ILogHandler logger)
+        public StartupDialog()
         {
             InitializeComponent();
-            this.logger = logger;
 
             aircrafts = new string[] { A32nx.NAME, FakeA320.NAME };
 
@@ -51,7 +49,7 @@ namespace A320_Cockpit.Infrastructure.View.StartupDialog
             string? port = combobox_port.SelectedItem?.ToString();
             string? aircraftName = combobox_aircraft.SelectedItem?.ToString();
 
-            AircraftOptionsChecker optionsChecker = new(port, aircraftName, logger);
+            AircraftOptionsChecker optionsChecker = new(port, aircraftName);
             
             if(optionsChecker.Aircraft == null)
             {

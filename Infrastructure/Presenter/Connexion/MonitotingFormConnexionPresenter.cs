@@ -1,6 +1,5 @@
-﻿using A320_Cockpit.Adaptation.Log;
-using A320_Cockpit.Domain.UseCase.Connexion;
-using A320_Cockpit.Infrastructure.View.SystemTray;
+﻿using A320_Cockpit.Domain.UseCase.Connexion;
+using A320_Cockpit.Infrastructure.View.Monitoring;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,11 +9,11 @@ using System.Threading.Tasks;
 namespace A320_Cockpit.Infrastructure.Presenter.Connexion
 {
     /// <summary>
-    /// Présenteur dédié à la connexion pour le system tray
+    /// Présenteur de status de connexion pour le form Monitoring
     /// </summary>
-    public class TrayConnexionPresenter : IConnexionPresenter
+    public class MonitotingFormConnexionPresenter : IConnexionPresenter
     {
-        private readonly ApplicationTray applicationTray;
+        private readonly MonitringForm monitringForm;
         private readonly List<Exception> exceptions;
         private bool cockpitStatus;
         private bool simulatorStatus;
@@ -22,42 +21,41 @@ namespace A320_Cockpit.Infrastructure.Presenter.Connexion
         /// <summary>
         /// Création du présenter
         /// </summary>
-        /// <param name="applicationTray"></param>
-        public TrayConnexionPresenter(ApplicationTray applicationTray)
+        /// <param name="monitringForm"></param>
+        public MonitotingFormConnexionPresenter(MonitringForm monitringForm)
         {
-            exceptions = new List<Exception>();
-            this.applicationTray = applicationTray;
+            this.monitringForm = monitringForm;
+            exceptions = new();
         }
 
         /// <summary>
-        /// La liste des erreurs de connexion
-        /// </summary>
-        public List<Exception> Exceptions
-        {
-            get { return exceptions; }
-        }
-
-        /// <summary>
-        /// Ajoute une nouvelle erreur de connexion
+        /// Ajoute une erreur
         /// </summary>
         /// <param name="exception"></param>
-        /// <exception cref="NotImplementedException"></exception>
         public void AddException(Exception exception)
         {
             exceptions.Add(exception);
         }
 
         /// <summary>
-        /// Présente les élements au system tray
+        /// Présente les status de connexion
         /// </summary>
         /// <exception cref="NotImplementedException"></exception>
         public void Present()
         {
-            if(!cockpitStatus || !simulatorStatus)
+            monitringForm.SetStatusCanBus(cockpitStatus);
+            monitringForm.SetStatusSimulator(simulatorStatus);
+
+            foreach (Exception exception in exceptions)
             {
-                applicationTray.ChangeStatus(TrayStatus.FAILURE);
+                monitringForm.AddError(exception);
             }
         }
+
+        /// <summary>
+        /// La liste des erreurs
+        /// </summary>
+        public List<Exception> Exceptions => exceptions;
 
         /// <summary>
         /// Le status du simulateur

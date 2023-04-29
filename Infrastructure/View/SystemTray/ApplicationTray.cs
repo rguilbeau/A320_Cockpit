@@ -18,6 +18,7 @@ using A320_Cockpit.Infrastructure.Presenter.ListenEvent;
 using A320_Cockpit.Infrastructure.Aircraft;
 using A320_Cockpit.Infrastructure.View.Monitoring;
 using System.DirectoryServices.ActiveDirectory;
+using A320_Cockpit.Infrastructure.Presenter.Monitoring;
 
 namespace A320_Cockpit.Infrastructure.View.SystemTray
 {
@@ -29,9 +30,13 @@ namespace A320_Cockpit.Infrastructure.View.SystemTray
         private readonly NotifyIcon trayIcon;
         private readonly System.Windows.Forms.Timer timerConnexion;
 
-        private readonly IRunner msfsVariableRunner;
+        private readonly IRunner runner;
         private readonly ConnextionUseCase connextionUseCase;
-        private readonly IAircraft aircraft;
+
+        private MonitoringFormListenEventPresenter ?monitoringFormListenEventPresenter;
+        private MonitotingFormConnexionPresenter ?monitotingFormConnexionPresenter;
+        private MonitoringFormSendPresenter ?monitoringFormSendPresenter;
+        private MonitoringPresenter? monitoringPresenter;
 
         private MonitringForm ?monitoringForm;
 
@@ -40,17 +45,12 @@ namespace A320_Cockpit.Infrastructure.View.SystemTray
         /// </summary>
         public ApplicationTray(IAircraft aircraft)
         {
-            this.aircraft = aircraft;
-
-            TrayConnexionPresenter trayConnexionPresenter = new(aircraft.Logger, this);
-            TrayListenEventPresenter trayListenEventPresenter = new(this);
-            TraySendPresenter traySendPresenter = new(aircraft.Logger, this);
-
             connextionUseCase = new ConnextionUseCase(aircraft.SimulatorConnexionRepository, aircraft.CockpitRepository);
-            connextionUseCase.AddPresenter(trayConnexionPresenter);
-            
-            
-            msfsVariableRunner = aircraft.CreateRunner(trayConnexionPresenter, trayListenEventPresenter, traySendPresenter);
+            connextionUseCase.AddPresenter(new TrayConnexionPresenter(this));
+
+            runner = aircraft.Runner;
+            runner.AddListenEventPresenter(new TrayListenEventPresenter(this));
+            runner.AddSendPayloadPresenter(new TraySendPresenter(this));
 
             timerConnexion = new() { Interval = 5000 };
             timerConnexion.Tick += TimerConnexion_Tick;
@@ -59,7 +59,7 @@ namespace A320_Cockpit.Infrastructure.View.SystemTray
             trayIcon = new()
             {
                 Text = AppResources.AppName,
-                Icon = AppResources.AppTrayIcon,
+                Icon = AppResources.AppTrayIconError,
                 ContextMenuStrip = new ContextMenuStrip()
                 {
                     Items = {
@@ -73,7 +73,7 @@ namespace A320_Cockpit.Infrastructure.View.SystemTray
             };
 
             trayIcon.ShowBalloonTip(3);
-            msfsVariableRunner.Start();
+            runner.Start();
         }
 
         /// <summary>
@@ -95,15 +95,16 @@ namespace A320_Cockpit.Infrastructure.View.SystemTray
         /// </summary>
         public void BlinkIcon(TrayStatus status)
         {
-            trayIcon.Icon = status == TrayStatus.SUCCESS ? AppResources.AppTrayIcon : AppResources.AppTrayIconError;
-            System.Windows.Forms.Timer timer = new() { Interval = 20 };
-            timer.Tick += (sender, args) =>
+            /*trayIcon.Icon = status == TrayStatus.SUCCESS ? AppResources.AppTrayIcon : AppResources.AppTrayIconError;
+            
+            System.Timers.Timer blinkTimer = new() { Interval = 20 };
+            blinkTimer.Elapsed += (sender, args) =>
             {
                 trayIcon.Icon = AppResources.AppTrayIconSuccess;
-                timer.Stop();
-                timer.Dispose();
+                blinkTimer.Stop();
+                blinkTimer.Dispose();
             };
-            timer.Start();
+            blinkTimer.Start();*/
         }
 
         /// <summary>
@@ -117,8 +118,23 @@ namespace A320_Cockpit.Infrastructure.View.SystemTray
             } else
             {
                 monitoringForm = new();
+
+                monitoringFormListenEventPresenter = new(monitoringForm);
+                monitoringFormSendPresenter = new(monitoringForm);
+                monitotingFormConnexionPresenter = new(monitoringForm);
+                monitoringPresenter = new(monitoringForm);
+
+                runner.AddListenEventPresenter(monitoringFormListenEventPresenter);
+                runner.AddSendPayloadPresenter(monitoringFormSendPresenter);
+                runner.AddMonitoringPresenter(monitoringPresenter);
+                connextionUseCase.AddPresenter(monitotingFormConnexionPresenter);
+
                 monitoringForm.Disposed += (sender, e) =>
                 {
+                    runner.RemoveListenEventPresenter(monitoringFormListenEventPresenter);
+                    runner.RemoveSendPayloadPresenter(monitoringFormSendPresenter);
+                    runner.RemoveMonitoringPresenter(monitoringPresenter);
+                    connextionUseCase.RemovePresenter(monitotingFormConnexionPresenter);
                     monitoringForm = null;
                 };
                 monitoringForm.Show();
@@ -133,20 +149,9 @@ namespace A320_Cockpit.Infrastructure.View.SystemTray
         public void Exit_OnClick(object? sender, EventArgs e)
         {
             trayIcon.Visible = false;
-            msfsVariableRunner.Stop();
+            runner.Stop();
             Dispose();
             Application.Exit();
-        }
-
-        /// <summary>
-        /// Ouvre les logs de l'application
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        /// <exception cref="NotImplementedException"></exception>
-        private void Log_OnClick(object? sender, EventArgs e)
-        {
-            aircraft.Logger.OpenInEditor();
         }
 
         /// <summary>

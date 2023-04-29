@@ -8,17 +8,14 @@ namespace A320_Cockpit
 {
     internal static class Program
     {
-        static IAircraft ?aircraft;
         /// <summary>
         ///  The main entry point for the application.
         /// </summary>
         [STAThread]
         static void Main()
         {            
-            //AllocConsole();
-            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             ApplicationConfiguration.Initialize();
-            Application.Run(new StartupDialog(new SirelogAdapter("")));
+            Application.Run(new StartupDialog());
         }
 
         /// <summary>
@@ -28,15 +25,8 @@ namespace A320_Cockpit
         /// <param name="e"></param>
         private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            aircraft?.Logger.Error(new Exception("Unhandled exception", (Exception)e.ExceptionObject));
-            Application.Exit();
+            Exception exception = new("Unhandled exception", (Exception)e.ExceptionObject);
+            MessageBox.Show(exception.ToString(), "Unhandled exception");
         }
-
-        /// <summary>
-        /// Affiche la console de l'application
-        /// </summary>
-        /// <returns></returns>
-        [System.Runtime.InteropServices.DllImport("kernel32.dll")]
-        private static extern bool AllocConsole();
     }
 }

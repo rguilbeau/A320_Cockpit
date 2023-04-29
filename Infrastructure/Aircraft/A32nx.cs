@@ -35,12 +35,13 @@ namespace A320_Cockpit.Infrastructure.Aircraft
     public class A32nx : IAircraft
     {
         private readonly MsfsSimulatorRepository msfsSimulatorRepository;
-        private readonly ILogHandler logger;
         private readonly ISimulatorConnexionRepository simulatorConnexionRepository;
         private readonly ICockpitRepository cockpitRepository;
 
         private readonly List<IPayloadRepository> payloadRepositories;
         private readonly List<IPayloadEventHandler> payloadEventHandlers;
+
+        private readonly IRunner runner;
 
         public const string NAME = "FlyByWire - A32NX";
 
@@ -49,10 +50,9 @@ namespace A320_Cockpit.Infrastructure.Aircraft
         /// </summary>
         /// <param name="logger"></param>
         /// <param name="comPort"></param>
-        public A32nx(ILogHandler logger, string comPort)
+        public A32nx(string comPort)
         {
-            this.logger = logger;
-            IMsfs msfs = new FakeMsfs();
+            IMsfs msfs = new MsfsWasmAdapter();
             msfsSimulatorRepository = new(msfs);
             simulatorConnexionRepository = msfsSimulatorRepository;
             cockpitRepository = new SerialBusCockpitRepository(new ArduinoSerialCanAdapter(new System.IO.Ports.SerialPort(), comPort));
@@ -70,12 +70,14 @@ namespace A320_Cockpit.Infrastructure.Aircraft
                 new A32nxFcuBugEventHandler(msfsSimulatorRepository),
                 new A32nxFcuGlareshieldButtonsEventHandler(msfsSimulatorRepository)
             };
+        
+            runner = new MsfsVariableRunner(
+                msfsSimulatorRepository,
+                cockpitRepository,
+                payloadRepositories,
+                payloadEventHandlers
+            );
         }
-
-        /// <summary>
-        /// Le logger du FakeA320 (debug)
-        /// </summary>
-        public ILogHandler Logger => logger;
 
         /// <summary>
         /// Le repository de connexion au simulateur de l'A32NX
@@ -88,23 +90,8 @@ namespace A320_Cockpit.Infrastructure.Aircraft
         public ICockpitRepository CockpitRepository => cockpitRepository;
 
         /// <summary>
-        /// Création du runner de l'A32NX
+        /// Le runner de l'A32NX
         /// </summary>
-        /// <param name="connexionPresenter"></param>
-        /// <param name="listenEventPresenter"></param>
-        /// <param name="sendPayloadPresenter"></param>
-        /// <returns></returns>
-        public IRunner CreateRunner(IConnexionPresenter connexionPresenter, IListenEventPresenter listenEventPresenter, ISendPayloadPresenter sendPayloadPresenter)
-        {
-            return new MsfsVariableRunner(
-                msfsSimulatorRepository,
-                logger,
-                cockpitRepository,
-                payloadRepositories,
-                payloadEventHandlers,
-                sendPayloadPresenter,
-                listenEventPresenter
-            );
-        }
+        public IRunner Runner => runner;
     }
 }
