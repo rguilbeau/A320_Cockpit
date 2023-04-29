@@ -1,5 +1,7 @@
+using A320_Cockpit.Adaptation.Canbus.ArduinoSerialCan;
 using A320_Cockpit.Adaptation.Log.Sirelog;
 using A320_Cockpit.Infrastructure.Aircraft;
+using A320_Cockpit.Infrastructure.View.StartupDialog;
 using A320_Cockpit.Infrastructure.View.SystemTray;
 
 namespace A320_Cockpit
@@ -12,13 +14,11 @@ namespace A320_Cockpit
         /// </summary>
         [STAThread]
         static void Main()
-        {
-            aircraft = new FakeA320(new SirelogAdapter(""), "COM5");
-            
-            AllocConsole();
+        {            
+            //AllocConsole();
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             ApplicationConfiguration.Initialize();
-            Application.Run(new ApplicationTray(aircraft));
+            Application.Run(new StartupDialog(new SirelogAdapter("")));
         }
 
         /// <summary>

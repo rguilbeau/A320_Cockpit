@@ -14,17 +14,20 @@ namespace A320_Cockpit.Infrastructure.Presenter.Connexion
     /// </summary>
     public class TrayConnexionPresenter : IConnexionPresenter
     {
+        private readonly ApplicationTray applicationTray;
         private readonly List<Exception> exceptions;
         private readonly ILogHandler logger;
 
         /// <summary>
-        /// Création du présenteur
+        /// Création du présenter
         /// </summary>
-        /// <param name="logger">Le logger</param>
-        public TrayConnexionPresenter(ILogHandler logger)
+        /// <param name="logger"></param>
+        /// <param name="applicationTray"></param>
+        public TrayConnexionPresenter(ILogHandler logger, ApplicationTray applicationTray)
         {
             exceptions = new List<Exception>();
             this.logger = logger;
+            this.applicationTray = applicationTray;
         }
 
         /// <summary>
@@ -51,7 +54,7 @@ namespace A320_Cockpit.Infrastructure.Presenter.Connexion
         /// <exception cref="NotImplementedException"></exception>
         public void Present()
         {
-            //applicationTray.ChangeStatus(exceptions.Count == 0 ? TrayStatus.SUCCESS : TrayStatus.FAILURE);
+            applicationTray.ChangeStatus(exceptions.Count == 0 ? TrayStatus.SUCCESS : TrayStatus.FAILURE);
             if (exceptions.Count > 0)
             {
                 foreach (Exception e in exceptions)

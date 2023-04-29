@@ -39,6 +39,7 @@
             // 
             // combobox_port
             // 
+            combobox_port.DropDownStyle = ComboBoxStyle.DropDownList;
             combobox_port.FormattingEnabled = true;
             combobox_port.Location = new Point(78, 53);
             combobox_port.Name = "combobox_port";
@@ -47,6 +48,7 @@
             // 
             // combobox_aircraft
             // 
+            combobox_aircraft.DropDownStyle = ComboBoxStyle.DropDownList;
             combobox_aircraft.FormattingEnabled = true;
             combobox_aircraft.Location = new Point(78, 82);
             combobox_aircraft.Name = "combobox_aircraft";

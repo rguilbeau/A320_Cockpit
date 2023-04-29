@@ -215,16 +215,5 @@ namespace A320_Cockpit.Adaptation.Canbus.CANtact
             frame.Data[0] = (byte)new Random().Next(256);
             Send(frame);
         }
-
-        /// <summary>
-        /// Retourne les ports disponibles
-        /// </summary>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
-        public static string[] FindAvailablePort()
-        {
-            string[] ports = SerialPort.GetPortNames();
-            return ports.Distinct().ToArray();
-        }
     }
 }

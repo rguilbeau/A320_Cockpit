@@ -1,4 +1,6 @@
-﻿using A320_Cockpit.Adaptation.Log.Sirelog;
+﻿using A320_Cockpit.Adaptation.Log;
+using A320_Cockpit.Adaptation.Log.Sirelog;
+using A320_Cockpit.Domain.Repository.Cockpit;
 using A320_Cockpit.Infrastructure.Aircraft;
 using A320_Cockpit.Infrastructure.View.SystemTray;
 using System;
@@ -6,6 +8,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO.Ports;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,9 +18,27 @@ namespace A320_Cockpit.Infrastructure.View.StartupDialog
 {
     public partial class StartupDialog : Form
     {
-        public StartupDialog()
+        private readonly ILogHandler logger;
+        private readonly string[] aircrafts;
+
+        private readonly System.Windows.Forms.Timer portScannerTimer;
+
+        /// <summary>
+        /// Création de la modale d'ouverture
+        /// </summary>
+        public StartupDialog(ILogHandler logger)
         {
             InitializeComponent();
+            this.logger = logger;
+
+            aircrafts = new string[] { A32nx.NAME, FakeA320.NAME };
+
+            combobox_port.DataSource = SerialPort.GetPortNames(); ;
+            combobox_aircraft.DataSource = aircrafts;
+
+            portScannerTimer = new() { Interval = 1000 };
+            portScannerTimer.Tick += PortScannerTimer_Tick;
+            portScannerTimer.Start();
         }
 
         /// <summary>
@@ -27,10 +48,35 @@ namespace A320_Cockpit.Infrastructure.View.StartupDialog
         /// <param name="e"></param>
         private void Button_start_Click(object sender, EventArgs e)
         {
-            FakeA320 aircraft = new(new SirelogAdapter(""), "COM5");
-            ApplicationTray applicationTray = new(aircraft);
-            applicationTray.ChangeStatus(TrayStatus.STAND_BY);
-            Dispose();
+            string ?port = combobox_port.SelectedItem?.ToString();
+            string ?aircraftName = combobox_aircraft.SelectedItem?.ToString();
+            IAircraft ?aircraft = null;
+
+            if (port == null || aircraftName == null)
+            {
+                MessageBox.Show("Vous devez sélectionner un COM Port et un avion pour démarrer l'application", "Attention");
+            } else
+            {
+                switch (aircraftName)
+                {
+                    case A32nx.NAME:
+                        aircraft = new A32nx(logger, port);
+                        break;
+                    case FakeA320.NAME:
+                        aircraft = new FakeA320(logger, port);
+                        break;
+                }
+
+                if (aircraft == null)
+                {
+                    MessageBox.Show("L'avion " + aircraftName + " est inconnu");
+                } else
+                {
+                    _ = new ApplicationTray(aircraft);
+                    portScannerTimer.Dispose();
+                    Dispose();
+                }
+            }
         }
 
         /// <summary>
@@ -41,6 +87,17 @@ namespace A320_Cockpit.Infrastructure.View.StartupDialog
         private void Button_cancel_Click(object sender, EventArgs e)
         {
             Application.Exit();
+        }
+
+        /// <summary>
+        /// Scan des COM Ports
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void PortScannerTimer_Tick(object? sender, EventArgs e)
+        {
+            combobox_port.DataSource = SerialPort.GetPortNames();
         }
     }
 }

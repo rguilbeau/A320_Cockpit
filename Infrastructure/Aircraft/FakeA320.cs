@@ -40,6 +40,8 @@ namespace A320_Cockpit.Infrastructure.Aircraft
         private readonly List<IPayloadRepository> payloadRepositories;
         private readonly List<IPayloadEventHandler> payloadEventHandlers;
 
+        public const string NAME = "Debug";
+
         /// <summary>
         /// Chargement des dépendences liées au FakeA320 (debug)
         /// </summary>

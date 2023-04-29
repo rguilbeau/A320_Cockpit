@@ -42,6 +42,8 @@ namespace A320_Cockpit.Infrastructure.Aircraft
         private readonly List<IPayloadRepository> payloadRepositories;
         private readonly List<IPayloadEventHandler> payloadEventHandlers;
 
+        public const string NAME = "FlyByWire - A32NX";
+
         /// <summary>
         /// Chargement des dépendences liées à l'A32NX
         /// </summary>

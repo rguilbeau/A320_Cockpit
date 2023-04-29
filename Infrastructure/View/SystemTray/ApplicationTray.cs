@@ -38,9 +38,9 @@ namespace A320_Cockpit.Infrastructure.View.SystemTray
         {
             this.aircraft = aircraft;
 
-            TrayConnexionPresenter trayConnexionPresenter = new(aircraft.Logger);
-            TrayListenEventPresenter trayListenEventPresenter = new();
-            TraySendPresenter traySendPresenter = new(aircraft.Logger);
+            TrayConnexionPresenter trayConnexionPresenter = new(aircraft.Logger, this);
+            TrayListenEventPresenter trayListenEventPresenter = new(this);
+            TraySendPresenter traySendPresenter = new(aircraft.Logger, this);
 
             connextionUseCase = new ConnextionUseCase(aircraft.SimulatorConnexionRepository, aircraft.CockpitRepository);
             connextionUseCase.AddPresenter(trayConnexionPresenter);

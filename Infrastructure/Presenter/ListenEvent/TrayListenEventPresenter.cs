@@ -1,5 +1,7 @@
-﻿using A320_Cockpit.Domain.Enum;
+﻿using A320_Cockpit.Adaptation.Log;
+using A320_Cockpit.Domain.Enum;
 using A320_Cockpit.Domain.UseCase.ListenEvent;
+using A320_Cockpit.Infrastructure.View.SystemTray;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,13 +15,24 @@ namespace A320_Cockpit.Infrastructure.Presenter.ListenEvent
     /// </summary>
     public class TrayListenEventPresenter : IListenEventPresenter
     {
+        private readonly ApplicationTray applicationTray;
+
+        /// <summary>
+        /// Création du présenter
+        /// </summary>
+        /// <param name="applicationTray"></param>
+        public TrayListenEventPresenter(ApplicationTray applicationTray)
+        {
+            this.applicationTray = applicationTray;
+        }
+
         /// <summary>
         /// Présente l'evenement sur le system tray
         /// </summary>
         /// <param name="e"></param>
         public void Present(CockpitEvent e)
         {
-            
+            applicationTray.BlinkIcon(TrayStatus.SUCCESS);    
         }
     }
 }
