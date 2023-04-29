@@ -53,7 +53,7 @@ namespace A320_Cockpit.Infrastructure.View.StartupDialog
 
             AircraftOptionsChecker optionsChecker = new(port, aircraftName, logger);
             
-            if(optionsChecker.Aircraft == null || optionsChecker.Port == null)
+            if(optionsChecker.Aircraft == null)
             {
                 MessageBox.Show(optionsChecker.ErrorMessage, "Attention");
             } else

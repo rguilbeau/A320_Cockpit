@@ -15,13 +15,11 @@ namespace A320_Cockpit.Infrastructure.View.StartupDialog
     /// </summary>
     public class AircraftOptionsChecker
     {
-        private readonly string? port;
         private readonly IAircraft ?aircraft;
         private readonly string errorMessage;
 
         public AircraftOptionsChecker(string? port, string? aircraftName, ILogHandler logger)
         {
-            this.port = port;
             errorMessage = string.Empty;
 
             if (port == null || aircraftName == null)
@@ -47,10 +45,6 @@ namespace A320_Cockpit.Infrastructure.View.StartupDialog
             }
         }
 
-        /// <summary>
-        /// Le COM Port
-        /// </summary>
-        public string? Port => port;
         /// <summary>
         /// L'avion
         /// </summary>
