@@ -32,10 +32,13 @@ namespace A320_Cockpit.Infrastructure.Aircraft
     /// </summary>
     public class FakeA320 : IAircraft
     {
-        private readonly ConnextionUseCase connextionUseCase;
-        private readonly ListenEventUseCase listenEventUseCase;
-        private readonly IRunner runner;
+        private readonly MsfsSimulatorRepository msfsSimulatorRepository;
         private readonly ILogHandler logger;
+        private readonly ISimulatorConnexionRepository simulatorConnexionRepository;
+        private readonly ICockpitRepository cockpitRepository;
+
+        private readonly List<IPayloadRepository> payloadRepositories;
+        private readonly List<IPayloadEventHandler> payloadEventHandlers;
 
         /// <summary>
         /// Chargement des dépendences liées au FakeA320 (debug)
@@ -46,64 +49,47 @@ namespace A320_Cockpit.Infrastructure.Aircraft
         {
             this.logger = logger;
             IMsfs msfs = new FakeMsfs();
-            MsfsSimulatorRepository msfsSimulatorRepository = new(msfs);
-            ISimulatorConnexionRepository simulatorConnexionRepository = msfsSimulatorRepository;
-            ICockpitRepository cockpitRepository = new SerialBusCockpitRepository(new ArduinoSerialCanAdapter(new System.IO.Ports.SerialPort(), comPort));
+            msfsSimulatorRepository = new(msfs);
+            simulatorConnexionRepository = msfsSimulatorRepository;
+            cockpitRepository = new SerialBusCockpitRepository(new ArduinoSerialCanAdapter(new System.IO.Ports.SerialPort(), comPort));
 
-            IConnexionPresenter connexionPresenter = new TrayConnexionPresenter(logger);
-            connextionUseCase = new ConnextionUseCase(simulatorConnexionRepository, cockpitRepository, connexionPresenter);
 
-            IListenEventPresenter listenEventPresenter = new TrayListenEventPresenter();
-            listenEventUseCase = new ListenEventUseCase(cockpitRepository, listenEventPresenter);
-
-            List<IPayloadRepository> payloadRepositories = new()
+            payloadRepositories = new()
             {
                 new FakeA320BrightnessRepository(),
                 new FakeA320FcuDisplayRepository(),
                 new FakeA320GlareshieldIndicatorsRepository()
             };
 
-            List<IPayloadEventHandler> payloadEventHandlers = new()
+            payloadEventHandlers = new()
             {
                 new FakeA320FcuBugEventHandler(new FakeA320FcuDisplayRepository()),
                 new FakeA320FcuGlareshieldButtonsEventHandler(new FakeA320GlareshieldIndicatorsRepository(), new FakeA320FcuDisplayRepository())
             };
-
-            ISendPayloadPresenter sendPayloadPresenter = new TraySendPresenter(logger);
-            List<SendPayloadUseCase> sendPayloadUseCases = new();
-            foreach (IPayloadRepository payloadRepository in payloadRepositories)
-            {
-                sendPayloadUseCases.Add(new SendPayloadUseCase(cockpitRepository, payloadRepository, sendPayloadPresenter));
-            }
-
-            runner = new MsfsVariableRunner(
-                msfsSimulatorRepository,
-                logger,
-                cockpitRepository,
-                listenEventUseCase,
-                payloadEventHandlers,
-                sendPayloadUseCases
-            );
         }
-
-        /// <summary>
-        /// Le use case de connexion du FakeA320 (debug)
-        /// </summary>
-        public ConnextionUseCase ConnextionUseCase => connextionUseCase;
-
-        /// <summary>
-        /// Le use case de l'écoute des evenements du cockpit du FakeA320 (debug)
-        /// </summary>
-        public ListenEventUseCase ListenEventUseCase => listenEventUseCase;
-
-        /// <summary>
-        /// Le runner du FakeA320 (debug)
-        /// </summary>
-        public IRunner Runner => runner;
 
         /// <summary>
         /// Le logger du FakeA320 (debug)
         /// </summary>
         public ILogHandler Logger => logger;
+
+        public ISimulatorConnexionRepository SimulatorConnexionRepository => simulatorConnexionRepository;
+
+        public ICockpitRepository CockpitRepository => cockpitRepository;
+
+        public IRunner CreateRunner(IConnexionPresenter connexionPresenter, IListenEventPresenter listenEventPresenter, ISendPayloadPresenter sendPayloadPresenter)
+        {
+            return new MsfsVariableRunner(
+                msfsSimulatorRepository,
+                logger,
+                cockpitRepository,
+                payloadRepositories,
+                payloadEventHandlers,
+                sendPayloadPresenter,
+                listenEventPresenter
+            );
+        }
+
+
     }
 }

@@ -1,4 +1,6 @@
-﻿using A320_Cockpit.Infrastructure.View.SystemTray;
+﻿using A320_Cockpit.Adaptation.Log.Sirelog;
+using A320_Cockpit.Infrastructure.Aircraft;
+using A320_Cockpit.Infrastructure.View.SystemTray;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -25,7 +27,8 @@ namespace A320_Cockpit.Infrastructure.View.StartupDialog
         /// <param name="e"></param>
         private void Button_start_Click(object sender, EventArgs e)
         {
-            ApplicationTray applicationTray = new();
+            FakeA320 aircraft = new(new SirelogAdapter(""), "COM5");
+            ApplicationTray applicationTray = new(aircraft);
             applicationTray.ChangeStatus(TrayStatus.STAND_BY);
             Dispose();
         }

@@ -2,6 +2,7 @@
 using A320_Cockpit.Adaptation.Log;
 using A320_Cockpit.Adaptation.Log.Sirelog;
 using A320_Cockpit.Adaptation.Msfs;
+using A320_Cockpit.Adaptation.Msfs.FakeMsfs;
 using A320_Cockpit.Adaptation.Msfs.MsfsWasm;
 using A320_Cockpit.Domain.Repository.Cockpit;
 using A320_Cockpit.Domain.Repository.Payload;
@@ -33,10 +34,13 @@ namespace A320_Cockpit.Infrastructure.Aircraft
     /// </summary>
     public class A32nx : IAircraft
     {
-        private readonly ConnextionUseCase connextionUseCase;
-        private readonly ListenEventUseCase listenEventUseCase;
-        private readonly IRunner runner;
+        private readonly MsfsSimulatorRepository msfsSimulatorRepository;
         private readonly ILogHandler logger;
+        private readonly ISimulatorConnexionRepository simulatorConnexionRepository;
+        private readonly ICockpitRepository cockpitRepository;
+
+        private readonly List<IPayloadRepository> payloadRepositories;
+        private readonly List<IPayloadEventHandler> payloadEventHandlers;
 
         /// <summary>
         /// Chargement des dépendences liées à l'A32NX
@@ -46,65 +50,46 @@ namespace A320_Cockpit.Infrastructure.Aircraft
         public A32nx(ILogHandler logger, string comPort)
         {
             this.logger = logger;
-            IMsfs msfs = new MsfsWasmAdapter();
-            MsfsSimulatorRepository msfsSimulatorRepository = new(msfs);
-            ISimulatorConnexionRepository simulatorConnexionRepository = msfsSimulatorRepository;
-            ICockpitRepository cockpitRepository = new SerialBusCockpitRepository(new ArduinoSerialCanAdapter(new System.IO.Ports.SerialPort(), comPort));
+            IMsfs msfs = new FakeMsfs();
+            msfsSimulatorRepository = new(msfs);
+            simulatorConnexionRepository = msfsSimulatorRepository;
+            cockpitRepository = new SerialBusCockpitRepository(new ArduinoSerialCanAdapter(new System.IO.Ports.SerialPort(), comPort));
 
-            IConnexionPresenter connexionPresenter = new TrayConnexionPresenter(logger);
-            connextionUseCase = new ConnextionUseCase(simulatorConnexionRepository, cockpitRepository, connexionPresenter);
 
-            IListenEventPresenter listenEventPresenter = new TrayListenEventPresenter();
-            listenEventUseCase = new ListenEventUseCase(cockpitRepository, listenEventPresenter);
-
-            List<IPayloadRepository> payloadRepositories = new()
+            payloadRepositories = new()
             {
                 new A32nxBrightnessRepository(msfsSimulatorRepository),
                 new A32nxFcuDisplayRepository(msfsSimulatorRepository),
                 new A32nxGlareshieldIndicatorsRepository(msfsSimulatorRepository)
             };
 
-            List<IPayloadEventHandler> payloadEventHandlers = new()
+            payloadEventHandlers = new()
             {
                 new A32nxFcuBugEventHandler(msfsSimulatorRepository),
                 new A32nxFcuGlareshieldButtonsEventHandler(msfsSimulatorRepository)
             };
-
-            ISendPayloadPresenter sendPayloadPresenter = new TraySendPresenter(logger);
-            List<SendPayloadUseCase> sendPayloadUseCases = new();
-            foreach (IPayloadRepository payloadRepository in payloadRepositories)
-            {
-                sendPayloadUseCases.Add(new SendPayloadUseCase(cockpitRepository, payloadRepository, sendPayloadPresenter));
-            }
-
-            runner = new MsfsVariableRunner(
-                msfsSimulatorRepository, 
-                logger, 
-                cockpitRepository,
-                listenEventUseCase,
-                payloadEventHandlers,
-                sendPayloadUseCases
-            );
         }
 
         /// <summary>
-        /// Le use case de connexion de l'a32NX
-        /// </summary>
-        public ConnextionUseCase ConnextionUseCase => connextionUseCase;
-
-        /// <summary>
-        /// Le use case de l'écoute des evenements du cockpit de l'A32NX
-        /// </summary>
-        public ListenEventUseCase ListenEventUseCase => listenEventUseCase;
-
-        /// <summary>
-        /// Le runner de l'A32NX
-        /// </summary>
-        public IRunner Runner => runner;
-
-        /// <summary>
-        /// Le logger de l'A32NX
+        /// Le logger du FakeA320 (debug)
         /// </summary>
         public ILogHandler Logger => logger;
+
+        public ISimulatorConnexionRepository SimulatorConnexionRepository => simulatorConnexionRepository;
+
+        public ICockpitRepository CockpitRepository => cockpitRepository;
+
+        public IRunner CreateRunner(IConnexionPresenter connexionPresenter, IListenEventPresenter listenEventPresenter, ISendPayloadPresenter sendPayloadPresenter)
+        {
+            return new MsfsVariableRunner(
+                msfsSimulatorRepository,
+                logger,
+                cockpitRepository,
+                payloadRepositories,
+                payloadEventHandlers,
+                sendPayloadPresenter,
+                listenEventPresenter
+            );
+        }
     }
 }

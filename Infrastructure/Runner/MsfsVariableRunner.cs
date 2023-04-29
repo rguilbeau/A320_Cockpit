@@ -18,14 +18,16 @@ namespace A320_Cockpit.Infrastructure.Runner
     {
         private readonly ILogHandler logger;
         private readonly MsfsSimulatorRepository msfs;
-        private bool running = false;
-        private readonly List<SendPayloadUseCase> sendPayloadUseCases;
-        private readonly ListenEventUseCase listenEventUseCase;
-        private readonly Stopwatch stopwatch;
         private readonly CockpitEventDispatcher eventDispatcher;
         private readonly ICockpitRepository cockpitRepository;
-        private CockpitEvent cockpitEvent;
+
+        private readonly List<SendPayloadUseCase> sendPayloadUseCases;
+        private readonly ListenEventUseCase listenEventUseCase;
+
         private readonly System.Timers.Timer eventReadTimeout;
+
+        private bool running = false;
+        private CockpitEvent cockpitEvent;
 
         /// <summary>
         /// Création du thread
@@ -38,22 +40,28 @@ namespace A320_Cockpit.Infrastructure.Runner
             MsfsSimulatorRepository msfs, 
             ILogHandler logger, 
             ICockpitRepository cockpitRepository,
-            ListenEventUseCase listenEventUseCase,
+            List<IPayloadRepository> payloadRepositories,
             List<IPayloadEventHandler> payloadEventHandlers,
-            List<SendPayloadUseCase> sendPayloadUseCases
+            ISendPayloadPresenter sendPayloadPresenter,
+            IListenEventPresenter listenEventPresenter
         ) {
             this.msfs = msfs;
             this.logger = logger;
-            this.sendPayloadUseCases = sendPayloadUseCases;
             this.cockpitRepository = cockpitRepository;
-            this.listenEventUseCase = listenEventUseCase;
+
+            sendPayloadUseCases = new();
+            foreach (IPayloadRepository payloadRepositoriy in payloadRepositories)
+            {
+                sendPayloadUseCases.Add(new SendPayloadUseCase(cockpitRepository, payloadRepositoriy, sendPayloadPresenter));
+            }
+
+            listenEventUseCase = new ListenEventUseCase(cockpitRepository, listenEventPresenter);
             listenEventUseCase.EventReceived += ListenEventUseCase_EventReceived;
 
             eventDispatcher = CockpitEventDispatcher.Get(payloadEventHandlers);
             cockpitEvent = CockpitEvent.ALL;
             eventReadTimeout = new() { Interval = 1000 };
             eventReadTimeout.Elapsed += EventReadTimeout_Elapsed;
-            stopwatch = new();
         }
 
         /// <summary>
@@ -79,7 +87,6 @@ namespace A320_Cockpit.Infrastructure.Runner
                 while (true)
                 {
                     msfs.StartTransaction();
-                    stopwatch.Restart();
 
                     // Arrêt du thread
                     if (!running) { break; }
@@ -100,9 +107,7 @@ namespace A320_Cockpit.Infrastructure.Runner
                         logger.Error(ex);
                     }
 
-                    stopwatch.Stop();
                     msfs.StopTransaction();
-                    //Console.WriteLine("Loop time:" + stopwatch.ElapsedMilliseconds + "ms");
                 }
             }).Start();
         }

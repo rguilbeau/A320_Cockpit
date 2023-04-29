@@ -2,9 +2,12 @@
 using A320_Cockpit.Adaptation.Msfs;
 using A320_Cockpit.Domain.Repository.Cockpit;
 using A320_Cockpit.Domain.Repository.Payload;
+using A320_Cockpit.Domain.Repository.Simulator;
 using A320_Cockpit.Domain.UseCase.Connexion;
 using A320_Cockpit.Domain.UseCase.ListenEvent;
+using A320_Cockpit.Domain.UseCase.SendPayload;
 using A320_Cockpit.Infrastructure.EventHandler;
+using A320_Cockpit.Infrastructure.Presenter.Send;
 using A320_Cockpit.Infrastructure.Runner;
 using System;
 using System.Collections.Generic;
@@ -21,23 +24,17 @@ namespace A320_Cockpit.Infrastructure.Aircraft
     public interface IAircraft
     {
         /// <summary>
-        /// Le use case de connexion de l'avion
-        /// </summary>
-        public ConnextionUseCase ConnextionUseCase { get; }
-
-        /// <summary>
-        /// Le use case d'écoute des evenements du cockpit de l'avion
-        /// </summary>
-        public ListenEventUseCase ListenEventUseCase { get; }
-
-        /// <summary>
         /// Le runner de l'avion
         /// </summary>
-        public IRunner Runner { get; }
+        public IRunner CreateRunner(IConnexionPresenter connexionPresenter, IListenEventPresenter listenEventPresenter, ISendPayloadPresenter sendPayloadPresenter);
 
         /// <summary>
         /// Le logger de l'avion
         /// </summary>
         public ILogHandler Logger { get; }
+
+        public ISimulatorConnexionRepository SimulatorConnexionRepository { get; }
+
+        public ICockpitRepository CockpitRepository { get; }
     }
 }

@@ -29,16 +29,22 @@ namespace A320_Cockpit.Infrastructure.View.SystemTray
 
         private readonly IRunner msfsVariableRunner;
         private readonly ConnextionUseCase connextionUseCase;
-        private readonly ILogHandler logger;
+        private readonly IAircraft aircraft;
 
         /// <summary>
         /// Création du système tray
         /// </summary>
         public ApplicationTray(IAircraft aircraft)
         {
-            connextionUseCase = aircraft.ConnextionUseCase;
-            msfsVariableRunner = aircraft.Runner;
-            logger = aircraft.Logger;
+            this.aircraft = aircraft;
+
+            TrayConnexionPresenter trayConnexionPresenter = new(aircraft.Logger);
+            connextionUseCase = new ConnextionUseCase(aircraft.SimulatorConnexionRepository, aircraft.CockpitRepository, trayConnexionPresenter);
+
+            TrayListenEventPresenter trayListenEventPresenter = new();
+            TraySendPresenter traySendPresenter = new(aircraft.Logger);
+            msfsVariableRunner = aircraft.CreateRunner(trayConnexionPresenter, trayListenEventPresenter, traySendPresenter);
+
 
             timerConnexion = new() { Interval = 5000 };
             timerConnexion.Tick += TimerConnexion_Tick;
@@ -115,7 +121,7 @@ namespace A320_Cockpit.Infrastructure.View.SystemTray
         /// <exception cref="NotImplementedException"></exception>
         private void Log_OnClick(object? sender, EventArgs e)
         {
-            logger.OpenInEditor();
+            aircraft.Logger.OpenInEditor();
         }
 
         /// <summary>
