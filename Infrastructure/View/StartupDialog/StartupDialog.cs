@@ -74,7 +74,7 @@ namespace A320_Cockpit.Infrastructure.View.StartupDialog
                 {
                     _ = new ApplicationTray(aircraft);
                     portScannerTimer.Dispose();
-                    Dispose();
+                    Hide(); // Obligé de garder la fenêtre caché, sinon le system tray ne répond plus
                 }
             }
         }
