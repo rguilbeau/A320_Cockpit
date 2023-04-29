@@ -52,10 +52,13 @@ namespace A320_Cockpit.Infrastructure.Runner
             sendPayloadUseCases = new();
             foreach (IPayloadRepository payloadRepositoriy in payloadRepositories)
             {
-                sendPayloadUseCases.Add(new SendPayloadUseCase(cockpitRepository, payloadRepositoriy, sendPayloadPresenter));
+                SendPayloadUseCase sendPayloadUseCase = new(cockpitRepository, payloadRepositoriy);
+                sendPayloadUseCase.AddPresenter(sendPayloadPresenter);
+                sendPayloadUseCases.Add(sendPayloadUseCase);
             }
 
-            listenEventUseCase = new ListenEventUseCase(cockpitRepository, listenEventPresenter);
+            listenEventUseCase = new ListenEventUseCase(cockpitRepository);
+            listenEventUseCase.AddPresenter(listenEventPresenter);
             listenEventUseCase.EventReceived += ListenEventUseCase_EventReceived;
 
             eventDispatcher = CockpitEventDispatcher.Get(payloadEventHandlers);

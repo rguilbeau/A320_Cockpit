@@ -17,17 +17,17 @@ namespace A320_Cockpit.Domain.UseCase.ListenEvent
     {
         public event EventHandler<ListenEventArgs> ?EventReceived;
         private readonly ICockpitRepository cockpitRepository;
-        private readonly IListenEventPresenter presenter;
+        private readonly List<IListenEventPresenter> presenters;
 
         /// <summary>
         /// Création du use case
         /// </summary>
         /// <param name="cockpitRepository"></param>
         /// <param name="presenter"></param>
-        public ListenEventUseCase(ICockpitRepository cockpitRepository, IListenEventPresenter presenter) 
+        public ListenEventUseCase(ICockpitRepository cockpitRepository) 
         { 
-            this.presenter = presenter;
             this.cockpitRepository = cockpitRepository;
+            presenters = new();
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace A320_Cockpit.Domain.UseCase.ListenEvent
                 {
                     CockpitEvent e = (CockpitEvent)System.Enum.Parse(typeof(CockpitEvent), idEvent.ToString());
                     EventReceived?.Invoke(this, new ListenEventArgs(e, data));
-                    presenter.Present(e);
+                    presenters.ForEach(presenter => presenter.Present(e));
                 }
             }
         }
@@ -74,6 +74,24 @@ namespace A320_Cockpit.Domain.UseCase.ListenEvent
         public void Stop()
         {
             cockpitRepository.FrameReceived -= CockpitRepository_FrameReceived;
+        }
+
+        /// <summary>
+        /// Ajoute un présenter
+        /// </summary>
+        /// <param name="presenter"></param>
+        public void AddPresenter(IListenEventPresenter presenter)
+        {
+            presenters.Add(presenter);
+        }
+
+        /// <summary>
+        /// Supprime un presenter
+        /// </summary>
+        /// <param name="presenter"></param>
+        public void RemovePresenter(IListenEventPresenter presenter)
+        {
+            presenters.Remove(presenter);
         }
     }
 }
