@@ -1,4 +1,5 @@
 ﻿using A320_Cockpit.Domain.Entity.Cockpit;
+using A320_Cockpit.Domain.Enum;
 using System;
 using System.Collections.Generic;
 using System.IO.Ports;
@@ -32,7 +33,7 @@ namespace A320_Cockpit.Adaptation.Canbus.ArduinoSerialCan
             this.serialPort = serialPort;
             this.serialPort.DataReceived += SerialPort_DataReceived;
 
-            pingId = 0xFFF;
+            pingId = 0x7FF;
             pingRandomData = true;
             ping = new();
             ping.Elapsed += Ping_Elapsed;
@@ -54,9 +55,9 @@ namespace A320_Cockpit.Adaptation.Canbus.ArduinoSerialCan
         /// <param name="interval"></param>
         /// <param name="id"></param>
         /// <param name="randomData"></param>
-        public void ActivePing(int interval, int id, bool randomData)
+        public void ActivePing(int interval, FrameId pingId, bool randomData)
         {
-            pingId = id;
+            this.pingId = (int)pingId;
             pingRandomData = randomData;
             ping.Interval = interval;
             ping.Start();

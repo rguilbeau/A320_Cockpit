@@ -34,7 +34,11 @@ namespace A320_Cockpit
 
             for (int i = 0; i < ports.Length; i++)
             {
-                Console.WriteLine(i + "-" + ports[i]);
+                if (ports[i].Contains("COM"))
+                {
+                    string numPort = ports[i][3..];
+                    Console.WriteLine("COM[" + numPort + "]");
+                }
             }
 
             Console.Write("Sélectionnez le COM port: ");           
@@ -42,9 +46,9 @@ namespace A320_Cockpit
             string? portKey = Console.ReadLine();
             bool success = int.TryParse(portKey, out int indexPort);
 
-            if(success && indexPort < ports.Length)
+            if(success && ports.Contains("COM" + indexPort))
             {
-                return ports[indexPort];
+                return "COM" + indexPort;
             } else
             {
                 Console.WriteLine();

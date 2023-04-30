@@ -1,4 +1,5 @@
-﻿using A320_Cockpit.Domain.Repository.Cockpit;
+﻿using A320_Cockpit.Domain.Enum;
+using A320_Cockpit.Domain.Repository.Cockpit;
 using A320_Cockpit.Domain.Repository.Simulator;
 using System;
 using System.Collections.Generic;
@@ -50,7 +51,7 @@ namespace A320_Cockpit.Domain.UseCase.Connexion
                 {
                     Console.WriteLine("Connexion au cockpit...");
                     cockpitRepository.Open();
-                    cockpitRepository.ActivePing();
+                    cockpitRepository.ActivePing(FrameId.PING, true);
                 }
                 catch (Exception ex)
                 {

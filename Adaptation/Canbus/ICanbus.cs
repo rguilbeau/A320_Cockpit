@@ -1,4 +1,5 @@
 ﻿using A320_Cockpit.Domain.Entity.Cockpit;
+using A320_Cockpit.Domain.Enum;
 
 namespace A320_Cockpit.Adaptation.Canbus
 {
@@ -30,9 +31,9 @@ namespace A320_Cockpit.Adaptation.Canbus
         /// Active le ping
         /// </summary>
         /// <param name="interval"></param>
-        /// <param name="id"></param>
+        /// <param name="frameId"></param>
         /// <param name="randomData"></param>
-        public void ActivePing(int interval, int id, bool randomData);
+        public void ActivePing(int interval, FrameId frameId, bool randomData);
 
         /// <summary>
         /// Etat de la connexion du CAN Bus

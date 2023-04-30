@@ -6,8 +6,14 @@ using System.Threading.Tasks;
 
 namespace A320_Cockpit.Domain.Enum
 {
+    /// <summary>
+    /// La liste des ID du CAN bus (de 0x000 à 0x7FF)
+    /// </summary>
     public enum FrameId
     {
+        // Ping
+        PING = 0x7FF,
+
         //
         // Globale (0x0##)
         //

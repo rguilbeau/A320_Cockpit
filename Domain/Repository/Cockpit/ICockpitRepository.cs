@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using A320_Cockpit.Domain.Entity.Cockpit;
+using A320_Cockpit.Domain.Enum;
 
 namespace A320_Cockpit.Domain.Repository.Cockpit
 {
@@ -38,8 +39,10 @@ namespace A320_Cockpit.Domain.Repository.Cockpit
         public bool IsOpen { get; }
 
         /// <summary>
-        /// Active le ping toutes les secondes
+        /// Active le ping
         /// </summary>
-        public void ActivePing();
+        /// <param name="pingId"></param>
+        /// <param name="randomData"></param>
+        public void ActivePing(FrameId pingId, bool randomData);
     }
 }

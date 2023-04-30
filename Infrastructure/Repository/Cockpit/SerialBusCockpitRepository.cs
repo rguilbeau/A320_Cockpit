@@ -1,5 +1,6 @@
 ﻿using A320_Cockpit.Adaptation.Canbus;
 using A320_Cockpit.Domain.Entity.Cockpit;
+using A320_Cockpit.Domain.Enum;
 using A320_Cockpit.Domain.Repository.Cockpit;
 using System;
 using System.Collections.Generic;
@@ -62,11 +63,13 @@ namespace A320_Cockpit.Infrastructure.Repository.Cockpit
         }
 
         /// <summary>
-        /// Active le ping toutes les secondes
+        /// Active le ping
         /// </summary>
-        public void ActivePing()
+        /// <param name="pingId"></param>
+        /// <param name="randomData"></param>
+        public void ActivePing(FrameId pingId, bool randomData)
         {
-            canbus.ActivePing(1000, 0xFFF, true);
+            canbus.ActivePing(1000, pingId, randomData);
         }
 
         /// <summary>
