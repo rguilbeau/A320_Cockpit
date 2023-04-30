@@ -1,10 +1,10 @@
 ﻿using A320_Cockpit.Domain.Entity.Payload.Brightness;
 using A320_Cockpit.Domain.Enum;
-using A320_Cockpit.Infrastructure.Aircraft.Msfs.A32nx.Payload.Variables;
-using A320_Cockpit.Infrastructure.Aircraft.Msfs.A32nx.Payload.Variables.Enum;
+using A320_Cockpit.Infrastructure.Aircraft.Msfs.A32nx.MsfsVariables;
+using A320_Cockpit.Infrastructure.Aircraft.Msfs.A32nx.MsfsVariables.Enum;
 using A320_Cockpit.Infrastructure.Simulator.Repository;
 
-namespace A320_Cockpit.Infrastructure.Aircraft.Msfs.A32nx.Payload.Repository.Brightness
+namespace A320_Cockpit.Infrastructure.Aircraft.Msfs.A32nx.Repository.Brightness
 {
     /// <summary>
     /// Repository pour la mise à jour et la récupération de l'entité du rétroaiclairage (pour l'A32NX)
@@ -51,7 +51,7 @@ namespace A320_Cockpit.Infrastructure.Aircraft.Msfs.A32nx.Payload.Repository.Bri
             byte indicatorsBrightness = 80;
             byte buttonBrightness = 255;
 
-            if (A32nxVariables.LightIndicatorStatus.Value ==  LightIndicatorEnum.DIM)
+            if (A32nxVariables.LightIndicatorStatus.Value == LightIndicatorEnum.DIM)
             {
                 indicatorsBrightness = 10;
             }

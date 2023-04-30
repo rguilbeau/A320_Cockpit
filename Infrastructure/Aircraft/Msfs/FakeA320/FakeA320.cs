@@ -8,8 +8,8 @@ using A320_Cockpit.Infrastructure.Simulator.Repository;
 using A320_Cockpit.Infrastructure.Cockpit.Repository;
 using A320_Cockpit.Infrastructure.Cockpit.EventHandlerDispatcher;
 using A320_Cockpit.Infrastructure.Aircraft.Msfs.FakeA320.EventHandler.Glareshield;
-using A320_Cockpit.Infrastructure.Aircraft.Msfs.FakeA320.Payload.Repository.Brightness;
-using A320_Cockpit.Infrastructure.Aircraft.Msfs.FakeA320.Payload.Repository.Glareshield;
+using A320_Cockpit.Infrastructure.Aircraft.Msfs.FakeA320.Repository.Brightness;
+using A320_Cockpit.Infrastructure.Aircraft.Msfs.FakeA320.Repository.Glareshield;
 
 namespace A320_Cockpit.Infrastructure.Aircraft.Msfs.FakeA320
 {

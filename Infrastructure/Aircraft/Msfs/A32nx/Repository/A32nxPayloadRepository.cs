@@ -3,7 +3,7 @@ using A320_Cockpit.Domain.Enum;
 using A320_Cockpit.Domain.Repository.Payload;
 using A320_Cockpit.Infrastructure.Simulator.Repository;
 
-namespace A320_Cockpit.Infrastructure.Aircraft.Msfs.A32nx.Payload
+namespace A320_Cockpit.Infrastructure.Aircraft.Msfs.A32nx.Repository
 {
     /// <summary>
     /// Classe mère des repository de l'A32nx

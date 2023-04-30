@@ -1,6 +1,6 @@
 ﻿using A320_Cockpit.Adaptation.Msfs.Model.Event;
 
-namespace A320_Cockpit.Infrastructure.Aircraft.Msfs.A32nx.EventHandler
+namespace A320_Cockpit.Infrastructure.Aircraft.Msfs.A32nx.MsfsVariables
 {
     /// <summary>
     /// Liste des évenements de l'A32NX

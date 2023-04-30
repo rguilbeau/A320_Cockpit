@@ -1,4 +1,5 @@
 ﻿using A320_Cockpit.Domain.Enum;
+using A320_Cockpit.Infrastructure.Aircraft.Msfs.A32nx.MsfsVariables;
 using A320_Cockpit.Infrastructure.Cockpit.EventHandlerDispatcher;
 using A320_Cockpit.Infrastructure.Simulator.Repository;
 

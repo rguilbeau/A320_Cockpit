@@ -1,10 +1,10 @@
 ﻿using A320_Cockpit.Domain.Entity.Payload.Brightness;
 using A320_Cockpit.Domain.Enum;
-using A320_Cockpit.Infrastructure.Aircraft.Msfs.A32nx.Payload.Variables;
-using A320_Cockpit.Infrastructure.Aircraft.Msfs.A32nx.Payload.Variables.Enum;
+using A320_Cockpit.Infrastructure.Aircraft.Msfs.A32nx.MsfsVariables;
+using A320_Cockpit.Infrastructure.Aircraft.Msfs.A32nx.MsfsVariables.Enum;
 using A320_Cockpit.Infrastructure.Simulator.Repository;
 
-namespace A320_Cockpit.Infrastructure.Aircraft.Msfs.A32nx.Payload.Repository.Brightness
+namespace A320_Cockpit.Infrastructure.Aircraft.Msfs.A32nx.Repository.Brightness
 {
     /// <summary>
     /// Repository des rétroaiclaire des écrans 7 segments

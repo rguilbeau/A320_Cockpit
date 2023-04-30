@@ -1,7 +1,7 @@
 ﻿using A320_Cockpit.Domain.Entity.Payload.Brightness;
 using A320_Cockpit.Domain.Enum;
 
-namespace A320_Cockpit.Infrastructure.Aircraft.Msfs.FakeA320.Payload.Repository.Brightness
+namespace A320_Cockpit.Infrastructure.Aircraft.Msfs.FakeA320.Repository.Brightness
 {
     internal class FakeA320BrightnessSevenSegementsRepository : FakeA320PayloadRepository<BrightnessSevenSegments>
     {

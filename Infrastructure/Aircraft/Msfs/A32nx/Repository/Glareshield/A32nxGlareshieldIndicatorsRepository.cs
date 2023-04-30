@@ -1,10 +1,10 @@
 ﻿using A320_Cockpit.Domain.Entity.Payload.Glareshield;
 using A320_Cockpit.Domain.Enum;
-using A320_Cockpit.Infrastructure.Aircraft.Msfs.A32nx.Payload.Variables;
-using A320_Cockpit.Infrastructure.Aircraft.Msfs.A32nx.Payload.Variables.Enum;
+using A320_Cockpit.Infrastructure.Aircraft.Msfs.A32nx.MsfsVariables;
+using A320_Cockpit.Infrastructure.Aircraft.Msfs.A32nx.MsfsVariables.Enum;
 using A320_Cockpit.Infrastructure.Simulator.Repository;
 
-namespace A320_Cockpit.Infrastructure.Aircraft.Msfs.A32nx.Payload.Repository.Glareshield
+namespace A320_Cockpit.Infrastructure.Aircraft.Msfs.A32nx.Repository.Glareshield
 {
     /// <summary>
     /// Repository pour la mise à jour et la récupération de l'entité du des témoins des panels du Glareshield (pour l'A32NX)

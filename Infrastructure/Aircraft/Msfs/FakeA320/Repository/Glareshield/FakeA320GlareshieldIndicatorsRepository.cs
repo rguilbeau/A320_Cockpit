@@ -1,7 +1,7 @@
 ﻿using A320_Cockpit.Domain.Entity.Payload.Glareshield;
 using A320_Cockpit.Domain.Enum;
 
-namespace A320_Cockpit.Infrastructure.Aircraft.Msfs.FakeA320.Payload.Repository.Glareshield
+namespace A320_Cockpit.Infrastructure.Aircraft.Msfs.FakeA320.Repository.Glareshield
 {
     /// <summary>
     /// Repository pour la mise à jour et la récupération de l'entité du des témoins des panels du Glareshield (pour le debug)

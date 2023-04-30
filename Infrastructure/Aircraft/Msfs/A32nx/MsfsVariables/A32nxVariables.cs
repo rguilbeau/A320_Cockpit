@@ -1,7 +1,7 @@
 ﻿using A320_Cockpit.Adaptation.Msfs.Model.Variable;
-using A320_Cockpit.Infrastructure.Aircraft.Msfs.A32nx.Payload.Variables.Enum;
+using A320_Cockpit.Infrastructure.Aircraft.Msfs.A32nx.MsfsVariables.Enum;
 
-namespace A320_Cockpit.Infrastructure.Aircraft.Msfs.A32nx.Payload.Variables
+namespace A320_Cockpit.Infrastructure.Aircraft.Msfs.A32nx.MsfsVariables
 {
     /// <summary>
     /// Lise des variables de MSFS (LVar, SimVar...)

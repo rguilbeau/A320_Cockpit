@@ -2,7 +2,7 @@
 using A320_Cockpit.Domain.Enum;
 using A320_Cockpit.Domain.Repository.Payload;
 
-namespace A320_Cockpit.Infrastructure.Aircraft.Msfs.FakeA320.Payload
+namespace A320_Cockpit.Infrastructure.Aircraft.Msfs.FakeA320.Repository
 {
     /// <summary>
     /// Classe mère des repository pour le debug du cockpit

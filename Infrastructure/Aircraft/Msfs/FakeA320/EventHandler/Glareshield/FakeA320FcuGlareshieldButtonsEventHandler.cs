@@ -1,6 +1,6 @@
 ﻿using A320_Cockpit.Domain.Entity.Payload.Glareshield;
 using A320_Cockpit.Domain.Enum;
-using A320_Cockpit.Infrastructure.Aircraft.Msfs.FakeA320.Payload.Repository.Glareshield;
+using A320_Cockpit.Infrastructure.Aircraft.Msfs.FakeA320.Repository.Glareshield;
 using A320_Cockpit.Infrastructure.Cockpit.EventHandlerDispatcher;
 
 namespace A320_Cockpit.Infrastructure.Aircraft.Msfs.FakeA320.EventHandler.Glareshield
