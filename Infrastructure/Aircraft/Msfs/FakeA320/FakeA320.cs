@@ -5,11 +5,11 @@ using A320_Cockpit.Domain.Repository.Payload;
 using A320_Cockpit.Domain.Repository.Simulator;
 using A320_Cockpit.Adaptation.Msfs.FakeMsfs;
 using A320_Cockpit.Infrastructure.Simulator.Repository;
-using A320_Cockpit.Infrastructure.Cockpit.EventHandler;
 using A320_Cockpit.Infrastructure.Cockpit.Repository;
-using A320_Cockpit.Infrastructure.Aircraft.Msfs.FakeA320.Repository.Brightness;
-using A320_Cockpit.Infrastructure.Aircraft.Msfs.FakeA320.Repository.Glareshield;
-using A320_Cockpit.Infrastructure.Aircraft.Msfs.FakeA320.Event.Glareshield;
+using A320_Cockpit.Infrastructure.Cockpit.EventHandlerDispatcher;
+using A320_Cockpit.Infrastructure.Aircraft.Msfs.FakeA320.EventHandler.Glareshield;
+using A320_Cockpit.Infrastructure.Aircraft.Msfs.FakeA320.Payload.Repository.Brightness;
+using A320_Cockpit.Infrastructure.Aircraft.Msfs.FakeA320.Payload.Repository.Glareshield;
 
 namespace A320_Cockpit.Infrastructure.Aircraft.Msfs.FakeA320
 {

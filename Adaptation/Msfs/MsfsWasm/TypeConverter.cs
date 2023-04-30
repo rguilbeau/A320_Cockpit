@@ -1,4 +1,6 @@
 ﻿
+using System;
+
 namespace A320_Cockpit.Adaptation.Msfs.MsfsWasm
 {
     /// <summary>
@@ -31,6 +33,10 @@ namespace A320_Cockpit.Adaptation.Msfs.MsfsWasm
             else if (typeof(T).Equals(typeof(int)))
             {
                 convertValue = (int)Math.Round(value, 0);
+            }
+            else if (typeof(T).IsEnum)
+            {
+                convertValue = (T)Enum.ToObject(typeof(T), (int)value);
             }
             else
             {

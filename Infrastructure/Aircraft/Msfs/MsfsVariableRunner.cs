@@ -4,7 +4,7 @@ using A320_Cockpit.Domain.Repository.Payload;
 using A320_Cockpit.Domain.UseCase.Connexion;
 using A320_Cockpit.Domain.UseCase.ListenEvent;
 using A320_Cockpit.Domain.UseCase.SendPayload;
-using A320_Cockpit.Infrastructure.Cockpit.EventHandler;
+using A320_Cockpit.Infrastructure.Cockpit.EventHandlerDispatcher;
 using A320_Cockpit.Infrastructure.Simulator.Repository;
 using System.Diagnostics;
 using System.Timers;

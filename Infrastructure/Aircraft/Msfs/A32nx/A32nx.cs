@@ -4,10 +4,10 @@ using A320_Cockpit.Adaptation.Msfs.MsfsWasm;
 using A320_Cockpit.Domain.Repository.Cockpit;
 using A320_Cockpit.Domain.Repository.Payload;
 using A320_Cockpit.Domain.Repository.Simulator;
-using A320_Cockpit.Infrastructure.Aircraft.Msfs.A32nx.Event.Glareshield;
-using A320_Cockpit.Infrastructure.Aircraft.Msfs.A32nx.Repository.Brightness;
-using A320_Cockpit.Infrastructure.Aircraft.Msfs.A32nx.Repository.Glareshield;
-using A320_Cockpit.Infrastructure.Cockpit.EventHandler;
+using A320_Cockpit.Infrastructure.Aircraft.Msfs.A32nx.EventHandler.Glareshield;
+using A320_Cockpit.Infrastructure.Aircraft.Msfs.A32nx.Payload.Repository.Brightness;
+using A320_Cockpit.Infrastructure.Aircraft.Msfs.A32nx.Payload.Repository.Glareshield;
+using A320_Cockpit.Infrastructure.Cockpit.EventHandlerDispatcher;
 using A320_Cockpit.Infrastructure.Cockpit.Repository;
 using A320_Cockpit.Infrastructure.Simulator.Repository;
 
