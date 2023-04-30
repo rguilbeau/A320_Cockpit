@@ -1,4 +1,5 @@
-﻿namespace A320_Cockpit.Adaptation.Msfs.Model.Variable
+﻿
+namespace A320_Cockpit.Adaptation.Msfs.Model.Variable
 {
     /// <summary>
     /// Définition d'une SimVar

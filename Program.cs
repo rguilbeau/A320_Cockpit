@@ -1,8 +1,7 @@
-using A320_Cockpit.Adaptation.Canbus.ArduinoSerialCan;
-using A320_Cockpit.Adaptation.Log.Sirelog;
 using A320_Cockpit.Infrastructure.Aircraft;
+using A320_Cockpit.Infrastructure.Aircraft.Msfs.A32nx;
+using A320_Cockpit.Infrastructure.Aircraft.Msfs.FakeA320;
 using System.IO.Ports;
-using System.Linq.Expressions;
 
 namespace A320_Cockpit
 {

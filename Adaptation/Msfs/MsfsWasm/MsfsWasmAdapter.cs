@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Runtime.InteropServices;
 using A320_Cockpit.Adaptation.Msfs.Model.Event;
 using A320_Cockpit.Adaptation.Msfs.Model.Variable;
 using Microsoft.FlightSimulator.SimConnect;

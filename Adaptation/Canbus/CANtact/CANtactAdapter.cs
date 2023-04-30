@@ -1,8 +1,5 @@
 ﻿using A320_Cockpit.Domain.Entity.Cockpit;
-using System;
 using System.IO.Ports;
-using System.Linq.Expressions;
-using System.Text;
 
 namespace A320_Cockpit.Adaptation.Canbus.CANtact
 {

@@ -1,4 +1,5 @@
-﻿namespace A320_Cockpit.Adaptation.Msfs.MsfsWasm
+﻿
+namespace A320_Cockpit.Adaptation.Msfs.MsfsWasm
 {
     /// <summary>
     /// Utilitaire pour la conversion des valeurs recu de MSFS vers les variables

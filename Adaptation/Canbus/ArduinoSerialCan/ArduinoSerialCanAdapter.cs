@@ -1,13 +1,7 @@
 ﻿using A320_Cockpit.Domain.Entity.Cockpit;
 using A320_Cockpit.Domain.Enum;
-using System;
-using System.Collections.Generic;
 using System.IO.Ports;
-using System.Linq;
-using System.Net.NetworkInformation;
-using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace A320_Cockpit.Adaptation.Canbus.ArduinoSerialCan
 {

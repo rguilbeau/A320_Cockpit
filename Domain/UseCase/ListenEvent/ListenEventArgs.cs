@@ -1,10 +1,4 @@
-﻿using A320_Cockpit.Domain.Entity.Cockpit;
-using A320_Cockpit.Domain.Enum;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using A320_Cockpit.Domain.Enum;
 
 namespace A320_Cockpit.Domain.UseCase.ListenEvent
 {

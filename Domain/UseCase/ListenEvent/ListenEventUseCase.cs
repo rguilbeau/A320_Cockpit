@@ -1,12 +1,6 @@
 ﻿using A320_Cockpit.Domain.Entity.Cockpit;
 using A320_Cockpit.Domain.Enum;
 using A320_Cockpit.Domain.Repository.Cockpit;
-using A320_Cockpit.Infrastructure.Repository.Payload;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace A320_Cockpit.Domain.UseCase.ListenEvent
 {
