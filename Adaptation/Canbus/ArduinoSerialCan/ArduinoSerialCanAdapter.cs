@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO.Ports;
 using System.Linq;
 using System.Net.NetworkInformation;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -17,7 +18,7 @@ namespace A320_Cockpit.Adaptation.Canbus.ArduinoSerialCan
     {
         private readonly SerialPort serialPort;
         private readonly System.Timers.Timer ping;
-        private int pingId;
+        private int ?pingId;
         private bool pingRandomData;
 
         /// <summary>
@@ -33,7 +34,6 @@ namespace A320_Cockpit.Adaptation.Canbus.ArduinoSerialCan
             this.serialPort = serialPort;
             this.serialPort.DataReceived += SerialPort_DataReceived;
 
-            pingId = 0x7FF;
             pingRandomData = true;
             ping = new();
             ping.Elapsed += Ping_Elapsed;
@@ -61,6 +61,28 @@ namespace A320_Cockpit.Adaptation.Canbus.ArduinoSerialCan
             pingRandomData = randomData;
             ping.Interval = interval;
             ping.Start();
+        }
+
+        /// <summary>
+        /// Réactive le ping
+        /// </summary>
+        public void ResumePing()
+        {
+            if(!ping.Enabled && pingId != null)
+            {
+                ping.Start();
+            }
+        }
+
+        /// <summary>
+        /// Suspend le ping
+        /// </summary>
+        public void SuspendPing()
+        {
+            if(ping.Enabled && pingId != null)
+            {
+                ping.Stop();
+            }
         }
 
         /// <summary>
@@ -156,17 +178,21 @@ namespace A320_Cockpit.Adaptation.Canbus.ArduinoSerialCan
         /// <exception cref="NotImplementedException"></exception>
         private void Ping_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
         {
-            Frame frame = new(pingId, 1);
+            if(pingId != null)
+            {
+                Frame frame = new((int)pingId, 1);
 
-            if(pingRandomData)
-            {
-                frame.Data[0] = (byte)new Random().Next(0, 255);
-            } else
-            {
-                frame.Data[0] = 0x01;
+                if (pingRandomData)
+                {
+                    frame.Data[0] = (byte)new Random().Next(0, 255);
+                }
+                else
+                {
+                    frame.Data[0] = 0x01;
+                }
+
+                Send(frame);
             }
-
-            Send(frame);
         }
     }
 }

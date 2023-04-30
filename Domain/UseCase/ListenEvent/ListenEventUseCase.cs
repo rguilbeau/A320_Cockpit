@@ -35,7 +35,7 @@ namespace A320_Cockpit.Domain.UseCase.ListenEvent
         /// <param name="frame"></param>
         private void CockpitRepository_FrameReceived(object? sender, Frame frame)
         {
-            if (frame.Id == 0x000 && frame.Size == 7)
+            if (frame.Id == (int)FrameId.EVENT && frame.Size == 7)
             {
                 int idEvent = (frame.Data[0] << 8) | (frame.Data[1]);
 

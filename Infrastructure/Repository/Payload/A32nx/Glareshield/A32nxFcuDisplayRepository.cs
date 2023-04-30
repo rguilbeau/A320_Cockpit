@@ -56,7 +56,6 @@ namespace A320_Cockpit.Infrastructure.Repository.Payload.A32nx.Glareshield
                     msfsSimulatorRepository.Read(A32nxVariables.VerticalSpeedSelectedFpa);
                     msfsSimulatorRepository.Read(A32nxVariables.VerticalSpeedSelectedFpm);
                     msfsSimulatorRepository.Read(A32nxVariables.VerticalSpeedManaged);
-                    msfsSimulatorRepository.Read(A32nxVariables.IsElectricityAc1BusPowered);
                     break;
                 case CockpitEvent.FCU_SPEED_BUG:
                     msfsSimulatorRepository.Read(A32nxVariables.SpeedSelected);
@@ -195,7 +194,6 @@ namespace A320_Cockpit.Infrastructure.Repository.Payload.A32nx.Glareshield
             }
 
             fcuDisplay.IsVerticalSpeedDash = A32nxVariables.VerticalSpeedManaged.Value;
-            fcuDisplay.IsPowerOn = A32nxVariables.IsElectricityAc1BusPowered.Value;
             return fcuDisplay;
         }
     }

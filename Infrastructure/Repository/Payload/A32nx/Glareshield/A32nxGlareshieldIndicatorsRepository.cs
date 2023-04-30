@@ -49,6 +49,7 @@ namespace A320_Cockpit.Infrastructure.Repository.Payload.A32nx.Glareshield
                     msfsSimulatorRepository.Read(A32nxVariables.LocModeActive);
                     msfsSimulatorRepository.Read(A32nxVariables.ExpedModeActive);
                     msfsSimulatorRepository.Read(A32nxVariables.ApprModeActive);
+                    msfsSimulatorRepository.Read(A32nxVariables.LightIndicatorStatus);
                     msfsSimulatorRepository.Read(A32nxVariables.IsElectricityAc1BusPowered);
                     break;
                 case CockpitEvent.FCU_AP1:
@@ -82,13 +83,15 @@ namespace A320_Cockpit.Infrastructure.Repository.Payload.A32nx.Glareshield
         /// </summary>
         protected override GlareshieldIndicators BuildPayload()
         {
-            glareshieldIndicators.FcuAp1 = A32nxVariables.Autopilot1Active.Value;
-            glareshieldIndicators.FcuAp2 = A32nxVariables.Autopilot2Active.Value;
-            glareshieldIndicators.FcuAthr = A32nxVariables.AutoThrustStatus.Value != 0;
-            glareshieldIndicators.FcuLoc = A32nxVariables.LocModeActive.Value;
-            glareshieldIndicators.FcuExped = A32nxVariables.ExpedModeActive.Value;
-            glareshieldIndicators.FcuAppr = A32nxVariables.ApprModeActive.Value;
-            glareshieldIndicators.FcuIsPowerOn = A32nxVariables.IsElectricityAc1BusPowered.Value;
+            bool testLight = A32nxVariables.LightIndicatorStatus.Value == 0 && A32nxVariables.IsElectricityAc1BusPowered.Value;
+
+            glareshieldIndicators.FcuAp1 = testLight || A32nxVariables.Autopilot1Active.Value;
+            glareshieldIndicators.FcuAp2 = testLight || A32nxVariables.Autopilot2Active.Value;
+            glareshieldIndicators.FcuAthr = testLight || A32nxVariables.AutoThrustStatus.Value != 0;
+            glareshieldIndicators.FcuLoc = testLight || A32nxVariables.LocModeActive.Value;
+            glareshieldIndicators.FcuExped = testLight || A32nxVariables.ExpedModeActive.Value;
+            glareshieldIndicators.FcuAppr = testLight || A32nxVariables.ApprModeActive.Value;
+
             return glareshieldIndicators;
         }
     }

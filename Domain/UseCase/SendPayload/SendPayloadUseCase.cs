@@ -18,7 +18,7 @@ namespace A320_Cockpit.Domain.UseCase.SendPayload
     {
         private readonly ICockpitRepository cockpitRepository;
         private readonly IPayloadRepository payloadRepository;
-        private readonly static Dictionary<int, Frame> frameHistory = new();
+        private static readonly History history = new(5000);
         
         /// <summary>
         /// Création du UseCase
@@ -39,19 +39,16 @@ namespace A320_Cockpit.Domain.UseCase.SendPayload
             PayloadEntity payload = payloadRepository.Find(e);
             Frame frame = payload.Frame;
 
-            // Si la frame n'a pas changé, il ne sert à rien de la renvoyer
-            bool alreadySent = frameHistory.ContainsKey(frame.Id) && frame.Equals(frameHistory[frame.Id]);
-
-            if (!alreadySent)
+            if(history.IsExpired(frame))
             {
                 try
                 {
                     cockpitRepository.Send(frame);
-                    frameHistory[frame.Id] = frame;
+                    history.Update(frame);
                 }
                 catch (Exception ex)
                 {
-                    frameHistory.Remove(frame.Id);
+                    history.Expire(frame);
                     Console.WriteLine(ex.ToString());
                 }
             }

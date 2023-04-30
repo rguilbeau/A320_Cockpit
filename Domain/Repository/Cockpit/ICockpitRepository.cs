@@ -44,5 +44,15 @@ namespace A320_Cockpit.Domain.Repository.Cockpit
         /// <param name="pingId"></param>
         /// <param name="randomData"></param>
         public void ActivePing(FrameId pingId, bool randomData);
+
+        /// <summary>
+        /// Réactive le ping
+        /// </summary>
+        public void ResumePing();
+
+        /// <summary>
+        /// Suspend le ping
+        /// </summary>
+        public void SuspendPing();
     }
 }

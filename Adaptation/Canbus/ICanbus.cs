@@ -34,6 +34,14 @@ namespace A320_Cockpit.Adaptation.Canbus
         /// <param name="frameId"></param>
         /// <param name="randomData"></param>
         public void ActivePing(int interval, FrameId frameId, bool randomData);
+        /// <summary>
+        /// Réactive le ping
+        /// </summary>
+        public void ResumePing();
+        /// <summary>
+        /// Suspend le ping
+        /// </summary>
+        public void SuspendPing();
 
         /// <summary>
         /// Etat de la connexion du CAN Bus

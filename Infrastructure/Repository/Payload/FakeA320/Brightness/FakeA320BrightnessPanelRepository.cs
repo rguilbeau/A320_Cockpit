@@ -16,27 +16,25 @@ namespace A320_Cockpit.Infrastructure.Repository.Payload.FakeA320.Brightness
     /// <summary>
     /// Repository pour la mise à jour et la récupération de l'entité du rétroaiclairage (pour de debug)
     /// </summary>
-    public class FakeA320BrightnessRepository : FakeA320PayloadRepository<BrightnessCockpit>
+    public class FakeA320BrightnessPanelRepository : FakeA320PayloadRepository<BrightnessPanel>
     {
-        private static readonly BrightnessCockpit brightness = new();
+        private static readonly BrightnessPanel brightnessPanel = new();
         
         /// <summary>
         /// L'entité
         /// </summary>
-        public override BrightnessCockpit Payload => brightness;
+        public override BrightnessPanel Payload => brightnessPanel;
 
         /// <summary>
         /// Création du repository
         /// </summary>
-        public FakeA320BrightnessRepository() : base()
+        public FakeA320BrightnessPanelRepository() : base()
         {
-            brightness.SegmentScreens = 255;
-            brightness.GlareshieldPanel = 255;
-            brightness.OverheadPanel = 255;
-            brightness.PedestalPanel = 255;
-            brightness.Indicators = 255;
-            brightness.Buttons = 255;
-            brightness.TestLight = false;
+            brightnessPanel.GlareshieldPanel = 100;
+            brightnessPanel.OverheadPanel = 100;
+            brightnessPanel.PedestalPanel = 100;
+            brightnessPanel.Indicators = 80;
+            brightnessPanel.Buttons = 255;
         }
 
         /// <summary>
@@ -50,9 +48,9 @@ namespace A320_Cockpit.Infrastructure.Repository.Payload.FakeA320.Brightness
         /// <summary>
         /// Mise à jour de l'entité
         /// </summary>
-        protected override BrightnessCockpit BuildPayload()
+        protected override BrightnessPanel BuildPayload()
         {
-            return brightness;
+            return brightnessPanel;
         }
     }
 }

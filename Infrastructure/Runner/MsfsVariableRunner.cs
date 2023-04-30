@@ -137,6 +137,12 @@ namespace A320_Cockpit.Infrastructure.Runner
         private void ListenEventUseCase_EventReceived(object? sender, ListenEventArgs listenEventArgs)
         {
             msfs.StopRead();
+
+            if(!listenEventArgs.IsPing)
+            {
+                cockpitRepository.SuspendPing();
+            }
+
             eventDispatcher.Dispatch(listenEventArgs.Event, listenEventArgs.Value);
 
             if(!listenEventArgs.IsPing)
@@ -145,7 +151,7 @@ namespace A320_Cockpit.Infrastructure.Runner
                 eventReadTimeout.Stop();
                 eventReadTimeout.Start();
             }
-            
+
             msfs.ResumeRead();
         }
 
@@ -158,6 +164,7 @@ namespace A320_Cockpit.Infrastructure.Runner
         private void EventReadTimeout_Elapsed(object? sender, ElapsedEventArgs e)
         {
             cockpitEvent = CockpitEvent.ALL;
+            cockpitRepository.ResumePing();
             eventReadTimeout.Stop();
         }
 

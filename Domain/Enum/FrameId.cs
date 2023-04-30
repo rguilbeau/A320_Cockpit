@@ -11,18 +11,16 @@ namespace A320_Cockpit.Domain.Enum
     /// </summary>
     public enum FrameId
     {
-        // Ping
-        PING = 0x7FF,
+        // Globale (0x##0)
+        EVENT = 0x000,
+        PING = 0x010,
+        BRIGHTNESS_PANEL = 0x020,
+        BRIGHTNESS_SEVEN_SEGMENT = 0x030,
 
         //
-        // Globale (0x0##)
+        // Glareshield panel (0x##1)
         //
-        BRIGHTNESS = 0x001,
-
-        //
-        // Glareshield panel (0x1##)
-        //
-        FCU_DISPLAY                 = 0x101,
-        GLARESHIELD_INDICATORS      = 0x102
+        FCU_DISPLAY                 = 0x011,
+        GLARESHIELD_INDICATORS      = 0x021
     }
 }

@@ -29,7 +29,6 @@ namespace A320_Cockpit.Domain.Entity.Payload.Glareshield
         private bool isHeadingDash = false;
         private bool isAltitudeDash = false;
         private bool isVerticalSpeedDash = false;
-        private bool isPowerOn = false;
 
         /// <summary>
         /// Retoune l'entité converti en frame
@@ -97,7 +96,7 @@ namespace A320_Cockpit.Domain.Entity.Payload.Glareshield
                 hiddens[4] = false; //not used
                 hiddens[5] = false; //not used
                 hiddens[6] = false; //not used
-                hiddens[7] = IsPowerOn;
+                hiddens[7] = false; //not used
 
                 frame.Data[7] = Frame.BitArrayToByte(hiddens);
 
@@ -173,9 +172,5 @@ namespace A320_Cockpit.Domain.Entity.Payload.Glareshield
         /// La vitesse verticale n'est pas affichée sur le FCU "----"
         /// </summary>
         public bool IsVerticalSpeedDash { get => isVerticalSpeedDash; set => isVerticalSpeedDash = value; }
-        /// <summary>
-        /// Le FCU est allimenté
-        /// </summary>
-        public bool IsPowerOn { get => isPowerOn; set => isPowerOn = value; }
     }
 }

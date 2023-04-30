@@ -54,7 +54,8 @@ namespace A320_Cockpit.Infrastructure.Aircraft
 
             payloadRepositories = new()
             {
-                new FakeA320BrightnessRepository(),
+                new FakeA320BrightnessPanelRepository(),
+                new FakeA320BrightnessSevenSegementsRepository(),
                 new FakeA320FcuDisplayRepository(),
                 new FakeA320GlareshieldIndicatorsRepository()
             };

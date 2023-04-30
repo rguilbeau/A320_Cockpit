@@ -20,7 +20,6 @@ namespace A320_Cockpit.Domain.Entity.Payload.Glareshield
         private bool fcuLoc = false;
         private bool fcuAppr = false;
         private bool fcuExped = false;
-        private bool fcuIsPowerOn = false;
 
         /// <summary>
         /// Retourne l'entité converti en Frame
@@ -38,7 +37,7 @@ namespace A320_Cockpit.Domain.Entity.Payload.Glareshield
                 fcuLight[4] = FcuExped;
                 fcuLight[5] = FcuAppr;
                 fcuLight[6] = false; // not used
-                fcuLight[7] = FcuIsPowerOn;
+                fcuLight[7] = false; // not used
 
                 frame.Data[0] = Frame.BitArrayToByte(fcuLight);
                 return frame;
@@ -77,9 +76,5 @@ namespace A320_Cockpit.Domain.Entity.Payload.Glareshield
         /// Le témoin du bouton EXPED (FCU)
         /// </summary>
         public bool FcuExped { get => fcuExped; set => fcuExped = value; }
-        /// <summary>
-        /// Le FCU est allimenté
-        /// </summary>
-        public bool FcuIsPowerOn { get => fcuIsPowerOn; set => fcuIsPowerOn = value; }
     }
 }

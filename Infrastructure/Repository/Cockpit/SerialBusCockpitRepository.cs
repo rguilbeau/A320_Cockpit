@@ -69,7 +69,23 @@ namespace A320_Cockpit.Infrastructure.Repository.Cockpit
         /// <param name="randomData"></param>
         public void ActivePing(FrameId pingId, bool randomData)
         {
-            canbus.ActivePing(1000, pingId, randomData);
+            canbus.ActivePing(4000, pingId, randomData);
+        }
+
+        /// <summary>
+        /// Reactive le ping
+        /// </summary>
+        public void ResumePing()
+        {
+            canbus.ResumePing();
+        }
+
+        /// <summary>
+        /// Suspend le ping
+        /// </summary>
+        public void SuspendPing()
+        {
+            canbus.SuspendPing();
         }
 
         /// <summary>

@@ -57,7 +57,8 @@ namespace A320_Cockpit.Infrastructure.Aircraft
 
             payloadRepositories = new()
             {
-                new A32nxBrightnessRepository(msfsSimulatorRepository),
+                new A32nxBrightnessPanelRepository(msfsSimulatorRepository),
+                new A32nxBrightnessSevenSegmentsRepository(msfsSimulatorRepository),
                 new A32nxFcuDisplayRepository(msfsSimulatorRepository),
                 new A32nxGlareshieldIndicatorsRepository(msfsSimulatorRepository)
             };

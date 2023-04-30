@@ -48,7 +48,6 @@ namespace A320_Cockpit.Infrastructure.Repository.Payload.FakeA320.Glareshield
             fcuDisplay.IsHeadingDash = false;
             fcuDisplay.IsAltitudeDash = false;
             fcuDisplay.IsVerticalSpeedDash = true;
-            fcuDisplay.IsPowerOn = true;
         }
 
         /// <summary>
