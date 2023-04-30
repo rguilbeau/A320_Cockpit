@@ -15,16 +15,18 @@ namespace A320_Cockpit.Domain.UseCase.ListenEvent
     {
         private readonly CockpitEvent cockpitEvent;
         private readonly float value;
+        private readonly bool isPing;
 
         /// <summary>
         /// Création des arguments de l'event
         /// </summary>
         /// <param name="cockpitEvent"></param>
         /// <param name="value"></param>
-        public ListenEventArgs(CockpitEvent cockpitEvent, float value)
+        public ListenEventArgs(CockpitEvent cockpitEvent, float value, bool isPing)
         {
             this.cockpitEvent = cockpitEvent;
             this.value = value;
+            this.isPing = isPing;
         }
 
         /// <summary>
@@ -36,5 +38,10 @@ namespace A320_Cockpit.Domain.UseCase.ListenEvent
         /// Retourne la frame
         /// </summary>
         public float Value { get { return value; } }
+
+        /// <summary>
+        /// Retourne si l'evenement est issu d'un ping
+        /// </summary>
+        public bool IsPing { get {  return isPing; } }
     }
 }

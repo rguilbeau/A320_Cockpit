@@ -138,10 +138,15 @@ namespace A320_Cockpit.Infrastructure.Runner
         {
             msfs.StopRead();
             eventDispatcher.Dispatch(listenEventArgs.Event, listenEventArgs.Value);
-            cockpitEvent = listenEventArgs.Event; // Priorité sur cet evenement
+
+            if(!listenEventArgs.IsPing)
+            {
+                cockpitEvent = listenEventArgs.Event; // Priorité sur cet evenement
+                eventReadTimeout.Stop();
+                eventReadTimeout.Start();
+            }
+            
             msfs.ResumeRead();
-            eventReadTimeout.Stop();
-            eventReadTimeout.Start();
         }
 
         /// <summary>

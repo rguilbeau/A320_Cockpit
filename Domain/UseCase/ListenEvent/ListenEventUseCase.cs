@@ -35,24 +35,24 @@ namespace A320_Cockpit.Domain.UseCase.ListenEvent
         /// <param name="frame"></param>
         private void CockpitRepository_FrameReceived(object? sender, Frame frame)
         {
-            if (frame.Id == 0x000 && frame.Size == 6)
+            if (frame.Id == 0x000 && frame.Size == 7)
             {
                 int idEvent = (frame.Data[0] << 8) | (frame.Data[1]);
 
-                byte[] bytes = new byte[] { frame.Data[2], frame.Data[3], frame.Data[4], frame.Data[5] };
-                
-                if(!BitConverter.IsLittleEndian) 
-                {
-                    Array.Reverse(bytes);
-                }
-
-
-                float data = BitConverter.ToSingle(bytes, 0);
-
                 if (System.Enum.IsDefined(typeof(CockpitEvent), idEvent))
                 {
+                    byte[] bytes = new byte[] { frame.Data[2], frame.Data[3], frame.Data[4], frame.Data[5] };
+
+                    if (!BitConverter.IsLittleEndian)
+                    {
+                        Array.Reverse(bytes);
+                    }
+
+                    float data = BitConverter.ToSingle(bytes, 0);
+                    bool isPing = frame.Data[6] == 0x01;
+
                     CockpitEvent e = (CockpitEvent)System.Enum.Parse(typeof(CockpitEvent), idEvent.ToString());
-                    EventReceived?.Invoke(this, new ListenEventArgs(e, data));
+                    EventReceived?.Invoke(this, new ListenEventArgs(e, data, isPing));
                 }
             }
         }
