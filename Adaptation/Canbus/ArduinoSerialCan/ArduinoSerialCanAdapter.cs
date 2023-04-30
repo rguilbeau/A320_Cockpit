@@ -15,6 +15,9 @@ namespace A320_Cockpit.Adaptation.Canbus.ArduinoSerialCan
     public class ArduinoSerialCanAdapter : ICanbus
     {
         private readonly SerialPort serialPort;
+        private readonly System.Timers.Timer ping;
+        private int pingId;
+        private bool pingRandomData;
 
         /// <summary>
         /// Création d'une nouvelle connexion
@@ -28,6 +31,11 @@ namespace A320_Cockpit.Adaptation.Canbus.ArduinoSerialCan
 
             this.serialPort = serialPort;
             this.serialPort.DataReceived += SerialPort_DataReceived;
+
+            pingId = 0xFFF;
+            pingRandomData = true;
+            ping = new();
+            ping.Elapsed += Ping_Elapsed;
         }
 
         /// <summary>
@@ -44,9 +52,14 @@ namespace A320_Cockpit.Adaptation.Canbus.ArduinoSerialCan
         /// Active le système de ping
         /// </summary>
         /// <param name="interval"></param>
-        public void ActivePing(int interval)
+        /// <param name="id"></param>
+        /// <param name="randomData"></param>
+        public void ActivePing(int interval, int id, bool randomData)
         {
-            // Ping not enabled
+            pingId = id;
+            pingRandomData = randomData;
+            ping.Interval = interval;
+            ping.Start();
         }
 
         /// <summary>
@@ -132,6 +145,27 @@ namespace A320_Cockpit.Adaptation.Canbus.ArduinoSerialCan
                     MessageReceived.Invoke(this, frame);
                 }
             }
+        }
+
+        /// <summary>
+        /// Lancement d'un ping
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void Ping_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
+        {
+            Frame frame = new(pingId, 1);
+
+            if(pingRandomData)
+            {
+                frame.Data[0] = (byte)new Random().Next(0, 255);
+            } else
+            {
+                frame.Data[0] = 0x01;
+            }
+
+            Send(frame);
         }
     }
 }

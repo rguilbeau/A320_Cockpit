@@ -119,7 +119,7 @@ namespace A320_Cockpit.Infrastructure.Runner
                     int cursorLeft = Console.CursorLeft;
                     int cursorTop = Console.CursorTop;
                     string header = monitoring.ElapsedMilliseconds + "ms";
-                    Console.Write(header);
+                    Console.Write(header + new string(' ', Console.WindowWidth - header.Length));
                     Console.SetCursorPosition(cursorLeft, cursorTop);
 
                     msfs.StopTransaction();

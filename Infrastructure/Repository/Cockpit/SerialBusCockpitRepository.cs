@@ -66,7 +66,7 @@ namespace A320_Cockpit.Infrastructure.Repository.Cockpit
         /// </summary>
         public void ActivePing()
         {
-            canbus.ActivePing(1000);
+            canbus.ActivePing(1000, 0xFFF, true);
         }
 
         /// <summary>

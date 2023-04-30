@@ -8,8 +8,12 @@ namespace A320_Cockpit.Adaptation.Canbus.CANtact
 {
     /// <summary>
     /// Système de connexion au bus via le port USB et le module CANtact (firmware slcan)
+    /// 
+    /// INFORMAION:
+    /// N'est plus utilisé, mais gardé au cas où. Il n'hérite plus de ICanbus
+    /// 
     /// </summary>
-    public class CANtactAdapter : ICanbus
+    public class CANtactAdapter
     {
         public event EventHandler<Frame> ?MessageReceived;
 
