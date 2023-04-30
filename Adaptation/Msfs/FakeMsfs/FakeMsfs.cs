@@ -36,6 +36,13 @@ namespace A320_Cockpit.Adaptation.Msfs.FakeMsfs
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="variable"></param>
+        public void Write<T>(Lvar<T> variable){}
+
+        /// <summary>
+        /// Inop
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="variable"></param>
         public void Read<T>(SimVar<T> variable) {}
 
         /// <summary>

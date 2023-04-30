@@ -65,6 +65,9 @@ namespace A320_Cockpit.Infrastructure.Aircraft.Msfs.A32nx.Repository.Glareshield
                 case CockpitEvent.FCU_APPR:
                     msfsSimulatorRepository.Read(A32nxVariables.ApprModeActive);
                     break;
+                case CockpitEvent.FCU_METRICT_ALT:
+                    msfsSimulatorRepository.Read(A32nxVariables.MetricAltToggle);
+                    break;
 
             }
 

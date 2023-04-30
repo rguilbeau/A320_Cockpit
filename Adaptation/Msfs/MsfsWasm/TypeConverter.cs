@@ -46,5 +46,40 @@ namespace A320_Cockpit.Adaptation.Msfs.MsfsWasm
             return (T?)convertValue;
         }
 
+        public static string Convert<T>(T? value)
+        {
+            string convertValue;
+
+            if (value == null)
+            {
+                convertValue = "0";
+            } else if (value is string)
+            {
+                convertValue = value + "";
+            }
+            else if (value is bool)
+            {
+                bool boolValue = (bool)(object)value;
+                convertValue = boolValue ? "1" : "0";
+            }
+            else if (value is short)
+            {
+                convertValue = value + "";
+            }
+            else if (typeof(T).Equals(typeof(int)))
+            {
+                convertValue = value + "";
+            }
+            else if (typeof(T).IsEnum)
+            {
+                convertValue = value + "";
+            }
+            else
+            {
+                convertValue = value + ""; ;
+            }
+
+            return convertValue;
+        }
     }
 }

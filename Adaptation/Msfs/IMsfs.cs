@@ -21,6 +21,13 @@ namespace A320_Cockpit.Adaptation.Msfs
         public void Read<T>(Lvar<T> variable);
 
         /// <summary>
+        /// Modifie la valeur d'une LVAR
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="variable"></param>
+        public void Write<T>(Lvar<T> variable);
+
+        /// <summary>
         /// Lit une variable "native" du simulateur de vol
         /// </summary>
         /// <typeparam name="T"></typeparam>

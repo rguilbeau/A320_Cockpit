@@ -298,6 +298,27 @@ namespace A320_Cockpit.Adaptation.Msfs.MsfsWasm
         }
 
         /// <summary>
+        /// Modifie la valeur d'une LVAR
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="variable"></param>
+        public void Write<T>(Lvar<T> variable)
+        {
+            lock (lockSend)
+            {
+                if (!isOpen || simConnect == null)
+                {
+                    throw new Exception("Unable to write SimVar, SimConnect is closed");
+                }
+
+                StructStr cmd;
+                cmd.value = TypeConverter.Convert(variable.Value) + " (>L:" + variable.Name + ")";
+
+                simConnect.SetClientData((ID_CLIENT)3, (ID_DEFINITION)3, SIMCONNECT_CLIENT_DATA_SET_FLAG.DEFAULT, 0, cmd);
+            }
+        }
+
+        /// <summary>
         /// Récupère la valeur d'une SimVar
         /// </summary>
         /// <typeparam name="T">Le type de la variable</typeparam>
@@ -376,7 +397,7 @@ namespace A320_Cockpit.Adaptation.Msfs.MsfsWasm
 
                 if (kEvent.Value != null)
                 {
-                    cmd.value += kEvent.Value + " ";
+                    cmd.value += TypeConverter.Convert(kEvent.Value) + " ";
                 }
 
                 cmd.value += "(>K:" + kEvent.Name + ")";

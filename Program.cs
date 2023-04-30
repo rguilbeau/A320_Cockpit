@@ -40,7 +40,7 @@ namespace A320_Cockpit
                 }
             }
 
-            Console.Write("Sélectionnez le COM port: ");           
+            Console.Write("Sélectionnez le COM port: COM");           
 
             string? portKey = Console.ReadLine();
             bool success = int.TryParse(portKey, out int indexPort);
@@ -57,7 +57,7 @@ namespace A320_Cockpit
 
         private static IAircraft AskAircraft(string comPort)
         {
-            string[] aircrafts = { "A32NX", "FakeA320" };
+            string[] aircrafts = { A32nx.NAME, FakeA320.NAME };
 
             for (int i = 0; i < aircrafts.Length; i++)
             {

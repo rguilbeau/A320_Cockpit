@@ -42,6 +42,7 @@ namespace A320_Cockpit.Infrastructure.Aircraft.Msfs.A32nx.MsfsVariables
         public static readonly Lvar<bool> Autopilot1Active = new("A32NX_AUTOPILOT_1_ACTIVE");
         public static readonly Lvar<bool> Autopilot2Active = new("A32NX_AUTOPILOT_2_ACTIVE");
         public static readonly Lvar<AutothrottleEnum> AutoThrustStatus = new("A32NX_AUTOTHRUST_STATUS");
+        public static readonly Lvar<bool> MetricAltToggle = new("A32NX_METRIC_ALT_TOGGLE");
 
         //
         // Over head panel

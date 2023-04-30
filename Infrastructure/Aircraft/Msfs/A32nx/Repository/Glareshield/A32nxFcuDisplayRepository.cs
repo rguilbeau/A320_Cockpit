@@ -46,6 +46,7 @@ namespace A320_Cockpit.Infrastructure.Aircraft.Msfs.A32nx.Repository.Glareshield
                     msfsSimulatorRepository.Read(A32nxVariables.VerticalSpeedSelectedFpa);
                     msfsSimulatorRepository.Read(A32nxVariables.VerticalSpeedSelectedFpm);
                     msfsSimulatorRepository.Read(A32nxVariables.VerticalSpeedManaged);
+                    msfsSimulatorRepository.Read(A32nxVariables.MetricAltToggle);
                     break;
                 case CockpitEvent.FCU_SPEED_BUG:
                     msfsSimulatorRepository.Read(A32nxVariables.SpeedSelected);

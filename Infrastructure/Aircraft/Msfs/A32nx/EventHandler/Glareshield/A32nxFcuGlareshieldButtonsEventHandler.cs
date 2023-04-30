@@ -72,9 +72,9 @@ namespace A320_Cockpit.Infrastructure.Aircraft.Msfs.A32nx.EventHandler.Glareshie
                     msfsSimulatorRepository.Send(A32nxEvents.FcuTrkFpaTogglePush);
                     break;
                 case CockpitEvent.FCU_METRICT_ALT:
-                    // todo: event non trouvé
+                    A32nxVariables.MetricAltToggle.Value = !A32nxVariables.MetricAltToggle.Value;
+                    msfsSimulatorRepository.Write(A32nxVariables.MetricAltToggle);
                     break;
-
             }
         }
     }

@@ -27,7 +27,7 @@ namespace A320_Cockpit.Infrastructure.Aircraft.Msfs.FakeA320
 
         private readonly IRunner runner;
 
-        public const string NAME = "Debug";
+        public const string NAME = "FakeA320 - Debug";
 
         /// <summary>
         /// Chargement des dépendences liées au FakeA320 (debug)

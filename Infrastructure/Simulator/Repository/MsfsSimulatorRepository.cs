@@ -69,6 +69,16 @@ namespace A320_Cockpit.Infrastructure.Simulator.Repository
         }
 
         /// <summary>
+        /// Modifie la valeur d'une LVAR
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="variable"></param>
+        public void Write<T>(Lvar<T> variable)
+        {
+            msfs.Write(variable);
+        }
+
+        /// <summary>
         /// Lecture d'une variable SimVar
         /// </summary>
         /// <typeparam name="T"></typeparam>
