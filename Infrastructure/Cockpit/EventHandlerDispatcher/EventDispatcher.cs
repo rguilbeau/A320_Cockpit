@@ -44,11 +44,18 @@ namespace A320_Cockpit.Infrastructure.Cockpit.EventHandlerDispatcher
         /// Lance le Handle des classes associées à l'evenement
         /// </summary>
         /// <param name="e"></param>
-        public void Dispatch(CockpitEvent e, float value)
+        public bool Dispatch(CockpitEvent e, float value)
         {
-            foreach (IPayloadEventHandler eventClass in eventDictionary[e])
+            if(eventDictionary.ContainsKey(e)) 
             {
-                eventClass.Handle(e, value);
+                foreach (IPayloadEventHandler eventClass in eventDictionary[e])
+                {
+                    eventClass.Handle(e, value);
+                }
+                return true;
+            } else
+            {
+                return false;
             }
         }
     }

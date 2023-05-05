@@ -143,9 +143,9 @@ namespace A320_Cockpit.Infrastructure.Aircraft.Msfs
                 cockpitRepository.SuspendPing();
             }
 
-            eventDispatcher.Dispatch(listenEventArgs.Event, listenEventArgs.Value);
+            bool eventExists = eventDispatcher.Dispatch(listenEventArgs.Event, listenEventArgs.Value);
 
-            if (!listenEventArgs.IsPing)
+            if (eventExists && !listenEventArgs.IsPing)
             {
                 cockpitEvent = listenEventArgs.Event; // Priorité sur cet evenement
                 eventReadTimeout.Stop();
