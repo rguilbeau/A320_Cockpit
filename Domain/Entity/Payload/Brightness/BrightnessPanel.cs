@@ -8,7 +8,7 @@ namespace A320_Cockpit.Domain.Entity.Payload.Brightness
     /// </summary>
     public class BrightnessPanel : PayloadEntity
     {
-        private const int SIZE = 6;
+        private const int SIZE = 5;
         private byte glareshieldPanel = 255;
         private byte overheadPanel = 255;
         private byte pedestalPanel = 255;

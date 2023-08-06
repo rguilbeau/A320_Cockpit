@@ -47,7 +47,7 @@ namespace A320_Cockpit.Infrastructure.Aircraft.Msfs.A32nx.Repository.Brightness
         /// </summary>
         protected override BrightnessPanel BuildPayload()
         {
-            byte panelBrightness = 100;
+            byte panelBrightness = 200;
             byte indicatorsBrightness = 80;
             byte buttonBrightness = 255;
 

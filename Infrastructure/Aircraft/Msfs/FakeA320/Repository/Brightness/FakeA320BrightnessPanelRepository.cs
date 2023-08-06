@@ -20,9 +20,9 @@ namespace A320_Cockpit.Infrastructure.Aircraft.Msfs.FakeA320.Repository.Brightne
         /// </summary>
         public FakeA320BrightnessPanelRepository() : base()
         {
-            brightnessPanel.GlareshieldPanel = 100;
-            brightnessPanel.OverheadPanel = 100;
-            brightnessPanel.PedestalPanel = 100;
+            brightnessPanel.GlareshieldPanel = 255;
+            brightnessPanel.OverheadPanel = 255;
+            brightnessPanel.PedestalPanel = 255;
             brightnessPanel.Indicators = 80;
             brightnessPanel.Buttons = 255;
         }
