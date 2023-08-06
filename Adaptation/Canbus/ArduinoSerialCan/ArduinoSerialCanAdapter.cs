@@ -141,27 +141,30 @@ namespace A320_Cockpit.Adaptation.Canbus.ArduinoSerialCan
         /// <param name="e"></param>
         private void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            if (MessageReceived != null)
+            try
             {
-                string message = serialPort.ReadLine();
-                if (message != null)
+                if (MessageReceived != null)
                 {
-                    int id = int.Parse(message[..3], System.Globalization.NumberStyles.HexNumber);
-                    int size = (message.Length - 3) / 2;
-
-                    Frame frame = new(id, size);
-
-                    for (int i = 0; i < size; i++)
+                    string message = serialPort.ReadLine();
+                    if (message != null)
                     {
-                        int indexStart = (i * 2) + 3;
-                        int indexEnd = indexStart + 2;
-                        frame.Data[i] = byte.Parse(message[indexStart..indexEnd], System.Globalization.NumberStyles.HexNumber); ;
-                    }
+                        int id = int.Parse(message[..3], System.Globalization.NumberStyles.HexNumber);
+                        int size = (message.Length - 3) / 2;
 
-                    Console.WriteLine("<-- " + frame.ToString());
-                    MessageReceived.Invoke(this, frame);
+                        Frame frame = new(id, size);
+
+                        for (int i = 0; i < size; i++)
+                        {
+                            int indexStart = (i * 2) + 3;
+                            int indexEnd = indexStart + 2;
+                            frame.Data[i] = byte.Parse(message[indexStart..indexEnd], System.Globalization.NumberStyles.HexNumber); ;
+                        }
+
+                        Console.WriteLine("<-- " + frame.ToString());
+                        MessageReceived.Invoke(this, frame);
+                    }
                 }
-            }
+            } catch (Exception) { }
         }
 
         /// <summary>
